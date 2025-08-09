@@ -14,16 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agents: {
+        Row: {
+          address: string | null
+          agent_code: string
+          city: string | null
+          commission_rate: number | null
+          company_name: string
+          contact_person: string
+          country: string | null
+          created_at: string
+          email: string
+          id: string
+          phone: string
+          pincode: string | null
+          state: string | null
+          status: Database["public"]["Enums"]["agent_status"] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          agent_code: string
+          city?: string | null
+          commission_rate?: number | null
+          company_name: string
+          contact_person: string
+          country?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          phone: string
+          pincode?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["agent_status"] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          agent_code?: string
+          city?: string | null
+          commission_rate?: number | null
+          company_name?: string
+          contact_person?: string
+          country?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          phone?: string
+          pincode?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["agent_status"] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bookings: {
+        Row: {
+          adult_count: number | null
+          agent_id: string
+          booking_details: Json | null
+          booking_reference: string
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          child_count: number | null
+          commission_amount: number
+          created_at: string
+          departure_date: string | null
+          from_location: string | null
+          id: string
+          passenger_email: string
+          passenger_name: string
+          passenger_phone: string
+          return_date: string | null
+          status: Database["public"]["Enums"]["booking_status"] | null
+          to_location: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          adult_count?: number | null
+          agent_id: string
+          booking_details?: Json | null
+          booking_reference: string
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          child_count?: number | null
+          commission_amount: number
+          created_at?: string
+          departure_date?: string | null
+          from_location?: string | null
+          id?: string
+          passenger_email: string
+          passenger_name: string
+          passenger_phone: string
+          return_date?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
+          to_location?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          adult_count?: number | null
+          agent_id?: string
+          booking_details?: Json | null
+          booking_reference?: string
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          child_count?: number | null
+          commission_amount?: number
+          created_at?: string
+          departure_date?: string | null
+          from_location?: string | null
+          id?: string
+          passenger_email?: string
+          passenger_name?: string
+          passenger_phone?: string
+          return_date?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
+          to_location?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          agent_id: string
+          amount: number
+          booking_id: string
+          created_at: string
+          id: string
+          payment_date: string | null
+          payment_method: string
+          payment_status: string | null
+          transaction_id: string | null
+        }
+        Insert: {
+          agent_id: string
+          amount: number
+          booking_id: string
+          created_at?: string
+          id?: string
+          payment_date?: string | null
+          payment_method: string
+          payment_status?: string | null
+          transaction_id?: string | null
+        }
+        Update: {
+          agent_id?: string
+          amount?: number
+          booking_id?: string
+          created_at?: string
+          id?: string
+          payment_date?: string | null
+          payment_method?: string
+          payment_status?: string | null
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_agent_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_booking_reference: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      agent_status: "pending" | "active" | "suspended"
+      booking_status: "pending" | "confirmed" | "cancelled" | "completed"
+      booking_type: "flight" | "bus" | "hotel"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +340,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      agent_status: ["pending", "active", "suspended"],
+      booking_status: ["pending", "confirmed", "cancelled", "completed"],
+      booking_type: ["flight", "bus", "hotel"],
+    },
   },
 } as const
