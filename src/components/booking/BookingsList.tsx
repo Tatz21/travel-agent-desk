@@ -3,10 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plane, Bus, Hotel, Eye } from 'lucide-react';
+import { Plane, Bus, Hotel, Eye, FileText } from 'lucide-react';
 import { useAgent } from '@/hooks/useAgent';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { Invoice } from './Invoice';
 
 interface Booking {
   id: string;
@@ -32,6 +33,8 @@ const BookingsList = () => {
   const { agent } = useAgent();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [showInvoice, setShowInvoice] = useState(false);
 
   useEffect(() => {
     if (agent) {
@@ -59,6 +62,26 @@ const BookingsList = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGenerateInvoice = async (booking: Booking) => {
+    if (!agent) return;
+
+    const invoiceData = {
+      ...booking,
+      agent: {
+        agent_code: agent.agent_code,
+        company_name: agent.company_name,
+        contact_person: agent.contact_person,
+        phone: agent.phone,
+        email: agent.email,
+        address: agent.address,
+        commission_rate: agent.commission_rate,
+      },
+    };
+
+    setSelectedBooking(invoiceData);
+    setShowInvoice(true);
   };
 
   const getBookingIcon = (type: string) => {
@@ -175,10 +198,20 @@ const BookingsList = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-1" />
-                        View
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleGenerateInvoice(booking)}
+                        >
+                          <FileText className="h-4 w-4 mr-1" />
+                          Invoice
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -187,6 +220,15 @@ const BookingsList = () => {
           </div>
         )}
       </CardContent>
+      {showInvoice && selectedBooking && (
+        <Invoice 
+          bookingData={selectedBooking} 
+          onClose={() => {
+            setShowInvoice(false);
+            setSelectedBooking(null);
+          }} 
+        />
+      )}
     </Card>
   );
 };
