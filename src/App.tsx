@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AgentSetup from "./pages/AgentSetup";
 import Dashboard from "./pages/Dashboard";
+import GroupBooking from "./pages/GroupBooking";
+import ServiceCharge from "./pages/ServiceCharge";
+import BankDetails from "./pages/BankDetails";
+import ContactRepresentative from "./pages/ContactRepresentative";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +81,26 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/group-booking" element={
+              <ProtectedRoute>
+                <GroupBooking />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/service-charge" element={
+              <ProtectedRoute>
+                <ServiceCharge />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/bank-details" element={
+              <ProtectedRoute>
+                <BankDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/contact" element={
+              <ProtectedRoute>
+                <ContactRepresentative />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

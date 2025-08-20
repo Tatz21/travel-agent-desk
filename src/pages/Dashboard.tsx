@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plane, Bus, Hotel, User, LogOut, Plus } from 'lucide-react';
+import { Plane, Bus, Hotel, User, LogOut, Plus, Menu } from 'lucide-react';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
+import WalletComponent from '@/components/Wallet';
 import FlightBooking from '@/components/booking/FlightBooking';
 import BusBooking from '@/components/booking/BusBooking';
 import HotelBooking from '@/components/booking/HotelBooking';
@@ -34,164 +37,173 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Plane className="h-8 w-8 text-primary" />
-              <h1 className="text-xl font-bold ml-2">Travelopedia</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <User className="h-4 w-4" />
-                <span className="text-sm font-medium">{agent?.contact_person}</span>
-                <Badge variant="secondary" className={getStatusColor(agent?.status || 'pending')}>
-                  {agent?.status}
-                </Badge>
+    <SidebarProvider>
+      <div className="min-h-screen bg-background flex w-full">
+        <AppSidebar />
+        
+        <main className="flex-1 overflow-auto">
+          {/* Header */}
+          <header className="border-b border-border sticky top-0 bg-background z-10">
+            <div className="flex items-center justify-between h-16 px-6">
+              <div className="flex items-center space-x-4">
+                <SidebarTrigger />
+                <div className="flex items-center">
+                  <Plane className="h-8 w-8 text-primary" />
+                  <h1 className="text-xl font-bold ml-2">Travelopedia</h1>
+                </div>
               </div>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="flights">Flights</TabsTrigger>
-            <TabsTrigger value="buses">Buses</TabsTrigger>
-            <TabsTrigger value="hotels">Hotels</TabsTrigger>
-            <TabsTrigger value="bookings">Bookings</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Agent Code</CardTitle>
-                  <User className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{agent?.agent_code}</div>
-                  <p className="text-xs text-muted-foreground">
-                    Your unique agent identifier
-                  </p>
-                </CardContent>
-              </Card>
               
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Commission Rate</CardTitle>
-                  <span className="h-4 w-4 text-muted-foreground">%</span>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{agent?.commission_rate}%</div>
-                  <p className="text-xs text-muted-foreground">
-                    Your earning percentage
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
-                  <Plus className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  <p className="text-xs text-muted-foreground">
-                    Bookings this month
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-                  <span className="h-4 w-4 text-muted-foreground">₹</span>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">₹0</div>
-                  <p className="text-xs text-muted-foreground">
-                    Commission earned
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="flex items-center space-x-4">
+                <WalletComponent />
+                <div className="flex items-center space-x-2">
+                  <User className="h-4 w-4" />
+                  <span className="text-sm font-medium">{agent?.contact_person}</span>
+                  <Badge variant="secondary" className={getStatusColor(agent?.status || 'pending')}>
+                    {agent?.status}
+                  </Badge>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
             </div>
+          </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('flights')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Plane className="h-5 w-5 mr-2" />
-                    Flight Booking
-                  </CardTitle>
-                  <CardDescription>
-                    Book domestic and international flights
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Book Flight</Button>
-                </CardContent>
-              </Card>
+          {/* Main Content */}
+          <div className="p-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsList className="grid w-full grid-cols-5">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="flights">Flights</TabsTrigger>
+                <TabsTrigger value="buses">Buses</TabsTrigger>
+                <TabsTrigger value="hotels">Hotels</TabsTrigger>
+                <TabsTrigger value="bookings">Bookings</TabsTrigger>
+              </TabsList>
 
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('buses')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Bus className="h-5 w-5 mr-2" />
-                    Bus Booking
-                  </CardTitle>
-                  <CardDescription>
-                    Book bus tickets across cities
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Book Bus</Button>
-                </CardContent>
-              </Card>
+              <TabsContent value="overview" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Agent Code</CardTitle>
+                      <User className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{agent?.agent_code}</div>
+                      <p className="text-xs text-muted-foreground">
+                        Your unique agent identifier
+                      </p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Commission Rate</CardTitle>
+                      <span className="h-4 w-4 text-muted-foreground">%</span>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{agent?.commission_rate}%</div>
+                      <p className="text-xs text-muted-foreground">
+                        Your earning percentage
+                      </p>
+                    </CardContent>
+                  </Card>
 
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('hotels')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Hotel className="h-5 w-5 mr-2" />
-                    Hotel Booking
-                  </CardTitle>
-                  <CardDescription>
-                    Book hotels and accommodations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Book Hotel</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
+                      <Plus className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">0</div>
+                      <p className="text-xs text-muted-foreground">
+                        Bookings this month
+                      </p>
+                    </CardContent>
+                  </Card>
 
-          <TabsContent value="flights">
-            <FlightBooking />
-          </TabsContent>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+                      <span className="h-4 w-4 text-muted-foreground">₹</span>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">₹0</div>
+                      <p className="text-xs text-muted-foreground">
+                        Commission earned
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
 
-          <TabsContent value="buses">
-            <BusBooking />
-          </TabsContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('flights')}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Plane className="h-5 w-5 mr-2" />
+                        Flight Booking
+                      </CardTitle>
+                      <CardDescription>
+                        Book domestic and international flights
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Button className="w-full">Book Flight</Button>
+                    </CardContent>
+                  </Card>
 
-          <TabsContent value="hotels">
-            <HotelBooking />
-          </TabsContent>
+                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('buses')}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Bus className="h-5 w-5 mr-2" />
+                        Bus Booking
+                      </CardTitle>
+                      <CardDescription>
+                        Book bus tickets across cities
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Button className="w-full">Book Bus</Button>
+                    </CardContent>
+                  </Card>
 
-          <TabsContent value="bookings">
-            <BookingsList />
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+                  <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('hotels')}>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Hotel className="h-5 w-5 mr-2" />
+                        Hotel Booking
+                      </CardTitle>
+                      <CardDescription>
+                        Book hotels and accommodations
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Button className="w-full">Book Hotel</Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="flights">
+                <FlightBooking />
+              </TabsContent>
+
+              <TabsContent value="buses">
+                <BusBooking />
+              </TabsContent>
+
+              <TabsContent value="hotels">
+                <HotelBooking />
+              </TabsContent>
+
+              <TabsContent value="bookings">
+                <BookingsList />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };
 
