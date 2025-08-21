@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AgentSetup from "./pages/AgentSetup";
 import Dashboard from "./pages/Dashboard";
+import FlightBookingPage from "./pages/FlightBookingPage";
+import BusBookingPage from "./pages/BusBookingPage";
+import HotelBookingPage from "./pages/HotelBookingPage";
+import BookingsPage from "./pages/BookingsPage";
 import GroupBooking from "./pages/GroupBooking";
 import ServiceCharge from "./pages/ServiceCharge";
 import BankDetails from "./pages/BankDetails";
@@ -81,6 +85,26 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/flights" element={
+              <ProtectedRoute>
+                <FlightBookingPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/buses" element={
+              <ProtectedRoute>
+                <BusBookingPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/hotels" element={
+              <ProtectedRoute>
+                <HotelBookingPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/bookings" element={
+              <ProtectedRoute>
+                <BookingsPage />
               </ProtectedRoute>
             } />
             <Route path="/dashboard/group-booking" element={
