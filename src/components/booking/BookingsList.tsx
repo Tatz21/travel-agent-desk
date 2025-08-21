@@ -8,6 +8,7 @@ import { useAgent } from '@/hooks/useAgent';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { Invoice } from './Invoice';
+import BookingDetails from './BookingDetails';
 
 interface Booking {
   id: string;
@@ -35,6 +36,8 @@ const BookingsList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [showInvoice, setShowInvoice] = useState(false);
+  const [selectedViewBooking, setSelectedViewBooking] = useState<Booking | null>(null);
+  const [showBookingDetails, setShowBookingDetails] = useState(false);
 
   useEffect(() => {
     if (agent) {
@@ -62,6 +65,11 @@ const BookingsList = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleViewBooking = (booking: Booking) => {
+    setSelectedViewBooking(booking);
+    setShowBookingDetails(true);
   };
 
   const handleGenerateInvoice = async (booking: Booking) => {
@@ -199,7 +207,11 @@ const BookingsList = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleViewBooking(booking)}
+                        >
                           <Eye className="h-4 w-4 mr-1" />
                           View
                         </Button>
@@ -227,6 +239,16 @@ const BookingsList = () => {
             setShowInvoice(false);
             setSelectedBooking(null);
           }} 
+        />
+      )}
+      {showBookingDetails && selectedViewBooking && (
+        <BookingDetails
+          booking={selectedViewBooking}
+          isOpen={showBookingDetails}
+          onClose={() => {
+            setShowBookingDetails(false);
+            setSelectedViewBooking(null);
+          }}
         />
       )}
     </Card>
