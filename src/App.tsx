@@ -1,8 +1,10 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { useAgent } from "@/hooks/useAgent";
 import Index from "./pages/Index";
@@ -69,70 +71,72 @@ const SetupRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/setup" element={
-              <SetupRoute>
-                <AgentSetup />
-              </SetupRoute>
-            } />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/flights" element={
-              <ProtectedRoute>
-                <FlightBookingPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/buses" element={
-              <ProtectedRoute>
-                <BusBookingPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/hotels" element={
-              <ProtectedRoute>
-                <HotelBookingPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/bookings" element={
-              <ProtectedRoute>
-                <BookingsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/group-booking" element={
-              <ProtectedRoute>
-                <GroupBooking />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/service-charge" element={
-              <ProtectedRoute>
-                <ServiceCharge />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/bank-details" element={
-              <ProtectedRoute>
-                <BankDetails />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard/contact" element={
-              <ProtectedRoute>
-                <ContactRepresentative />
-              </ProtectedRoute>
-            } />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <TooltipProvider>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/setup" element={
+                <SetupRoute>
+                  <AgentSetup />
+                </SetupRoute>
+              } />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/flights" element={
+                <ProtectedRoute>
+                  <FlightBookingPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/buses" element={
+                <ProtectedRoute>
+                  <BusBookingPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/hotels" element={
+                <ProtectedRoute>
+                  <HotelBookingPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/bookings" element={
+                <ProtectedRoute>
+                  <BookingsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/group-booking" element={
+                <ProtectedRoute>
+                  <GroupBooking />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/service-charge" element={
+                <ProtectedRoute>
+                  <ServiceCharge />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/bank-details" element={
+                <ProtectedRoute>
+                  <BankDetails />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/contact" element={
+                <ProtectedRoute>
+                  <ContactRepresentative />
+                </ProtectedRoute>
+              } />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

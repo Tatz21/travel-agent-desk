@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
@@ -9,6 +10,7 @@ import { Plane, Bus, Hotel, User, LogOut, Plus, Menu } from 'lucide-react';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import WalletComponent from '@/components/Wallet';
+import ThemeToggle from '@/components/ThemeToggle';
 import FlightBooking from '@/components/booking/FlightBooking';
 import BusBooking from '@/components/booking/BusBooking';
 import HotelBooking from '@/components/booking/HotelBooking';
@@ -55,6 +57,7 @@ const Dashboard = () => {
               
               <div className="flex items-center space-x-4">
                 <WalletComponent />
+                <ThemeToggle />
                 <div className="flex items-center space-x-2">
                   <User className="h-4 w-4" />
                   <span className="text-sm font-medium">{agent?.contact_person}</span>
