@@ -1,17 +1,33 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Users, Send } from 'lucide-react';
+import { Users, Send, ArrowLeft } from 'lucide-react';
 
 const GroupBooking = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Group Booking Enquiry</h1>
-        <p className="text-muted-foreground">Submit enquiries for group bookings and corporate travel</p>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Dashboard
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">Group Booking Enquiry</h1>
+            <p className="text-muted-foreground">Submit enquiries for group bookings and corporate travel</p>
+          </div>
+        </div>
       </div>
 
       <Card>

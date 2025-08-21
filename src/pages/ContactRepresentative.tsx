@@ -1,15 +1,31 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Mail, MessageCircle, Clock, User, MapPin } from 'lucide-react';
+import { Phone, Mail, MessageCircle, Clock, User, MapPin, ArrowLeft } from 'lucide-react';
 
 const ContactRepresentative = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Contact Your Representative</h1>
-        <p className="text-muted-foreground">Get in touch with your dedicated account representative</p>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Dashboard
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">Contact Your Representative</h1>
+            <p className="text-muted-foreground">Get in touch with your dedicated account representative</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
