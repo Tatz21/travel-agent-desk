@@ -9,35 +9,41 @@ const ContactRepresentative = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Contact Your Representative</h1>
-            <p className="text-muted-foreground">Get in touch with your dedicated account representative</p>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6 max-w-6xl">
+        <div className="space-y-8">
+          {/* Header Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center w-fit"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Dashboard
+            </Button>
           </div>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <User className="h-5 w-5 mr-2" />
-              Account Representative
-            </CardTitle>
-            <CardDescription>Your dedicated support contact</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Hero Section */}
+          <div className="text-center space-y-4 py-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+              <User className="h-8 w-8 text-primary" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight">Contact Your Representative</h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Get personalized support from your dedicated account representative
+            </p>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-xl">Account Representative</CardTitle>
+                <CardDescription className="text-base">Your dedicated support contact</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6 p-8">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                 <User className="h-6 w-6 text-primary" />
@@ -85,119 +91,121 @@ const ContactRepresentative = () => {
               </div>
             </div>
 
-            <div className="flex space-x-2 pt-4">
-              <Button size="sm" className="flex-1">
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </Button>
-              <Button size="sm" variant="outline" className="flex-1">
-                <MessageCircle className="h-4 w-4 mr-2" />
-                WhatsApp
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Clock className="h-5 w-5 mr-2" />
-              Support Hours
-            </CardTitle>
-            <CardDescription>When you can reach us</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Monday - Friday</span>
-                <span className="text-sm">9:00 AM - 8:00 PM</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Saturday</span>
-                <span className="text-sm">9:00 AM - 6:00 PM</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-medium">Sunday</span>
-                <span className="text-sm">10:00 AM - 4:00 PM</span>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-border">
-              <div className="text-sm font-medium mb-2">Emergency Support</div>
-              <div className="text-sm text-muted-foreground">
-                For urgent travel-related issues outside business hours, call our 24/7 emergency line:
-                <span className="font-medium text-foreground"> +91 1800 123 456</span>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-border">
-              <div className="text-sm font-medium mb-2">Response Time</div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <div className="font-medium">Phone/WhatsApp</div>
-                  <div className="text-muted-foreground">Immediate</div>
+                <div className="flex flex-col gap-3 pt-4">
+                  <Button className="w-full h-11">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Call Now
+                  </Button>
+                  <Button variant="outline" className="w-full h-11">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    WhatsApp
+                  </Button>
                 </div>
-                <div>
-                  <div className="font-medium">Email</div>
-                  <div className="text-muted-foreground">Within 2 hours</div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-xl">Support Hours</CardTitle>
+                <CardDescription className="text-base">When you can reach us</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6 p-8">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                    <span className="font-medium">Monday - Friday</span>
+                    <span className="font-medium text-primary">9:00 AM - 8:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                    <span className="font-medium">Saturday</span>
+                    <span className="font-medium text-primary">9:00 AM - 6:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                    <span className="font-medium">Sunday</span>
+                    <span className="font-medium text-primary">10:00 AM - 4:00 PM</span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Common Support Topics</CardTitle>
-          <CardDescription>Quick help for frequently asked questions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Button variant="outline" className="h-auto p-4 text-left justify-start">
-              <div>
-                <div className="font-medium">Booking Assistance</div>
-                <div className="text-xs text-muted-foreground">Help with creating bookings</div>
-              </div>
-            </Button>
-            
-            <Button variant="outline" className="h-auto p-4 text-left justify-start">
-              <div>
-                <div className="font-medium">Commission Queries</div>
-                <div className="text-xs text-muted-foreground">Payment and commission issues</div>
-              </div>
-            </Button>
+                <div className="pt-4 border-t border-border">
+                  <div className="font-medium mb-3">Emergency Support</div>
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="text-sm text-muted-foreground mb-1">
+                      For urgent travel-related issues outside business hours:
+                    </div>
+                    <div className="font-semibold text-red-700">+91 1800 123 456</div>
+                  </div>
+                </div>
 
-            <Button variant="outline" className="h-auto p-4 text-left justify-start">
-              <div>
-                <div className="font-medium">Technical Support</div>
-                <div className="text-xs text-muted-foreground">Platform and system issues</div>
-              </div>
-            </Button>
-
-            <Button variant="outline" className="h-auto p-4 text-left justify-start">
-              <div>
-                <div className="font-medium">Account Setup</div>
-                <div className="text-xs text-muted-foreground">Profile and settings help</div>
-              </div>
-            </Button>
-
-            <Button variant="outline" className="h-auto p-4 text-left justify-start">
-              <div>
-                <div className="font-medium">Training & Resources</div>
-                <div className="text-xs text-muted-foreground">Learning materials and guides</div>
-              </div>
-            </Button>
-
-            <Button variant="outline" className="h-auto p-4 text-left justify-start">
-              <div>
-                <div className="font-medium">Partnership Opportunities</div>
-                <div className="text-xs text-muted-foreground">Business development</div>
-              </div>
-            </Button>
+                <div className="pt-4 border-t border-border">
+                  <div className="font-medium mb-3">Response Time</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-muted/30 rounded-lg text-center">
+                      <div className="font-medium text-sm">Phone/WhatsApp</div>
+                      <div className="text-xs text-muted-foreground mt-1">Immediate</div>
+                    </div>
+                    <div className="p-3 bg-muted/30 rounded-lg text-center">
+                      <div className="font-medium text-sm">Email</div>
+                      <div className="text-xs text-muted-foreground mt-1">Within 2 hours</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Common Support Topics */}
+          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl">Common Support Topics</CardTitle>
+              <CardDescription className="text-base">Quick help for frequently asked questions</CardDescription>
+            </CardHeader>
+            <CardContent className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Booking Assistance</div>
+                    <div className="text-xs text-muted-foreground mt-1">Help with creating bookings</div>
+                  </div>
+                </Button>
+                
+                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Commission Queries</div>
+                    <div className="text-xs text-muted-foreground mt-1">Payment and commission issues</div>
+                  </div>
+                </Button>
+
+                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Technical Support</div>
+                    <div className="text-xs text-muted-foreground mt-1">Platform and system issues</div>
+                  </div>
+                </Button>
+
+                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Account Setup</div>
+                    <div className="text-xs text-muted-foreground mt-1">Profile and settings help</div>
+                  </div>
+                </Button>
+
+                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Training & Resources</div>
+                    <div className="text-xs text-muted-foreground mt-1">Learning materials and guides</div>
+                  </div>
+                </Button>
+
+                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Partnership Opportunities</div>
+                    <div className="text-xs text-muted-foreground mt-1">Business development</div>
+                  </div>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
