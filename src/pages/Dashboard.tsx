@@ -46,7 +46,7 @@ const Dashboard = () => {
         <main className="flex-1 overflow-auto">
           {/* Header */}
           <header className="border-b border-border sticky top-0 bg-background z-10">
-            <div className="flex items-center justify-between h-48 px-6">
+            <div className="flex items-center justify-between h-16 px-6">
               <div className="flex items-center space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">

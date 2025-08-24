@@ -36,7 +36,7 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border bg-background/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-48">
+          <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto" />
             </div>
