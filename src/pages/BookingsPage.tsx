@@ -40,46 +40,49 @@ const BookingsPage = () => {
         <main className="flex-1 overflow-auto">
           {/* Header */}
           <header className="border-b border-border sticky top-0 bg-background z-10">
-            <div className="flex items-center justify-between h-16 px-6">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between h-16 px-3 md:px-6">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <Plane className="h-8 w-8 text-primary" />
-                  <h1 className="text-xl font-bold ml-2">Travelopedia</h1>
+                  <Plane className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+                  <h1 className="text-lg md:text-xl font-bold ml-2">Travelopedia</h1>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-4">
-                <WalletComponent />
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 md:space-x-4">
+                <div className="hidden sm:block">
+                  <WalletComponent />
+                </div>
+                <div className="hidden lg:flex items-center space-x-2">
                   <User className="h-4 w-4" />
                   <span className="text-sm font-medium">{agent?.contact_person}</span>
                   <Badge variant="secondary" className={getStatusColor(agent?.status || 'pending')}>
                     {agent?.status}
                   </Badge>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleSignOut}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
+                <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs md:text-sm">
+                  <LogOut className="h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">Sign Out</span>
                 </Button>
               </div>
             </div>
           </header>
 
           {/* Main Content */}
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
+          <div className="p-3 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={() => navigate('/dashboard')}
-                  className="flex items-center"
+                  className="flex items-center w-fit"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Dashboard
+                  <span className="hidden sm:inline">Back to Dashboard</span>
+                  <span className="sm:hidden">Back</span>
                 </Button>
-                <h1 className="text-3xl font-bold text-foreground">All Bookings</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">All Bookings</h1>
               </div>
             </div>
             <BookingsList />

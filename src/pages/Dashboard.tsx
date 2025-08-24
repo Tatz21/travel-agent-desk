@@ -46,45 +46,51 @@ const Dashboard = () => {
         <main className="flex-1 overflow-auto">
           {/* Header */}
           <header className="border-b border-border sticky top-0 bg-background z-10">
-            <div className="flex items-center justify-between h-16 px-6">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between h-16 px-3 md:px-6">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto filter brightness-0 invert" />
+                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-8 w-auto md:h-10 filter brightness-0 invert" />
                 </div>
               </div>
               
-              <div className="flex items-center space-x-4">
-                <WalletComponent />
-                <ThemeToggle />
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 md:space-x-4">
+                <div className="hidden sm:block">
+                  <WalletComponent />
+                </div>
+                <div className="hidden md:block">
+                  <ThemeToggle />
+                </div>
+                <div className="hidden lg:flex items-center space-x-2">
                   <User className="h-4 w-4" />
                   <span className="text-sm font-medium">{agent?.contact_person}</span>
                   <Badge variant="secondary" className={getStatusColor(agent?.status || 'pending')}>
                     {agent?.status}
                   </Badge>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleSignOut}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
+                <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs md:text-sm">
+                  <LogOut className="h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">Sign Out</span>
                 </Button>
               </div>
             </div>
           </header>
 
           {/* Main Content */}
-          <div className="p-8">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="flights">Flights</TabsTrigger>
-                <TabsTrigger value="buses">Buses</TabsTrigger>
-                <TabsTrigger value="hotels">Hotels</TabsTrigger>
-                <TabsTrigger value="bookings">Bookings</TabsTrigger>
-              </TabsList>
+          <div className="p-3 md:p-6 lg:p-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">
+              <div className="overflow-x-auto">
+                <TabsList className="grid w-full grid-cols-5 min-w-[500px] lg:min-w-0">
+                  <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
+                  <TabsTrigger value="flights" className="text-xs md:text-sm">Flights</TabsTrigger>
+                  <TabsTrigger value="buses" className="text-xs md:text-sm">Buses</TabsTrigger>
+                  <TabsTrigger value="hotels" className="text-xs md:text-sm">Hotels</TabsTrigger>
+                  <TabsTrigger value="bookings" className="text-xs md:text-sm">Bookings</TabsTrigger>
+                </TabsList>
+              </div>
 
-              <TabsContent value="overview" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <TabsContent value="overview" className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Agent Code</CardTitle>
@@ -138,7 +144,7 @@ const Dashboard = () => {
                   </Card>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('flights')}>
                     <CardHeader>
                       <CardTitle className="flex items-center">

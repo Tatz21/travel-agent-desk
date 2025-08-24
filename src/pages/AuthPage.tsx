@@ -101,14 +101,14 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary">
-      <div className="w-full max-w-md p-6">
-        <div className="text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-3 md:p-6">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-6 md:mb-8">
           <div className="flex items-center justify-center mb-4">
-            <Plane className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold ml-2">Travelopedia</h1>
+            <Plane className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+            <h1 className="text-xl md:text-2xl font-bold ml-2">Travelopedia</h1>
           </div>
-          <p className="text-muted-foreground">Agent Portal</p>
+          <p className="text-sm md:text-base text-muted-foreground">Agent Portal</p>
         </div>
 
         <Card>
@@ -150,7 +150,7 @@ const AuthPage = () => {
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button type="submit" className="w-full h-11 md:h-10" disabled={loading}>
                     {loading ? 'Signing In...' : 'Sign In'}
                   </Button>
                 </form>
@@ -192,7 +192,7 @@ const AuthPage = () => {
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button type="submit" className="w-full h-11 md:h-10" disabled={loading}>
                     {loading ? 'Creating Account...' : 'Create Account'}
                   </Button>
                 </form>
