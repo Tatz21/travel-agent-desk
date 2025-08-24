@@ -38,7 +38,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto" />
+              <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto brightness-0 invert" />
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="outline" onClick={() => navigate('/auth')}>
