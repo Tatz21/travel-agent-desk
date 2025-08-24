@@ -50,7 +50,7 @@ const Dashboard = () => {
               <div className="flex items-center space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto brightness-0 invert dark:brightness-100 dark:invert-0" />
+                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto filter brightness-0 invert" />
                 </div>
               </div>
               
