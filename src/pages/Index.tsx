@@ -38,8 +38,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Plane className="h-8 w-8 text-primary" />
-              <h1 className="text-xl font-bold ml-2">Travelopedia</h1>
+              <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-10 w-auto" />
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="outline" onClick={() => navigate('/auth')}>
@@ -61,7 +60,7 @@ const Index = () => {
             <span className="text-primary"> Simplified</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Join thousands of travel agents using Travelopedia to book flights, buses, and hotels 
+            Join thousands of travel agents using Phoenix Travelopedia to book flights, buses, and hotels 
             for their customers. Earn commissions on every booking with our easy-to-use platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -158,7 +157,7 @@ const Index = () => {
           <CardHeader>
             <CardTitle className="text-2xl mb-4">Ready to Start Your Travel Business?</CardTitle>
             <CardDescription className="text-lg">
-              Join Travelopedia today and start earning commissions on travel bookings.
+              Join Phoenix Travelopedia today and start earning commissions on travel bookings.
             </CardDescription>
           </CardHeader>
           <CardContent>
