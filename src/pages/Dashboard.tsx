@@ -46,11 +46,11 @@ const Dashboard = () => {
         <main className="flex-1 overflow-auto">
           {/* Header */}
           <header className="border-b border-border sticky top-0 bg-background z-10">
-            <div className="flex items-center justify-between h-16 px-6">
+            <div className="flex items-center justify-between h-48 px-6">
               <div className="flex items-center space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-8 w-auto" />
+                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto" />
                 </div>
               </div>
               
