@@ -1,66 +1,57 @@
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Plane, Search } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { CalendarIcon, Plane, Users, Clock, MapPin, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { toast } from '@/hooks/use-toast';
-import { useAgent } from '@/hooks/useAgent';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/AuthProvider';
+import { useAgent } from '@/hooks/useAgent';
+import { toast } from 'sonner';
 
 const FlightBooking = () => {
   const { agent } = useAgent();
   const [loading, setLoading] = useState(false);
-  const [tripType, setTripType] = useState('one-way');
-  const [formData, setFormData] = useState({
-    from: '',
-    to: '',
-    departureDate: null as Date | null,
-    returnDate: null as Date | null,
-    adults: 1,
-    children: 0,
-    class: 'economy',
-    passengerName: '',
-    passengerEmail: '',
-    passengerPhone: ''
-  });
+  const [tripType, setTripType] = useState<'one-way' | 'round-trip'>('one-way');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [departureDate, setDepartureDate] = useState<Date | undefined>(undefined);
+  const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [flightClass, setFlightClass] = useState('economy');
+  const [passengerName, setPassengerName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [specialRequests, setSpecialRequests] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { id, value } = e.target;
+    if (id === 'from') setFrom(value);
+    if (id === 'to') setTo(value);
+    if (id === 'passengerName') setPassengerName(value);
+    if (id === 'email') setEmail(value);
+    if (id === 'phone') setPhone(value);
+    if (id === 'specialRequests') setSpecialRequests(value);
   };
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  const handleSelectChange = (value: string) => {
+    setFlightClass(value);
   };
 
   const handleBooking = async () => {
     if (!agent) {
-      toast({
-        title: "Error",
-        description: "Agent profile not found",
-        variant: "destructive"
-      });
+      toast.error("Agent profile not found");
       return;
     }
 
-    if (!formData.from || !formData.to || !formData.departureDate || !formData.passengerName) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
-      });
+    if (!from || !to || !departureDate || !passengerName || !email || !phone) {
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -70,31 +61,35 @@ const FlightBooking = () => {
       // Generate booking reference
       const { data: bookingRef } = await supabase.rpc('generate_booking_reference');
       
-      // Mock flight price calculation
-      const basePrice = 5000;
-      const totalAmount = basePrice * formData.adults + (basePrice * 0.75 * formData.children);
+      // Calculate total amount based on adults and children
+      const basePrice = flightClass === 'economy' ? 5000 : 
+                       flightClass === 'premium-economy' ? 8000 :
+                       flightClass === 'business' ? 15000 : 25000;
+      
+      const totalAmount = (basePrice * adults) + (basePrice * 0.75 * children);
       const commissionAmount = totalAmount * (agent.commission_rate / 100);
 
       const bookingData = {
         agent_id: agent.id,
         booking_reference: bookingRef,
         booking_type: 'flight' as const,
-        passenger_name: formData.passengerName,
-        passenger_email: formData.passengerEmail,
-        passenger_phone: formData.passengerPhone,
-        from_location: formData.from,
-        to_location: formData.to,
-        departure_date: formData.departureDate.toISOString().split('T')[0],
-        return_date: formData.returnDate ? formData.returnDate.toISOString().split('T')[0] : null,
-        adult_count: formData.adults,
-        child_count: formData.children,
+        passenger_name: passengerName,
+        passenger_email: email,
+        passenger_phone: phone,
+        from_location: from,
+        to_location: to,
+        departure_date: departureDate.toISOString().split('T')[0],
+        return_date: returnDate ? returnDate.toISOString().split('T')[0] : null,
+        adult_count: adults,
+        child_count: children,
         total_amount: totalAmount,
         commission_amount: commissionAmount,
         booking_details: {
           trip_type: tripType,
-          class: formData.class,
-          departure_date: formData.departureDate?.toISOString(),
-          return_date: formData.returnDate?.toISOString()
+          class: flightClass,
+          special_requests: specialRequests,
+          departure_date: departureDate?.toISOString(),
+          return_date: returnDate?.toISOString()
         }
       };
 
@@ -106,236 +101,288 @@ const FlightBooking = () => {
         throw error;
       }
 
-      toast({
-        title: "Success",
-        description: `Flight booking created successfully! Reference: ${bookingRef}`
-      });
+      toast.success(`Flight booking created successfully! Reference: ${bookingRef}`);
 
       // Reset form
-      setFormData({
-        from: '',
-        to: '',
-        departureDate: null,
-        returnDate: null,
-        adults: 1,
-        children: 0,
-        class: 'economy',
-        passengerName: '',
-        passengerEmail: '',
-        passengerPhone: ''
-      });
+      setFrom('');
+      setTo('');
+      setDepartureDate(undefined);
+      setReturnDate(undefined);
+      setAdults(1);
+      setChildren(0);
+      setFlightClass('economy');
+      setPassengerName('');
+      setEmail('');
+      setPhone('');
+      setSpecialRequests('');
+      setTripType('one-way');
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create booking",
-        variant: "destructive"
-      });
+      toast.error(error.message || "Failed to create booking");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Plane className="h-5 w-5 mr-2" />
-          Flight Booking
-        </CardTitle>
-        <CardDescription>
-          Book domestic and international flights for your customers
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Trip Type */}
-        <div className="space-y-3">
-          <Label>Trip Type</Label>
-          <RadioGroup value={tripType} onValueChange={setTripType} className="flex space-x-6">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="one-way" id="one-way" />
-              <Label htmlFor="one-way">One Way</Label>
+    <div className="w-full max-w-6xl mx-auto space-y-6">
+      {/* Header Section */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-2xl shadow-elegant">
+          <Plane className="h-8 w-8 text-white" />
+        </div>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            Book Your Flight
+          </h1>
+          <p className="text-muted-foreground mt-2">Find and book the perfect flight for your journey</p>
+        </div>
+      </div>
+
+      {/* Trip Type Selection */}
+      <Card className="shadow-card border-0 bg-gradient-to-br from-card to-card/50">
+        <CardContent className="p-6">
+          <RadioGroup
+            value={tripType}
+            onValueChange={(value) => setTripType(value as 'one-way' | 'round-trip')}
+            className="flex gap-8 justify-center"
+          >
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="one-way" id="one-way" className="text-primary border-primary" />
+              <Label htmlFor="one-way" className="text-base font-medium cursor-pointer">One Way</Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="round-trip" id="round-trip" />
-              <Label htmlFor="round-trip">Round Trip</Label>
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="round-trip" id="round-trip" className="text-primary border-primary" />
+              <Label htmlFor="round-trip" className="text-base font-medium cursor-pointer">Round Trip</Label>
             </div>
           </RadioGroup>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Flight Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="from">From *</Label>
-            <Input
-              id="from"
-              name="from"
-              placeholder="Departure city"
-              value={formData.from}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="to">To *</Label>
-            <Input
-              id="to"
-              name="to"
-              placeholder="Destination city"
-              value={formData.to}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Departure Date *</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !formData.departureDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.departureDate ? format(formData.departureDate, "PPP") : "Select date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={formData.departureDate || undefined}
-                  onSelect={(date) => setFormData({ ...formData, departureDate: date || null })}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
+      {/* Flight Search Form */}
+      <Card className="shadow-card border-0 bg-gradient-to-br from-card to-card/50">
+        <CardContent className="p-8 space-y-8">
+          {/* Route Selection */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div className="md:col-span-2 space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">FROM</Label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="from"
+                  value={from}
+                  onChange={handleInputChange}
+                  placeholder="Departure city"
+                  className="pl-10 h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
                 />
-              </PopoverContent>
-            </Popover>
+              </div>
+            </div>
+            
+            <div className="flex justify-center items-center">
+              <div className="bg-primary/10 p-2 rounded-full">
+                <ArrowRight className="h-5 w-5 text-primary" />
+              </div>
+            </div>
+            
+            <div className="md:col-span-2 space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">TO</Label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="to"
+                  value={to}
+                  onChange={handleInputChange}
+                  placeholder="Destination city"
+                  className="pl-10 h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
+                />
+              </div>
+            </div>
           </div>
 
-          {tripType === 'round-trip' && (
+          {/* Date Selection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Return Date</Label>
+              <Label className="text-sm font-medium text-muted-foreground">DEPARTURE</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.returnDate && "text-muted-foreground"
-                    )}
+                    className="w-full h-12 justify-start text-left font-normal border-0 shadow-sm bg-muted/30 hover:bg-background"
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.returnDate ? format(formData.returnDate, "PPP") : "Select date"}
+                    <CalendarIcon className="mr-3 h-5 w-5 text-muted-foreground" />
+                    <span className="text-base">
+                      {departureDate ? format(departureDate, "EEE, MMM dd") : "Select date"}
+                    </span>
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={formData.returnDate || undefined}
-                    onSelect={(date) => setFormData({ ...formData, returnDate: date || null })}
-                    disabled={(date) => date < (formData.departureDate || new Date())}
+                    selected={departureDate}
+                    onSelect={(date) => setDepartureDate(date || new Date())}
+                    disabled={(date) => date < new Date()}
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
             </div>
-          )}
-        </div>
+            
+            {tripType === 'round-trip' && (
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground">RETURN</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full h-12 justify-start text-left font-normal border-0 shadow-sm bg-muted/30 hover:bg-background"
+                    >
+                      <CalendarIcon className="mr-3 h-5 w-5 text-muted-foreground" />
+                      <span className="text-base">
+                        {returnDate ? format(returnDate, "EEE, MMM dd") : "Select date"}
+                      </span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={returnDate}
+                      onSelect={(date) => setReturnDate(date || new Date())}
+                      disabled={(date) => date < (departureDate || new Date())}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="adults">Adults</Label>
-            <Select value={formData.adults.toString()} onValueChange={(value) => handleSelectChange('adults', value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5, 6].map((num) => (
-                  <SelectItem key={num} value={num.toString()}>{num}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="children">Children</Label>
-            <Select value={formData.children.toString()} onValueChange={(value) => handleSelectChange('children', value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[0, 1, 2, 3, 4].map((num) => (
-                  <SelectItem key={num} value={num.toString()}>{num}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="class">Class</Label>
-            <Select value={formData.class} onValueChange={(value) => handleSelectChange('class', value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="economy">Economy</SelectItem>
-                <SelectItem value="business">Business</SelectItem>
-                <SelectItem value="first">First Class</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Passenger Details */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Passenger Details</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Passengers and Class */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="passengerName">Passenger Name *</Label>
+              <Label className="text-sm font-medium text-muted-foreground">ADULTS</Label>
+              <Select value={adults.toString()} onValueChange={(value) => setAdults(Number(value))}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                    <SelectItem key={num} value={num.toString()}>
+                      {num} Adult{num > 1 ? 's' : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">CHILDREN</Label>
+              <Select value={children.toString()} onValueChange={(value) => setChildren(Number(value))}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                    <SelectItem key={num} value={num.toString()}>
+                      {num} Child{num !== 1 ? 'ren' : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">CLASS</Label>
+              <Select value={flightClass} onValueChange={handleSelectChange}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="economy">Economy</SelectItem>
+                  <SelectItem value="premium-economy">Premium Economy</SelectItem>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="first">First Class</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Passenger Information */}
+      <Card className="shadow-card border-0 bg-gradient-to-br from-card to-card/50">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center text-xl">
+            <Users className="mr-3 h-5 w-5 text-primary" />
+            Passenger Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">FULL NAME</Label>
               <Input
                 id="passengerName"
-                name="passengerName"
-                placeholder="Full name"
-                value={formData.passengerName}
+                value={passengerName}
                 onChange={handleInputChange}
-                required
+                placeholder="Enter full name"
+                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="passengerEmail">Email *</Label>
+              <Label className="text-sm font-medium text-muted-foreground">EMAIL</Label>
               <Input
-                id="passengerEmail"
-                name="passengerEmail"
+                id="email"
                 type="email"
-                placeholder="Email address"
-                value={formData.passengerEmail}
+                value={email}
                 onChange={handleInputChange}
-                required
+                placeholder="Enter email address"
+                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="passengerPhone">Phone *</Label>
+              <Label className="text-sm font-medium text-muted-foreground">PHONE</Label>
               <Input
-                id="passengerPhone"
-                name="passengerPhone"
-                type="tel"
-                placeholder="Phone number"
-                value={formData.passengerPhone}
+                id="phone"
+                value={phone}
                 onChange={handleInputChange}
-                required
+                placeholder="Enter phone number"
+                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">SPECIAL REQUESTS</Label>
+              <Input
+                id="specialRequests"
+                value={specialRequests}
+                onChange={handleInputChange}
+                placeholder="Any special requirements"
+                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
               />
             </div>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        <Button onClick={handleBooking} className="w-full" disabled={loading}>
-          {loading ? 'Processing...' : 'Book Flight'}
-          <Search className="ml-2 h-4 w-4" />
+      {/* Book Button */}
+      <div className="flex justify-center pt-4">
+        <Button 
+          onClick={handleBooking} 
+          disabled={loading}
+          className="px-12 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-elegant transition-all duration-300 hover:shadow-xl hover:scale-105"
+        >
+          {loading ? (
+            <>
+              <Clock className="mr-2 h-5 w-5 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <Plane className="mr-2 h-5 w-5" />
+              Book Flight
+            </>
+          )}
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

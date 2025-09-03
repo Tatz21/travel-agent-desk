@@ -37,15 +37,17 @@ const FlightBookingPage = () => {
       <div className="min-h-screen bg-background flex w-full">
         <AppSidebar />
         
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
           {/* Header */}
-          <header className="border-b border-border sticky top-0 bg-background z-10">
+          <header className="border-b border-border/50 sticky top-0 bg-background/80 backdrop-blur-xl z-10">
             <div className="flex items-center justify-between h-16 px-3 md:px-6">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <Plane className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-                  <h1 className="text-lg md:text-xl font-bold ml-2">Travelopedia</h1>
+                  <div className="bg-gradient-to-br from-primary to-purple-600 p-2 rounded-lg">
+                    <Plane className="h-5 w-5 md:h-6 md:w-6 text-white" />
+                  </div>
+                  <h1 className="text-lg md:text-xl font-bold ml-3 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Travelopedia</h1>
                 </div>
               </div>
               
@@ -54,13 +56,13 @@ const FlightBookingPage = () => {
                   <WalletComponent />
                 </div>
                 <div className="hidden lg:flex items-center space-x-2">
-                  <User className="h-4 w-4" />
+                  <User className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">{agent?.contact_person}</span>
                   <Badge variant="secondary" className={getStatusColor(agent?.status || 'pending')}>
                     {agent?.status}
                   </Badge>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs md:text-sm">
+                <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs md:text-sm border-0 shadow-sm">
                   <LogOut className="h-4 w-4 md:mr-2" />
                   <span className="hidden md:inline">Sign Out</span>
                 </Button>
@@ -69,20 +71,19 @@ const FlightBookingPage = () => {
           </header>
 
           {/* Main Content */}
-          <div className="p-3 md:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-4">
+          <div className="p-3 md:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-8 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={() => navigate('/dashboard')}
-                  className="flex items-center w-fit"
+                  className="flex items-center w-fit border-0 shadow-sm bg-card/50"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   <span className="hidden sm:inline">Back to Dashboard</span>
                   <span className="sm:hidden">Back</span>
                 </Button>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Flight Booking</h1>
               </div>
             </div>
             <FlightBooking />
