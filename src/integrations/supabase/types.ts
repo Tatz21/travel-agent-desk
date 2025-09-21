@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -31,7 +31,7 @@ export type Database = {
           state: string | null
           status: Database["public"]["Enums"]["agent_status"] | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           address?: string | null
@@ -49,7 +49,7 @@ export type Database = {
           state?: string | null
           status?: Database["public"]["Enums"]["agent_status"] | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           address?: string | null
@@ -67,7 +67,7 @@ export type Database = {
           state?: string | null
           status?: Database["public"]["Enums"]["agent_status"] | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -196,6 +196,87 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallet_balances: {
+        Row: {
+          agent_id: string
+          balance: number
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          agent_id: string
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          razorpay_payment_id: string | null
+          reference_id: string | null
+          status: string
+          transaction_type: string
+        }
+        Insert: {
+          agent_id: string
+          amount: number
+          created_at?: string
+          description: string
+          id?: string
+          razorpay_payment_id?: string | null
+          reference_id?: string | null
+          status?: string
+          transaction_type: string
+        }
+        Update: {
+          agent_id?: string
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          razorpay_payment_id?: string | null
+          reference_id?: string | null
+          status?: string
+          transaction_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -209,11 +290,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      is_admin: {
+        Args: { user_uuid?: string }
+        Returns: boolean
+      }
     }
     Enums: {
       agent_status: "pending" | "active" | "suspended"
       booking_status: "pending" | "confirmed" | "cancelled" | "completed"
       booking_type: "flight" | "bus" | "hotel"
+      user_role: "admin" | "agent"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -344,6 +430,7 @@ export const Constants = {
       agent_status: ["pending", "active", "suspended"],
       booking_status: ["pending", "confirmed", "cancelled", "completed"],
       booking_type: ["flight", "bus", "hotel"],
+      user_role: ["admin", "agent"],
     },
   },
 } as const
