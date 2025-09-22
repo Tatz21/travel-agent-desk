@@ -95,7 +95,12 @@ export const useWallet = () => {
       });
 
       if (error) {
-        throw new Error(error.message);
+        console.error('Supabase function error:', error);
+        throw new Error(`Function error: ${error.message || JSON.stringify(error)}`);
+      }
+
+      if (!orderData) {
+        throw new Error('No order data received from function');
       }
 
       // Initialize Razorpay payment
