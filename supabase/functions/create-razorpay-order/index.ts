@@ -70,11 +70,21 @@ serve(async (req) => {
 
     console.log('Creating Razorpay order:', orderData);
 
+    // Verify credentials are available
+    console.log('Razorpay Key ID:', razorpayKeyId);
+    console.log('Razorpay Key Secret exists:', !!razorpayKeySecret);
+    console.log('Razorpay Key Secret length:', razorpayKeySecret?.length || 0);
+    console.log('Razorpay Key Secret prefix:', razorpayKeySecret?.substring(0, 8) + '...');
+
+    if (!razorpayKeyId || !razorpayKeySecret) {
+      throw new Error(`Missing credentials - Key ID: ${!!razorpayKeyId}, Key Secret: ${!!razorpayKeySecret}`);
+    }
+
     // Create order with Razorpay
     const authString = btoa(`${razorpayKeyId}:${razorpayKeySecret}`);
     
     console.log('Making Razorpay API call with order data:', orderData);
-    console.log('Using Razorpay Key ID:', razorpayKeyId);
+    console.log('Auth string length:', authString.length);
     
     const razorpayResponse = await fetch('https://api.razorpay.com/v1/orders', {
       method: 'POST',
