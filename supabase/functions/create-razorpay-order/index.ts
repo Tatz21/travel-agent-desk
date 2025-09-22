@@ -72,6 +72,10 @@ serve(async (req) => {
 
     // Create order with Razorpay
     const authString = btoa(`${razorpayKeyId}:${razorpayKeySecret}`);
+    
+    console.log('Making Razorpay API call with order data:', orderData);
+    console.log('Using Razorpay Key ID:', razorpayKeyId);
+    
     const razorpayResponse = await fetch('https://api.razorpay.com/v1/orders', {
       method: 'POST',
       headers: {
@@ -81,10 +85,14 @@ serve(async (req) => {
       body: JSON.stringify(orderData)
     });
 
+    console.log('Razorpay API response status:', razorpayResponse.status);
+    console.log('Razorpay API response headers:', Object.fromEntries(razorpayResponse.headers.entries()));
+
     if (!razorpayResponse.ok) {
       const errorData = await razorpayResponse.text();
-      console.error('Razorpay error:', errorData);
-      throw new Error('Failed to create Razorpay order');
+      console.error('Razorpay API error response:', errorData);
+      console.error('Razorpay API error status:', razorpayResponse.status);
+      throw new Error(`Razorpay API error: ${razorpayResponse.status} - ${errorData}`);
     }
 
     const order = await razorpayResponse.json();
