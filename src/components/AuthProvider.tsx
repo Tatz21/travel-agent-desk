@@ -8,8 +8,8 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signInWithOtp: (email?: string, phone?: string) => Promise<{ error: any }>;
-  verifyOtp: (email: string | undefined, phone: string | undefined, token: string, type: 'email' | 'sms') => Promise<{ error: any }>;
+  signInWithPasswordAndOtp: (email: string, password: string) => Promise<{ error: any; needsOtp?: boolean; }>;
+  verifyLoginOtp: (token: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -27,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tempCredentials, setTempCredentials] = useState<{email: string, password: string} | null>(null);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -87,44 +88,104 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const signInWithOtp = async (email?: string, phone?: string) => {
-    if (email) {
-      const { error } = await supabase.auth.signInWithOtp({
+  const signInWithPasswordAndOtp = async (email: string, password: string) => {
+    // First verify the password
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (authError) {
+      return { error: authError };
+    }
+
+    // If password is correct, immediately sign out and prepare for OTP
+    await supabase.auth.signOut();
+    
+    // Store credentials temporarily for OTP verification
+    setTempCredentials({ email, password });
+
+    // Get agent details to send OTP to registered phone
+    const { data: agent, error: agentError } = await supabase
+      .from('agents')
+      .select('phone')
+      .eq('email', email)
+      .single();
+
+    if (agentError || !agent?.phone) {
+      // If no phone found, send OTP only to email
+      const { error: emailOtpError } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          shouldCreateUser: false, // Don't create new users, only existing agents
+          shouldCreateUser: false,
         }
       });
-      return { error };
-    } else if (phone) {
-      const { error } = await supabase.auth.signInWithOtp({
-        phone,
+      
+      if (emailOtpError) {
+        return { error: emailOtpError };
+      }
+    } else {
+      // Send OTP to both email and phone
+      const { error: emailOtpError } = await supabase.auth.signInWithOtp({
+        email,
         options: {
-          shouldCreateUser: false, // Don't create new users, only existing agents
+          shouldCreateUser: false,
         }
       });
-      return { error };
+
+      const { error: phoneOtpError } = await supabase.auth.signInWithOtp({
+        phone: agent.phone,
+        options: {
+          shouldCreateUser: false,
+        }
+      });
+
+      if (emailOtpError && phoneOtpError) {
+        return { error: new Error('Failed to send OTP to both email and phone') };
+      }
     }
-    return { error: new Error('Either email or phone must be provided') };
+
+    return { error: null, needsOtp: true };
   };
 
-  const verifyOtp = async (email: string | undefined, phone: string | undefined, token: string, type: 'email' | 'sms') => {
-    if (type === 'email' && email) {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token,
-        type: 'email',
-      });
-      return { error };
-    } else if (type === 'sms' && phone) {
-      const { error } = await supabase.auth.verifyOtp({
-        phone,
+  const verifyLoginOtp = async (token: string) => {
+    if (!tempCredentials) {
+      return { error: new Error('No pending authentication session') };
+    }
+
+    // Try to verify with email first
+    const { error: emailError } = await supabase.auth.verifyOtp({
+      email: tempCredentials.email,
+      token,
+      type: 'email',
+    });
+
+    if (!emailError) {
+      setTempCredentials(null);
+      return { error: null };
+    }
+
+    // If email verification fails, try with phone (get phone from agent data)
+    const { data: agent } = await supabase
+      .from('agents')
+      .select('phone')
+      .eq('email', tempCredentials.email)
+      .single();
+
+    if (agent?.phone) {
+      const { error: phoneError } = await supabase.auth.verifyOtp({
+        phone: agent.phone,
         token,
         type: 'sms',
       });
-      return { error };
+
+      if (!phoneError) {
+        setTempCredentials(null);
+        return { error: null };
+      }
     }
-    return { error: new Error('Invalid verification parameters') };
+
+    return { error: new Error('Invalid OTP') };
   };
 
   const signOut = async () => {
@@ -137,8 +198,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signUp,
     signIn,
-    signInWithOtp,
-    verifyOtp,
+    signInWithPasswordAndOtp,
+    verifyLoginOtp,
     signOut,
   };
 
