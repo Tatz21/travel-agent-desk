@@ -61,7 +61,7 @@ serve(async (req) => {
     const orderData = {
       amount: Math.round(amount * 100), // Convert to paise
       currency: 'INR',
-      receipt: `wallet_${agent.id}_${Date.now()}`,
+      receipt: `wlt_${agent.id.substring(0, 8)}_${Date.now().toString().slice(-8)}`, // Keep under 40 chars
       notes: {
         agent_id: agent.id,
         user_id: user.id
@@ -137,7 +137,8 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in create-razorpay-order:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
