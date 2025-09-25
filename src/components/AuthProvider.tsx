@@ -89,6 +89,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithPasswordAndOtp = async (email: string, password: string) => {
+    console.log('Attempting login with email:', email);
+    
     // First check if agent exists and get their details (case insensitive email check)
     const { data: agent, error: agentError } = await supabase
       .from('agents')
@@ -98,7 +100,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .limit(1)
       .maybeSingle();
 
-    if (agentError || !agent) {
+    console.log('Agent query result:', { agent, agentError });
+
+    if (agentError) {
+      console.log('Agent query error:', agentError);
+      return { error: new Error(`Database error: ${agentError.message}`) };
+    }
+
+    if (!agent) {
+      console.log('No agent found for email:', email);
       return { error: new Error('Agent not found. Please contact admin.') };
     }
 
