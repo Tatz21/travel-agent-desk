@@ -94,7 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .from('agents')
       .select('phone, user_id, email')
       .ilike('email', email)
-      .single();
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
     if (agentError || !agent) {
       return { error: new Error('Agent not found. Please contact admin.') };
