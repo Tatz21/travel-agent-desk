@@ -89,11 +89,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithPasswordAndOtp = async (email: string, password: string) => {
-    // First check if agent exists and get their details
+    // First check if agent exists and get their details (case insensitive email check)
     const { data: agent, error: agentError } = await supabase
       .from('agents')
-      .select('phone, user_id')
-      .eq('email', email)
+      .select('phone, user_id, email')
+      .ilike('email', email)
       .single();
 
     if (agentError || !agent) {
