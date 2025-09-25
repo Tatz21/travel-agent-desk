@@ -89,28 +89,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithPasswordAndOtp = async (email: string, password: string) => {
-    console.log('Attempting login with email:', email);
-    
-    // First check if agent exists and get their details (case insensitive email check)
+    // Use security definer function to get agent details
     const { data: agent, error: agentError } = await supabase
-      .from('agents')
-      .select('phone, user_id, email')
-      .ilike('email', email)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    console.log('Agent query result:', { agent, agentError });
+      .rpc('get_agent_for_auth', { agent_email: email });
 
     if (agentError) {
-      console.log('Agent query error:', agentError);
       return { error: new Error(`Database error: ${agentError.message}`) };
     }
 
-    if (!agent) {
-      console.log('No agent found for email:', email);
+    if (!agent || agent.length === 0) {
       return { error: new Error('Agent not found. Please contact admin.') };
     }
+
+    const agentData = agent[0];
 
     // Try to sign in with password to verify credentials
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
@@ -139,9 +130,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     let phoneOtpError = null;
-    if (agent.phone) {
+    if (agentData.phone) {
       const { error } = await supabase.auth.signInWithOtp({
-        phone: agent.phone,
+        phone: agentData.phone,
         options: {
           shouldCreateUser: false,
         }
@@ -175,14 +166,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // If email verification fails, try with phone (get phone from agent data)
     const { data: agent } = await supabase
-      .from('agents')
-      .select('phone')
-      .eq('email', tempCredentials.email)
-      .single();
+      .rpc('get_agent_for_auth', { agent_email: tempCredentials.email });
 
-    if (agent?.phone) {
+    if (agent?.[0]?.phone) {
       const { error: phoneError } = await supabase.auth.verifyOtp({
-        phone: agent.phone,
+        phone: agent[0].phone,
         token,
         type: 'sms',
       });

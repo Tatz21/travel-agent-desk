@@ -290,6 +290,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_agent_for_auth: {
+        Args: { agent_email: string }
+        Returns: {
+          email: string
+          phone: string
+          user_id: string
+        }[]
+      }
       is_admin: {
         Args: { user_uuid?: string }
         Returns: boolean
