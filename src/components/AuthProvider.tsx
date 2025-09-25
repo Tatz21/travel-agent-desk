@@ -8,6 +8,8 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithOtp: (email?: string, phone?: string) => Promise<{ error: any }>;
+  verifyOtp: (email: string | undefined, phone: string | undefined, token: string, type: 'email' | 'sms') => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -85,6 +87,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const signInWithOtp = async (email?: string, phone?: string) => {
+    if (email) {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false, // Don't create new users, only existing agents
+        }
+      });
+      return { error };
+    } else if (phone) {
+      const { error } = await supabase.auth.signInWithOtp({
+        phone,
+        options: {
+          shouldCreateUser: false, // Don't create new users, only existing agents
+        }
+      });
+      return { error };
+    }
+    return { error: new Error('Either email or phone must be provided') };
+  };
+
+  const verifyOtp = async (email: string | undefined, phone: string | undefined, token: string, type: 'email' | 'sms') => {
+    if (type === 'email' && email) {
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: 'email',
+      });
+      return { error };
+    } else if (type === 'sms' && phone) {
+      const { error } = await supabase.auth.verifyOtp({
+        phone,
+        token,
+        type: 'sms',
+      });
+      return { error };
+    }
+    return { error: new Error('Invalid verification parameters') };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -95,6 +137,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signUp,
     signIn,
+    signInWithOtp,
+    verifyOtp,
     signOut,
   };
 
