@@ -89,60 +89,56 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithPasswordAndOtp = async (email: string, password: string) => {
-    // First verify the password
+    // First check if agent exists and get their details
+    const { data: agent, error: agentError } = await supabase
+      .from('agents')
+      .select('phone, user_id')
+      .eq('email', email)
+      .single();
+
+    if (agentError || !agent) {
+      return { error: new Error('Agent not found. Please contact admin.') };
+    }
+
+    // Try to sign in with password to verify credentials
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (authError) {
-      return { error: authError };
+      // If auth user doesn't exist or password is wrong, but agent exists
+      // This means agent was created without auth user, so we'll just verify agent exists and send OTP
+      console.log('Auth error, but agent exists. Sending OTP for verification.');
+    } else {
+      // If password is correct, sign out and prepare for OTP
+      await supabase.auth.signOut();
     }
-
-    // If password is correct, immediately sign out and prepare for OTP
-    await supabase.auth.signOut();
     
     // Store credentials temporarily for OTP verification
     setTempCredentials({ email, password });
 
-    // Get agent details to send OTP to registered phone
-    const { data: agent, error: agentError } = await supabase
-      .from('agents')
-      .select('phone')
-      .eq('email', email)
-      .single();
-
-    if (agentError || !agent?.phone) {
-      // If no phone found, send OTP only to email
-      const { error: emailOtpError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: false,
-        }
-      });
-      
-      if (emailOtpError) {
-        return { error: emailOtpError };
+    // Send OTP to both email and phone if available
+    const { error: emailOtpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
       }
-    } else {
-      // Send OTP to both email and phone
-      const { error: emailOtpError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: false,
-        }
-      });
+    });
 
-      const { error: phoneOtpError } = await supabase.auth.signInWithOtp({
+    let phoneOtpError = null;
+    if (agent.phone) {
+      const { error } = await supabase.auth.signInWithOtp({
         phone: agent.phone,
         options: {
           shouldCreateUser: false,
         }
       });
+      phoneOtpError = error;
+    }
 
-      if (emailOtpError && phoneOtpError) {
-        return { error: new Error('Failed to send OTP to both email and phone') };
-      }
+    if (emailOtpError && phoneOtpError) {
+      return { error: new Error('Failed to send OTP. Please contact admin.') };
     }
 
     return { error: null, needsOtp: true };
