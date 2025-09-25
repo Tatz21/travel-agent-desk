@@ -49,7 +49,7 @@ const AuthPage = () => {
         setNeedsOtp(true);
         toast({
           title: "OTP Sent",
-          description: "OTP has been sent to your registered email and phone number"
+          description: "OTP has been sent to your email address"
         });
       } else {
         toast({
@@ -115,7 +115,7 @@ const AuthPage = () => {
           <CardHeader>
             <CardTitle>Agent Sign In</CardTitle>
             <CardDescription>
-              {needsOtp ? 'Enter the OTP sent to your registered email and phone' : 'Enter your credentials to sign in'}
+              {needsOtp ? 'Enter the OTP sent to your email address' : 'Enter your credentials to sign in'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -154,7 +154,7 @@ const AuthPage = () => {
                 <div className="text-center mb-4 p-4 bg-muted rounded-lg">
                   <Mail className="h-8 w-8 mx-auto mb-2 text-primary" />
                   <p className="text-sm text-muted-foreground">
-                    We've sent a verification code to your registered email and phone number
+                    We've sent a verification code to your email address
                   </p>
                 </div>
                 <div className="space-y-2">

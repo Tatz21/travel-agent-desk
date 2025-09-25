@@ -102,26 +102,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const agentData = agent[0];
-
-    // Try to sign in with password to verify credentials
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (authError) {
-      // If auth user doesn't exist or password is wrong, but agent exists
-      // This means agent was created without auth user, so we'll just verify agent exists and send OTP
-      console.log('Auth error, but agent exists. Sending OTP for verification.');
-    } else {
-      // If password is correct, sign out and prepare for OTP
-      await supabase.auth.signOut();
-    }
     
     // Store credentials temporarily for OTP verification
     setTempCredentials({ email, password });
 
-    // Send OTP to both email and phone if available
+    // Send OTP to email (phone OTP is disabled in your Supabase project)
     const { error: emailOtpError } = await supabase.auth.signInWithOtp({
       email,
       options: {
@@ -129,19 +114,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
 
-    let phoneOtpError = null;
-    if (agentData.phone) {
-      const { error } = await supabase.auth.signInWithOtp({
-        phone: agentData.phone,
-        options: {
-          shouldCreateUser: false,
-        }
-      });
-      phoneOtpError = error;
-    }
-
-    if (emailOtpError && phoneOtpError) {
-      return { error: new Error('Failed to send OTP. Please contact admin.') };
+    if (emailOtpError) {
+      return { error: emailOtpError };
     }
 
     return { error: null, needsOtp: true };
