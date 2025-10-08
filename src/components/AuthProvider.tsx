@@ -106,11 +106,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Store credentials temporarily for OTP verification
     setTempCredentials({ email, password });
 
-    // Send OTP to email (phone OTP is disabled in your Supabase project)
+    // Send OTP code (not magic link) to email
     const { error: emailOtpError } = await supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: false,
+        emailRedirectTo: undefined, // Prevent magic link, force OTP code
       }
     });
 
