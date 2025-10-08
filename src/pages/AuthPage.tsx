@@ -6,17 +6,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Plane, Mail } from 'lucide-react';
+import { Plane } from 'lucide-react';
 
 const AuthPage = () => {
-  const { user, signInWithPasswordAndOtp, verifyLoginOtp } = useAuth();
+  const { user, signIn } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [needsOtp, setNeedsOtp] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    otp: ''
+    password: ''
   });
 
   useEffect(() => {
@@ -37,7 +35,7 @@ const AuthPage = () => {
     setLoading(true);
 
     try {
-      const { error, needsOtp: requiresOtp } = await signInWithPasswordAndOtp(formData.email, formData.password);
+      const { error } = await signIn(formData.email, formData.password);
       
       if (error) {
         toast({
@@ -45,48 +43,11 @@ const AuthPage = () => {
           description: error.message,
           variant: "destructive"
         });
-      } else if (requiresOtp) {
-        setNeedsOtp(true);
-        toast({
-          title: "OTP Sent",
-          description: "OTP has been sent to your email address"
-        });
       } else {
         toast({
           title: "Success",
           description: "Signed in successfully!"
         });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await verifyLoginOtp(formData.otp);
-
-      if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: "Signed in successfully!"
-        });
-        setNeedsOtp(false);
       }
     } catch (error) {
       toast({
@@ -115,76 +76,39 @@ const AuthPage = () => {
           <CardHeader>
             <CardTitle>Agent Sign In</CardTitle>
             <CardDescription>
-              {needsOtp ? 'Enter the OTP sent to your email address' : 'Enter your credentials to sign in'}
+              Enter your credentials to sign in
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {!needsOtp ? (
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="agent@example.com"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full h-11 md:h-10" disabled={loading}>
-                  {loading ? 'Verifying...' : 'Continue'}
-                </Button>
-              </form>
-            ) : (
-              <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div className="text-center mb-4 p-4 bg-muted rounded-lg">
-                  <Mail className="h-8 w-8 mx-auto mb-2 text-primary" />
-                  <p className="text-sm text-muted-foreground">
-                    We've sent a verification code to your email address
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="otp">Enter Verification Code</Label>
-                  <Input
-                    id="otp"
-                    name="otp"
-                    type="text"
-                    placeholder="Enter 6-digit code"
-                    value={formData.otp}
-                    onChange={handleInputChange}
-                    maxLength={6}
-                    required
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <Button type="submit" className="flex-1 h-11 md:h-10" disabled={loading}>
-                    {loading ? 'Verifying...' : 'Verify & Sign In'}
-                  </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="h-11 md:h-10"
-                    onClick={() => {setNeedsOtp(false); setFormData({...formData, otp: ''})}}
-                  >
-                    Back
-                  </Button>
-                </div>
-              </form>
-            )}
+            <form onSubmit={handleSignIn} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="agent@example.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full h-11 md:h-10" disabled={loading}>
+                {loading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </form>
           </CardContent>
         </Card>
       </div>
