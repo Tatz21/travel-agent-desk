@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plane, User, LogOut } from 'lucide-react';
+import { ArrowLeft, User, LogOut } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
@@ -9,6 +9,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
 import WalletComponent from '@/components/Wallet';
 import HotelBooking from '@/components/booking/HotelBooking';
+import logo from '@/assets/logo.gif';
 
 const HotelBookingPage = () => {
   const navigate = useNavigate();
@@ -44,8 +45,8 @@ const HotelBookingPage = () => {
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <Plane className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-                  <h1 className="text-lg md:text-xl font-bold ml-2">Travelopedia</h1>
+                  <img src={logo} alt="Travelopedia" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+                  <h1 className="text-lg md:text-xl font-bold ml-3 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Travelopedia</h1>
                 </div>
               </div>
               

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
@@ -15,6 +14,7 @@ import FlightBooking from '@/components/booking/FlightBooking';
 import BusBooking from '@/components/booking/BusBooking';
 import HotelBooking from '@/components/booking/HotelBooking';
 import BookingsList from '@/components/booking/BookingsList';
+import logo from '@/assets/logo.gif';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -50,7 +50,8 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
                 <div className="flex items-center">
-                  <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-8 w-auto md:h-10 filter brightness-0 invert" />
+                  <img src={logo} alt="Travelopedia" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+                  <h1 className="text-lg md:text-xl font-bold ml-3 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent hidden sm:inline">Travelopedia</h1>
                 </div>
               </div>
               

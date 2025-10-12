@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
 import { toast } from 'sonner';
+import logo from '@/assets/logo.gif';
 
 const FlightBooking = () => {
   const { agent } = useAgent();
@@ -148,8 +149,8 @@ const FlightBooking = () => {
     <div className="w-full max-w-6xl mx-auto space-y-6">
       {/* Header Section */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-2xl shadow-elegant">
-          <Plane className="h-8 w-8 text-white" />
+        <div className="inline-flex items-center justify-center">
+          <img src={logo} alt="Travelopedia" className="h-16 w-16 object-contain" />
         </div>
         <div>
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
