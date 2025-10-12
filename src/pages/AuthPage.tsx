@@ -69,7 +69,6 @@ const AuthPage = () => {
           <div className="flex items-center justify-center">
             <img src={logo} alt="Travelopedia" className="h-32 w-32 md:h-40 md:w-40 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
           </div>
-          <p className="text-sm md:text-base text-muted-foreground italic mt-2">a unit of Wanderlust Pvt Ltd</p>
         </div>
 
         <Card>
