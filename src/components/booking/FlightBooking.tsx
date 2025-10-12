@@ -150,10 +150,7 @@ const FlightBooking = () => {
       {/* Header Section */}
       <div className="text-center space-y-4">
         <div className="inline-flex items-center justify-center">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-white/30 to-transparent rounded-2xl blur-md"></div>
-            <img src={logo} alt="Travelopedia" className="h-40 w-40 object-contain relative z-10" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
-          </div>
+          <img src={logo} alt="Travelopedia" className="h-40 w-40 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
         </div>
         <div>
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
