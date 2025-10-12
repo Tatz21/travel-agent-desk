@@ -49,9 +49,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between h-16 px-3 md:px-6">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
-                <div className="flex items-center p-1 bg-white dark:bg-white rounded-md shadow-sm">
-                  <img src={logo} alt="Travelopedia" className="h-20 w-20 object-contain" />
-                </div>
+                <img src={logo} alt="Travelopedia" className="h-12 w-12 md:h-14 md:w-14 object-contain" />
               </div>
               
               <div className="flex items-center space-x-1 md:space-x-4">
