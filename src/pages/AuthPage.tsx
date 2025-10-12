@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { Plane } from 'lucide-react';
+import logo from '@/assets/logo.gif';
 
 const AuthPage = () => {
   const { user, signIn } = useAuth();
@@ -65,11 +66,9 @@ const AuthPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-3 md:p-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-6 md:mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Plane className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-            <h1 className="text-xl md:text-2xl font-bold ml-2">Travelopedia</h1>
+          <div className="flex items-center justify-center">
+            <img src={logo} alt="Travelopedia" className="h-32 w-32 md:h-40 md:w-40 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
           </div>
-          <p className="text-sm md:text-base text-muted-foreground">Agent Portal</p>
         </div>
 
         <Card>
