@@ -5,6 +5,7 @@ import { useAgent } from '@/hooks/useAgent';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plane, Users, Shield, Clock } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -41,6 +42,7 @@ const Index = () => {
               <img src="/lovable-uploads/58cd9100-c334-48c4-921f-804902dd3279.png" alt="Phoenix Travelopedia" className="h-40 w-auto brightness-0 invert" />
             </div>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <Button variant="outline" onClick={() => navigate('/auth')}>
                 Sign In
               </Button>
