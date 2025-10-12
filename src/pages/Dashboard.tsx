@@ -49,7 +49,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between h-16 px-3 md:px-6">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
-                <img src={logo} alt="Travelopedia" className="h-40 w-40 object-contain" />
+                <img src={logo} alt="Travelopedia" className="h-40 w-40 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
               </div>
               
               <div className="flex items-center space-x-1 md:space-x-4">
