@@ -109,7 +109,11 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({ booking, isOpen, onClos
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Passengers</label>
-                <p>{booking.adult_count} Adults{booking.child_count > 0 && `, ${booking.child_count} Children`}</p>
+                <p>
+                  {booking.adult_count} Adult{booking.adult_count > 1 ? 's' : ''}
+                  {booking.child_count > 0 && `, ${booking.child_count} Child${booking.child_count > 1 ? 'ren' : ''}`}
+                  {booking.booking_details?.infant_count > 0 && `, ${booking.booking_details.infant_count} Infant${booking.booking_details.infant_count > 1 ? 's' : ''}`}
+                </p>
               </div>
             </div>
           </div>
@@ -184,11 +188,61 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({ booking, isOpen, onClos
               <Separator />
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Additional Details</h3>
-                <div className="p-4 bg-muted rounded-lg">
-                  <pre className="text-sm overflow-auto">
-                    {JSON.stringify(booking.booking_details, null, 2)}
-                  </pre>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {booking.booking_details.class && (
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Class</label>
+                      <p className="capitalize">{booking.booking_details.class.replace('-', ' ')}</p>
+                    </div>
+                  )}
+                  {booking.booking_details.meal_preference && (
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Meal Preference</label>
+                      <p className="capitalize">{booking.booking_details.meal_preference}</p>
+                    </div>
+                  )}
+                  {booking.booking_details.extra_baggage && booking.booking_details.extra_baggage !== 'none' && (
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Extra Baggage</label>
+                      <p className="capitalize">+{booking.booking_details.extra_baggage}</p>
+                    </div>
+                  )}
+                  {booking.booking_details.special_requests && (
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-muted-foreground">Special Requests</label>
+                      <p>{booking.booking_details.special_requests}</p>
+                    </div>
+                  )}
                 </div>
+                
+                {(booking.booking_details.children_dob?.length > 0 || booking.booking_details.infants_dob?.length > 0) && (
+                  <>
+                    <Separator className="my-4" />
+                    <div className="space-y-3">
+                      <h4 className="font-medium">Age Details</h4>
+                      {booking.booking_details.children_dob?.length > 0 && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">Children DOB:</label>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {booking.booking_details.children_dob.map((dob: string, idx: number) => (
+                              dob && <Badge key={idx} variant="outline">Child {idx + 1}: {format(new Date(dob), 'PP')}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {booking.booking_details.infants_dob?.length > 0 && (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">Infants DOB:</label>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {booking.booking_details.infants_dob.map((dob: string, idx: number) => (
+                              dob && <Badge key={idx} variant="outline">Infant {idx + 1}: {format(new Date(dob), 'PP')}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </>
           )}

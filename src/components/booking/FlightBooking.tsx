@@ -24,7 +24,12 @@ const FlightBooking = () => {
   const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
+  const [infants, setInfants] = useState(0);
+  const [childrenDOB, setChildrenDOB] = useState<(Date | undefined)[]>([]);
+  const [infantsDOB, setInfantsDOB] = useState<(Date | undefined)[]>([]);
   const [flightClass, setFlightClass] = useState('economy');
+  const [mealPreference, setMealPreference] = useState('standard');
+  const [extraBaggage, setExtraBaggage] = useState('none');
   const [passengerName, setPassengerName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -66,7 +71,13 @@ const FlightBooking = () => {
                        flightClass === 'premium-economy' ? 8000 :
                        flightClass === 'business' ? 15000 : 25000;
       
-      const totalAmount = (basePrice * adults) + (basePrice * 0.75 * children);
+      // Calculate total with infants, meal and baggage
+      const infantPrice = basePrice * 0.1; // Infants are 10% of adult price
+      const mealPrice = mealPreference === 'vegetarian' ? 500 : mealPreference === 'special' ? 800 : 0;
+      const baggagePrice = extraBaggage === '15kg' ? 1500 : extraBaggage === '25kg' ? 2500 : 0;
+      
+      const totalAmount = (basePrice * adults) + (basePrice * 0.75 * children) + (infantPrice * infants) + 
+                          (mealPrice * (adults + children)) + (baggagePrice * (adults + children));
       const commissionAmount = totalAmount * (agent.commission_rate / 100);
 
       const bookingData = {
@@ -87,6 +98,11 @@ const FlightBooking = () => {
         booking_details: {
           trip_type: tripType,
           class: flightClass,
+          infant_count: infants,
+          children_dob: childrenDOB.map(d => d?.toISOString()),
+          infants_dob: infantsDOB.map(d => d?.toISOString()),
+          meal_preference: mealPreference,
+          extra_baggage: extraBaggage,
           special_requests: specialRequests,
           departure_date: departureDate?.toISOString(),
           return_date: returnDate?.toISOString()
@@ -110,7 +126,12 @@ const FlightBooking = () => {
       setReturnDate(undefined);
       setAdults(1);
       setChildren(0);
+      setInfants(0);
+      setChildrenDOB([]);
+      setInfantsDOB([]);
       setFlightClass('economy');
+      setMealPreference('standard');
+      setExtraBaggage('none');
       setPassengerName('');
       setEmail('');
       setPhone('');
@@ -256,9 +277,9 @@ const FlightBooking = () => {
           </div>
 
           {/* Passengers and Class */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">ADULTS</Label>
+              <Label className="text-sm font-medium text-muted-foreground">ADULTS (12+ yrs)</Label>
               <Select value={adults.toString()} onValueChange={(value) => setAdults(Number(value))}>
                 <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
                   <SelectValue />
@@ -274,8 +295,12 @@ const FlightBooking = () => {
             </div>
             
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">CHILDREN</Label>
-              <Select value={children.toString()} onValueChange={(value) => setChildren(Number(value))}>
+              <Label className="text-sm font-medium text-muted-foreground">CHILDREN (2-12 yrs)</Label>
+              <Select value={children.toString()} onValueChange={(value) => {
+                const newCount = Number(value);
+                setChildren(newCount);
+                setChildrenDOB(Array(newCount).fill(undefined));
+              }}>
                 <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
@@ -283,6 +308,26 @@ const FlightBooking = () => {
                   {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                     <SelectItem key={num} value={num.toString()}>
                       {num} Child{num !== 1 ? 'ren' : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">INFANTS (0-2 yrs)</Label>
+              <Select value={infants.toString()} onValueChange={(value) => {
+                const newCount = Number(value);
+                setInfants(newCount);
+                setInfantsDOB(Array(newCount).fill(undefined));
+              }}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[0, 1, 2, 3, 4].map((num) => (
+                    <SelectItem key={num} value={num.toString()}>
+                      {num} Infant{num !== 1 ? 's' : ''}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -300,6 +345,113 @@ const FlightBooking = () => {
                   <SelectItem value="premium-economy">Premium Economy</SelectItem>
                   <SelectItem value="business">Business</SelectItem>
                   <SelectItem value="first">First Class</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Date of Birth for Children */}
+          {children > 0 && (
+            <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
+              <Label className="text-sm font-medium">DATE OF BIRTH - CHILDREN</Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Array.from({ length: children }).map((_, index) => (
+                  <div key={`child-${index}`} className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Child {index + 1}</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full h-10 justify-start text-left font-normal border-0 shadow-sm bg-background"
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {childrenDOB[index] ? format(childrenDOB[index]!, "PP") : "Select DOB"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={childrenDOB[index]}
+                          onSelect={(date) => {
+                            const newDOBs = [...childrenDOB];
+                            newDOBs[index] = date;
+                            setChildrenDOB(newDOBs);
+                          }}
+                          disabled={(date) => date > new Date() || date < new Date('2012-01-01')}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Date of Birth for Infants */}
+          {infants > 0 && (
+            <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
+              <Label className="text-sm font-medium">DATE OF BIRTH - INFANTS</Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Array.from({ length: infants }).map((_, index) => (
+                  <div key={`infant-${index}`} className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">Infant {index + 1}</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full h-10 justify-start text-left font-normal border-0 shadow-sm bg-background"
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {infantsDOB[index] ? format(infantsDOB[index]!, "PP") : "Select DOB"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={infantsDOB[index]}
+                          onSelect={(date) => {
+                            const newDOBs = [...infantsDOB];
+                            newDOBs[index] = date;
+                            setInfantsDOB(newDOBs);
+                          }}
+                          disabled={(date) => date > new Date() || date < new Date('2022-01-01')}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Food and Baggage Options */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">MEAL PREFERENCE</Label>
+              <Select value={mealPreference} onValueChange={setMealPreference}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="standard">Standard Meal (Included)</SelectItem>
+                  <SelectItem value="vegetarian">Vegetarian (+₹500/person)</SelectItem>
+                  <SelectItem value="special">Special Dietary (+₹800/person)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">EXTRA BAGGAGE</Label>
+              <Select value={extraBaggage} onValueChange={setExtraBaggage}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Standard (15kg Included)</SelectItem>
+                  <SelectItem value="15kg">+15kg Extra (+₹1,500/person)</SelectItem>
+                  <SelectItem value="25kg">+25kg Extra (+₹2,500/person)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
