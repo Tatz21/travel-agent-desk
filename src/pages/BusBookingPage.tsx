@@ -44,9 +44,8 @@ const BusBookingPage = () => {
             <div className="flex items-center justify-between h-16 px-3 md:px-6">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
-                <div className="flex items-center">
+                <div className="flex items-center p-2 bg-white dark:bg-white rounded-lg shadow-sm">
                   <img src={logo} alt="Travelopedia" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
-                  <h1 className="text-lg md:text-xl font-bold ml-3 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Travelopedia</h1>
                 </div>
               </div>
               
