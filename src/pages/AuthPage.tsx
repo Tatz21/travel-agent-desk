@@ -67,7 +67,7 @@ const AuthPage = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-6 md:mb-8">
           <div className="flex items-center justify-center">
-            <img src={logo} alt="Travelopedia" className="h-32 w-32 md:h-40 md:w-40 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
+            <img src={logo} alt="Travelopedia" className="h-48 w-48 md:h-64 md:w-64 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
           </div>
         </div>
 
