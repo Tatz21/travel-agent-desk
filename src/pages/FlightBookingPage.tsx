@@ -44,8 +44,8 @@ const FlightBookingPage = () => {
             <div className="flex items-center justify-between h-16 px-3 md:px-6">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
-                <div className="flex items-center p-2 bg-white dark:bg-white rounded-lg shadow-sm">
-                  <img src={logo} alt="Travelopedia" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+                <div className="flex items-center p-1 bg-white dark:bg-white rounded-md shadow-sm">
+                  <img src={logo} alt="Travelopedia" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
                 </div>
               </div>
               
