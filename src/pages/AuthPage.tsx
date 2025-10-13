@@ -65,7 +65,7 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-3 md:p-6 relative overflow-hidden">
-      {/* Angled Watermark Logos */}
+      {/* Angled Watermark Logos Throughout Page */}
       <img 
         src={watermarkLogo} 
         alt="" 
@@ -74,7 +74,27 @@ const AuthPage = () => {
       <img 
         src={watermarkLogo} 
         alt="" 
+        className="absolute top-20 right-10 w-64 opacity-10 pointer-events-none rotate-6"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/2 -translate-y-1/2 left-1/4 w-72 opacity-10 pointer-events-none -rotate-6"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/3 right-1/4 w-72 opacity-8 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
         className="absolute bottom-10 -right-20 w-80 opacity-15 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-20 left-10 w-64 opacity-10 pointer-events-none -rotate-6"
       />
       
       <div className="w-full max-w-md relative z-10">
