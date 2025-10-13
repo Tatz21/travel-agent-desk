@@ -69,32 +69,32 @@ const AuthPage = () => {
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-10 -left-20 w-80 opacity-5 pointer-events-none -rotate-12"
+        className="absolute top-10 -left-20 w-80 opacity-10 pointer-events-none -rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-20 right-10 w-64 opacity-5 pointer-events-none rotate-6"
+        className="absolute top-20 right-10 w-64 opacity-10 pointer-events-none rotate-6"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-1/2 -translate-y-1/2 left-1/4 w-72 opacity-5 pointer-events-none -rotate-6"
+        className="absolute top-1/2 -translate-y-1/2 left-1/4 w-72 opacity-10 pointer-events-none -rotate-6"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-1/3 right-1/4 w-72 opacity-5 pointer-events-none rotate-12"
+        className="absolute top-1/3 right-1/4 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute bottom-10 -right-20 w-80 opacity-5 pointer-events-none rotate-12"
+        className="absolute bottom-10 -right-20 w-80 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute bottom-20 left-10 w-64 opacity-5 pointer-events-none -rotate-6"
+        className="absolute bottom-20 left-10 w-64 opacity-10 pointer-events-none -rotate-6"
       />
       
       <div className="w-full max-w-md relative z-10">
