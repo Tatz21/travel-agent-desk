@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from '@/hooks/use-toast';
 import { Plane } from 'lucide-react';
 import logo from '@/assets/logo.gif';
+import watermarkLogo from '@/assets/watermark-logo.png';
 
 const AuthPage = () => {
   const { user, signIn } = useAuth();
@@ -64,15 +65,16 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-3 md:p-6 relative overflow-hidden">
-      {/* Watermark Background */}
-      <div 
-        className="absolute inset-0 opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: `url(${logo})`,
-          backgroundSize: '200px 200px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'center'
-        }}
+      {/* Angled Watermark Logos */}
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-10 -left-20 w-80 opacity-5 pointer-events-none -rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-10 -right-20 w-80 opacity-5 pointer-events-none rotate-12"
       />
       
       <div className="w-full max-w-md relative z-10">
