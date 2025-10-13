@@ -69,12 +69,47 @@ const AuthPage = () => {
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-10 left-10 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-5 left-5 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-10 right-10 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-5 right-5 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-5 left-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-5 right-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/4 left-10 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/4 right-10 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/3 -left-10 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/3 -right-10 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
@@ -89,42 +124,102 @@ const AuthPage = () => {
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-1/2 -translate-y-1/2 -left-10 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-1/2 -translate-y-1/2 left-5 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-1/2 -translate-y-1/2 -right-10 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-1/2 -translate-y-1/2 right-5 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-2/3 left-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-1/2 -translate-y-1/2 left-1/4 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute top-2/3 right-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-1/2 -translate-y-1/2 right-1/4 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute bottom-10 left-10 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute bottom-10 right-10 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-2/3 -left-10 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute bottom-1/3 left-1/4 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-2/3 -right-10 w-72 opacity-10 pointer-events-none rotate-12"
       />
       <img 
         src={watermarkLogo} 
         alt="" 
-        className="absolute bottom-1/3 right-1/4 w-72 opacity-10 pointer-events-none rotate-12"
+        className="absolute top-2/3 left-1/6 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-2/3 right-1/6 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-3/4 left-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-3/4 right-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-5 left-5 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-5 right-5 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-5 left-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-5 right-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/4 left-10 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/4 right-10 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/3 left-1/6 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/3 right-1/6 w-72 opacity-10 pointer-events-none rotate-12"
       />
       
       <div className="w-full max-w-md relative z-10">
