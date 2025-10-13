@@ -63,8 +63,19 @@ const AuthPage = () => {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-3 md:p-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-3 md:p-6 relative overflow-hidden">
+      {/* Watermark Background */}
+      <div 
+        className="absolute inset-0 opacity-5 pointer-events-none"
+        style={{
+          backgroundImage: `url(${logo})`,
+          backgroundSize: '200px 200px',
+          backgroundRepeat: 'repeat',
+          backgroundPosition: 'center'
+        }}
+      />
+      
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-6 md:mb-8">
           <div className="flex items-center justify-center">
             <img src={logo} alt="Travelopedia" className="h-48 w-48 md:h-64 md:w-64 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
