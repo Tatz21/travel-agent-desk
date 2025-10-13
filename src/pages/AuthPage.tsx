@@ -151,6 +151,36 @@ const AuthPage = () => {
         alt="" 
         className="absolute bottom-5 left-1/4 w-72 opacity-10 pointer-events-none rotate-12"
       />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/5 right-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-2/5 left-1/6 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-3/4 left-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/5 right-1/4 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute top-1/6 left-10 w-72 opacity-10 pointer-events-none rotate-12"
+      />
+      <img 
+        src={watermarkLogo} 
+        alt="" 
+        className="absolute bottom-1/2 -translate-y-1/2 right-1/3 w-72 opacity-10 pointer-events-none rotate-12"
+      />
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-6 md:mb-8">
