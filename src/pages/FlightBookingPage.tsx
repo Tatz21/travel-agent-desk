@@ -9,6 +9,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
 import WalletComponent from '@/components/Wallet';
 import FlightBooking from '@/components/booking/FlightBooking';
+import TestFlightAPI from '@/components/TestFlightAPI';
 import logo from '@/assets/logo.gif';
 
 const FlightBookingPage = () => {
@@ -67,7 +68,7 @@ const FlightBookingPage = () => {
           </header>
 
           {/* Main Content */}
-          <div className="p-3 md:p-8">
+          <div className="p-3 md:p-8 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-8 gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Button 
@@ -82,6 +83,7 @@ const FlightBookingPage = () => {
                 </Button>
               </div>
             </div>
+            <TestFlightAPI />
             <FlightBooking />
           </div>
         </main>

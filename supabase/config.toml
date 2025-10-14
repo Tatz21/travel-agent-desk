@@ -6,5 +6,5 @@ verify_jwt = true
 [functions.verify-razorpay-payment]
 verify_jwt = true
 
-[functions.bus-api]
+[functions.flight-api]
 verify_jwt = true
