@@ -274,7 +274,7 @@ const FlightBooking = () => {
               <Label className="text-sm font-medium text-muted-foreground">TO</Label>
               <Select value={to} onValueChange={setTo}>
                 <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
-                  <SelectValue placeholder="Select destination city">
+                  <SelectValue placeholder={from ? "Select destination city" : "Select origin first"}>
                     {to && sectors.find(s => s.Destination === to)?.Sector.split('//')[1].trim()}
                   </SelectValue>
                 </SelectTrigger>
@@ -287,7 +287,6 @@ const FlightBooking = () => {
                       </SelectItem>
                     );
                   })}
-                  {!from && <SelectItem value="" disabled>Select origin first</SelectItem>}
                 </SelectContent>
               </Select>
             </div>
