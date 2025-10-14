@@ -9,7 +9,6 @@ import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
 import WalletComponent from '@/components/Wallet';
 import FlightBooking from '@/components/booking/FlightBooking';
-import TestFlightAPI from '@/components/TestFlightAPI';
 import logo from '@/assets/logo.gif';
 
 const FlightBookingPage = () => {
@@ -83,7 +82,6 @@ const FlightBookingPage = () => {
                 </Button>
               </div>
             </div>
-            <TestFlightAPI />
             <FlightBooking />
           </div>
         </main>
