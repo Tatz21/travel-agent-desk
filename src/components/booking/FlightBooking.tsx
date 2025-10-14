@@ -8,6 +8,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CalendarIcon, Plane, Users, Clock, MapPin, ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/AuthProvider';
@@ -18,6 +19,10 @@ import logo from '@/assets/logo.gif';
 const FlightBooking = () => {
   const { agent } = useAgent();
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [sectors, setSectors] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [selectedFlight, setSelectedFlight] = useState<any>(null);
   const [tripType, setTripType] = useState<'one-way' | 'round-trip'>('one-way');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
@@ -36,6 +41,27 @@ const FlightBooking = () => {
   const [phone, setPhone] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
 
+  // Load available sectors on mount
+  React.useEffect(() => {
+    loadSectors();
+  }, []);
+
+  const loadSectors = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('flight-api', {
+        body: { action: 'sectors' }
+      });
+
+      if (error) throw error;
+      
+      if (data?.data) {
+        setSectors(data.data);
+      }
+    } catch (error: any) {
+      console.error('Failed to load sectors:', error);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     if (id === 'from') setFrom(value);
@@ -50,14 +76,58 @@ const FlightBooking = () => {
     setFlightClass(value);
   };
 
+  const handleSearchFlights = async () => {
+    if (!from || !to || !departureDate) {
+      toast.error("Please select origin, destination and departure date");
+      return;
+    }
+
+    setSearching(true);
+    setSearchResults([]);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('flight-api', {
+        body: {
+          action: 'availability',
+          origin: from,
+          destination: to,
+          departureDate: format(departureDate, 'yyyy-MM-dd'),
+          returnDate: returnDate ? format(returnDate, 'yyyy-MM-dd') : null,
+          adultCount: adults,
+          childCount: children,
+          infantCount: infants,
+          class: flightClass.charAt(0).toUpperCase() + flightClass.slice(1).replace('-', ' '),
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.data) {
+        setSearchResults(data.data);
+        toast.success(`Found ${data.data.length} flights`);
+      } else {
+        toast.error("No flights found");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to search flights");
+    } finally {
+      setSearching(false);
+    }
+  };
+
   const handleBooking = async () => {
     if (!agent) {
       toast.error("Agent profile not found");
       return;
     }
 
-    if (!from || !to || !departureDate || !passengerName || !email || !phone) {
-      toast.error("Please fill in all required fields");
+    if (!selectedFlight) {
+      toast.error("Please select a flight first");
+      return;
+    }
+
+    if (!passengerName || !email || !phone) {
+      toast.error("Please fill in all passenger details");
       return;
     }
 
@@ -67,18 +137,8 @@ const FlightBooking = () => {
       // Generate booking reference
       const { data: bookingRef } = await supabase.rpc('generate_booking_reference');
       
-      // Calculate total amount based on adults and children
-      const basePrice = flightClass === 'economy' ? 5000 : 
-                       flightClass === 'premium-economy' ? 8000 :
-                       flightClass === 'business' ? 15000 : 25000;
-      
-      // Calculate total with infants, meal and baggage
-      const infantPrice = basePrice * 0.1; // Infants are 10% of adult price
-      const mealPrice = mealPreference === 'vegetarian' ? 500 : mealPreference === 'special' ? 800 : 0;
-      const baggagePrice = extraBaggage === '15kg' ? 1500 : extraBaggage === '25kg' ? 2500 : 0;
-      
-      const totalAmount = (basePrice * adults) + (basePrice * 0.75 * children) + (infantPrice * infants) + 
-                          (mealPrice * (adults + children)) + (baggagePrice * (adults + children));
+      // Get price from selected flight
+      const totalAmount = selectedFlight.TotalFare || selectedFlight.Fare || 0;
       const commissionAmount = totalAmount * (agent.commission_rate / 100);
 
       const bookingData = {
@@ -106,7 +166,8 @@ const FlightBooking = () => {
           extra_baggage: extraBaggage,
           special_requests: specialRequests,
           departure_date: departureDate?.toISOString(),
-          return_date: returnDate?.toISOString()
+          return_date: returnDate?.toISOString(),
+          flight_details: selectedFlight
         }
       };
 
@@ -138,6 +199,8 @@ const FlightBooking = () => {
       setPhone('');
       setSpecialRequests('');
       setTripType('one-way');
+      setSearchResults([]);
+      setSelectedFlight(null);
     } catch (error: any) {
       toast.error(error.message || "Failed to create booking");
     } finally {
@@ -455,81 +518,120 @@ const FlightBooking = () => {
         </CardContent>
       </Card>
 
-      {/* Passenger Information */}
+      {/* Search Button */}
       <Card className="shadow-card border-0 bg-gradient-to-br from-card to-card/50">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center text-xl">
-            <Users className="mr-3 h-5 w-5 text-primary" />
-            Passenger Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">FULL NAME</Label>
-              <Input
-                id="passengerName"
-                value={passengerName}
-                onChange={handleInputChange}
-                placeholder="Enter full name"
-                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">EMAIL</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={handleInputChange}
-                placeholder="Enter email address"
-                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">PHONE</Label>
-              <Input
-                id="phone"
-                value={phone}
-                onChange={handleInputChange}
-                placeholder="Enter phone number"
-                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">SPECIAL REQUESTS</Label>
-              <Input
-                id="specialRequests"
-                value={specialRequests}
-                onChange={handleInputChange}
-                placeholder="Any special requirements"
-                className="h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
-              />
-            </div>
-          </div>
+        <CardContent className="p-6">
+          <Button 
+            onClick={handleSearchFlights} 
+            disabled={searching}
+            size="lg"
+            className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
+          >
+            <Plane className="h-5 w-5 mr-2" />
+            {searching ? 'Searching Flights...' : 'Search Flights'}
+          </Button>
         </CardContent>
       </Card>
 
-      {/* Book Button */}
-      <div className="flex justify-center pt-4">
-        <Button 
-          onClick={handleBooking} 
-          disabled={loading}
-          className="px-12 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-elegant transition-all duration-300 hover:shadow-xl hover:scale-105"
-        >
-          {loading ? (
-            <>
-              <Clock className="mr-2 h-5 w-5 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <Plane className="mr-2 h-5 w-5" />
-              Book Flight
-            </>
-          )}
-        </Button>
-      </div>
+      {/* Search Results */}
+      {searchResults.length > 0 && (
+        <Card className="shadow-card border-0 bg-gradient-to-br from-card to-card/50">
+          <CardHeader>
+            <CardTitle>Available Flights ({searchResults.length})</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {searchResults.map((flight: any, index: number) => (
+              <Card 
+                key={index}
+                className={cn(
+                  "cursor-pointer transition-all hover:shadow-md",
+                  selectedFlight === flight && "ring-2 ring-primary"
+                )}
+                onClick={() => setSelectedFlight(flight)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="font-semibold">{flight.Airline || 'Flight'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {flight.DepartureTime || 'N/A'} - {flight.ArrivalTime || 'N/A'}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {flight.FlightNumber || 'N/A'}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-primary">
+                        ₹{flight.TotalFare || flight.Fare || 'N/A'}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{flight.Class || flightClass}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Passenger Details & Booking - Only show if flight selected */}
+      {selectedFlight && (
+        <Card className="shadow-card border-0 bg-gradient-to-br from-card to-card/50">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Users className="mr-2 h-5 w-5 text-primary" />
+              Passenger Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground">FULL NAME *</Label>
+                <Input
+                  id="passengerName"
+                  value={passengerName}
+                  onChange={handleInputChange}
+                  placeholder="Enter full name"
+                  className="h-12 border-0 shadow-sm bg-muted/30 focus:bg-background"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground">EMAIL *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={handleInputChange}
+                  placeholder="email@example.com"
+                  className="h-12 border-0 shadow-sm bg-muted/30 focus:bg-background"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground">PHONE *</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={handleInputChange}
+                  placeholder="+91 00000 00000"
+                  className="h-12 border-0 shadow-sm bg-muted/30 focus:bg-background"
+                />
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleBooking} 
+              disabled={loading}
+              size="lg"
+              className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-600/90 hover:to-emerald-600/90 shadow-lg hover:shadow-xl transition-all"
+            >
+              {loading ? 'Processing Booking...' : 'Confirm Booking'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
