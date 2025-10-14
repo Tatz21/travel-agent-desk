@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const FLIGHT_API_URL = 'https://omairiq.azurewebsites.net';
-const FLIGHT_API_LOGIN_ID = '9555202202';
+const FLIGHT_API_USERNAME = '9555202202';
 const FLIGHT_API_PASSWORD = '112233344';
 
 serve(async (req) => {
@@ -21,16 +21,16 @@ serve(async (req) => {
 
     console.log('Flight API request:', { action, params });
 
-    // Test authentication
+    // Authenticate with the API
     const authResponse = await fetch(`${FLIGHT_API_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Basic ${apiKey}`,
+        'api-key': apiKey,
       },
       body: JSON.stringify({
-        loginId: FLIGHT_API_LOGIN_ID,
-        password: FLIGHT_API_PASSWORD,
+        Username: FLIGHT_API_USERNAME,
+        Password: FLIGHT_API_PASSWORD,
       }),
     });
 
@@ -60,43 +60,80 @@ serve(async (req) => {
       authData = { token: authResponseText };
     }
     
-    console.log('Authentication successful');
+    console.log('Authentication successful, token:', authData.token);
 
     // Handle different actions
     let response;
     let endpoint = '';
     
     switch (action) {
-      case 'search':
-        endpoint = '/api/flight/search';
+      case 'sectors':
+        endpoint = '/sectors';
+        response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
+          method: 'GET',
+          headers: {
+            'api-key': apiKey,
+            'Authorization': authData.token,
+          },
+        });
+        break;
+
+      case 'availability':
+        endpoint = '/availability';
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authData.token || apiKey}`,
+            'api-key': apiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify({
-            origin: params.from,
-            destination: params.to,
-            departureDate: params.date,
-            returnDate: params.returnDate,
-            adults: params.adults || 1,
-            children: params.children || 0,
-            infants: params.infants || 0,
-            cabinClass: params.cabinClass || 'Economy',
+            Origin: params.origin,
+            Destination: params.destination,
+            DepartureDate: params.departureDate,
+            ReturnDate: params.returnDate,
+            AdultCount: params.adultCount || 1,
+            ChildCount: params.childCount || 0,
+            InfantCount: params.infantCount || 0,
+            Class: params.class || 'Economy',
           }),
         });
         break;
 
-      case 'book':
-        endpoint = '/api/flight/book';
+      case 'search':
+        endpoint = '/searchtickets';
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authData.token || apiKey}`,
+            'api-key': apiKey,
+            'Authorization': authData.token,
+          },
+          body: JSON.stringify(params.searchData),
+        });
+        break;
+
+      case 'book':
+        endpoint = '/ticketbooking';
+        response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': apiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify(params.bookingData),
+        });
+        break;
+
+      case 'ticket-details':
+        endpoint = `/ticketdetails?BookingId=${params.bookingId}`;
+        response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
+          method: 'GET',
+          headers: {
+            'api-key': apiKey,
+            'Authorization': authData.token,
+          },
         });
         break;
 
@@ -106,7 +143,8 @@ serve(async (req) => {
           JSON.stringify({ 
             success: true, 
             message: 'API connection successful',
-            authData 
+            user: authData.user,
+            balance: authData.user?.balance
           }),
           {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
