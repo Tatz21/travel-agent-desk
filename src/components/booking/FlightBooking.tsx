@@ -245,16 +245,23 @@ const FlightBooking = () => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
             <div className="md:col-span-2 space-y-2">
               <Label className="text-sm font-medium text-muted-foreground">FROM</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="from"
-                  value={from}
-                  onChange={handleInputChange}
-                  placeholder="Departure city"
-                  className="pl-10 h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
-                />
-              </div>
+              <Select value={from} onValueChange={setFrom}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue placeholder="Select departure city">
+                    {from && sectors.find(s => s.Origin === from)?.Sector.split('//')[0].trim()}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from(new Set(sectors.map(s => s.Origin))).sort().map((origin) => {
+                    const sector = sectors.find(s => s.Origin === origin);
+                    return (
+                      <SelectItem key={origin} value={origin}>
+                        {sector?.Sector.split('//')[0].trim()} ({origin})
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="flex justify-center items-center">
@@ -265,16 +272,24 @@ const FlightBooking = () => {
             
             <div className="md:col-span-2 space-y-2">
               <Label className="text-sm font-medium text-muted-foreground">TO</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="to"
-                  value={to}
-                  onChange={handleInputChange}
-                  placeholder="Destination city"
-                  className="pl-10 h-12 text-base border-0 shadow-sm bg-muted/30 focus:bg-background"
-                />
-              </div>
+              <Select value={to} onValueChange={setTo}>
+                <SelectTrigger className="h-12 border-0 shadow-sm bg-muted/30">
+                  <SelectValue placeholder="Select destination city">
+                    {to && sectors.find(s => s.Destination === to)?.Sector.split('//')[1].trim()}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {from && Array.from(new Set(sectors.filter(s => s.Origin === from).map(s => s.Destination))).sort().map((dest) => {
+                    const sector = sectors.find(s => s.Origin === from && s.Destination === dest);
+                    return (
+                      <SelectItem key={dest} value={dest}>
+                        {sector?.Sector.split('//')[1].trim()} ({dest})
+                      </SelectItem>
+                    );
+                  })}
+                  {!from && <SelectItem value="" disabled>Select origin first</SelectItem>}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
