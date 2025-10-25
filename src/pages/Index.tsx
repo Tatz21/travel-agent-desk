@@ -48,12 +48,6 @@ const Index = () => {
             <div className="flex items-center">
               <img src={logo} alt="Phoenix Travelopedia" className="h-16 w-auto object-contain" />
             </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#services" className="text-foreground hover:text-primary transition-colors font-medium">Services</a>
-              <a href="#destinations" className="text-foreground hover:text-primary transition-colors font-medium">Destinations</a>
-              <a href="#features" className="text-foreground hover:text-primary transition-colors font-medium">Features</a>
-              <a href="#contact" className="text-foreground hover:text-primary transition-colors font-medium">Contact</a>
-            </nav>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
               <Button variant="outline" onClick={() => navigate('/auth')} className="hidden sm:inline-flex">
