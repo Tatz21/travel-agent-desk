@@ -72,21 +72,21 @@ const Index = () => {
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
           <div className="mb-8">
-            <p className="text-primary text-lg md:text-xl mb-4 font-light tracking-wider">WELCOME TO</p>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-foreground drop-shadow-lg animate-fade-in">
+            <p className="text-primary text-lg md:text-xl mb-4 font-light tracking-wider animate-fade-in-down">WELCOME TO</p>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-foreground drop-shadow-lg animate-fade-in-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               Phoenix Travelopedia
             </h1>
-            <p className="text-3xl sm:text-4xl md:text-5xl font-script italic text-primary/90 mb-8 drop-shadow-md">
+            <p className="text-3xl sm:text-4xl md:text-5xl font-script italic text-primary/90 mb-8 drop-shadow-md animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
               Discover Incredible India
             </p>
           </div>
           
-          <p className="text-lg md:text-xl text-foreground/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+          <p className="text-lg md:text-xl text-foreground/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md animate-fade-in-up" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
             Your gateway to seamless travel experiences across India. Book flights, buses, and hotels 
             all in one place and earn competitive commissions as a trusted travel agent.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <Button 
               size="lg" 
               onClick={() => navigate('/auth')}
@@ -104,21 +104,21 @@ const Index = () => {
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto bg-background/60 backdrop-blur-md p-6 rounded-lg shadow-2xl">
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-primary mb-2">500+</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto bg-background/60 backdrop-blur-md p-6 rounded-lg shadow-2xl animate-scale-in" style={{ animationDelay: '1s', animationFillMode: 'both' }}>
+            <div className="text-center hover:scale-110 transition-transform duration-300">
+              <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">500+</p>
               <p className="text-sm text-foreground/80">Active Agents</p>
             </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-primary mb-2">10K+</p>
+            <div className="text-center hover:scale-110 transition-transform duration-300" style={{ animationDelay: '0.1s' }}>
+              <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">10K+</p>
               <p className="text-sm text-foreground/80">Bookings</p>
             </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-primary mb-2">50+</p>
+            <div className="text-center hover:scale-110 transition-transform duration-300" style={{ animationDelay: '0.2s' }}>
+              <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">50+</p>
               <p className="text-sm text-foreground/80">Destinations</p>
             </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</p>
+            <div className="text-center hover:scale-110 transition-transform duration-300" style={{ animationDelay: '0.3s' }}>
+              <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">24/7</p>
               <p className="text-sm text-foreground/80">Support</p>
             </div>
           </div>
@@ -146,7 +146,11 @@ const Index = () => {
               { img: amerFort, title: "Rajasthan Forts", desc: "Historic architectural marvels" },
               { img: heroTajMahal, title: "Taj Mahal", desc: "Wonder of the world" },
             ].map((destination, idx) => (
-              <Card key={idx} className="group overflow-hidden border-primary/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              <Card 
+                key={idx} 
+                className="group overflow-hidden border-primary/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-up"
+                style={{ animationDelay: `${idx * 0.1}s`, animationFillMode: 'both' }}
+              >
                 <div className="relative h-64 overflow-hidden">
                   <img 
                     src={destination.img} 
@@ -176,9 +180,9 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur">
+            <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur animate-slide-in-left" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <CardContent className="p-8 text-center">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
                   <Plane className="h-10 w-10 text-primary" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-4">Flight Booking</h3>
@@ -188,9 +192,9 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur">
+            <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur animate-scale-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <CardContent className="p-8 text-center">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
                   <Hotel className="h-10 w-10 text-primary" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-4">Hotel Reservations</h3>
@@ -200,9 +204,9 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur">
+            <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur animate-slide-in-right" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
               <CardContent className="p-8 text-center">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
                   <Bus className="h-10 w-10 text-primary" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-4">Bus Tickets</h3>
@@ -240,7 +244,11 @@ const Index = () => {
               { icon: Users, title: "Agent Community", desc: "Join a thriving community of travel professionals" },
               { icon: Star, title: "Premium Service", desc: "Dedicated account manager for your business" },
             ].map((feature, idx) => (
-              <Card key={idx} className="border-primary/10 hover:border-primary/30 transition-colors bg-card/80 backdrop-blur-md hover:shadow-xl">
+              <Card 
+                key={idx} 
+                className="border-primary/10 hover:border-primary/30 transition-all duration-300 bg-card/80 backdrop-blur-md hover:shadow-xl hover:scale-105 animate-fade-in"
+                style={{ animationDelay: `${idx * 0.1}s`, animationFillMode: 'both' }}
+              >
                 <CardContent className="p-6">
                   <feature.icon className="h-8 w-8 text-primary mb-4" />
                   <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
@@ -268,9 +276,13 @@ const Index = () => {
               { num: "02", title: "Start Booking", desc: "Access our platform to book flights, hotels, and buses" },
               { num: "03", title: "Earn & Grow", desc: "Receive commissions and grow your travel business" },
             ].map((step, idx) => (
-              <div key={idx} className="text-center relative">
+              <div 
+                key={idx} 
+                className="text-center relative animate-fade-in-up"
+                style={{ animationDelay: `${idx * 0.2}s`, animationFillMode: 'both' }}
+              >
                 <div className="relative inline-block mb-6">
-                  <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  <div className="w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto shadow-lg hover:shadow-2xl transition-shadow duration-300 hover:scale-110">
                     <span className="text-3xl font-bold text-white">{step.num}</span>
                   </div>
                   {idx < 2 && (
@@ -295,7 +307,7 @@ const Index = () => {
         </div>
         
         <div className="max-w-4xl mx-auto relative z-10">
-          <Card className="border-primary/30 bg-card/90 backdrop-blur-lg shadow-2xl">
+          <Card className="border-primary/30 bg-card/90 backdrop-blur-lg shadow-2xl animate-scale-in"  style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
             <CardContent className="p-12 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Ready to Transform Your Travel Business?
