@@ -13,6 +13,12 @@ import jaipurPalace from '@/assets/jaipur-palace.jpg';
 import himalayanMountains from '@/assets/himalayan-mountains.jpg';
 import goaBeach from '@/assets/goa-beach.jpg';
 import amerFort from '@/assets/amer-fort.jpg';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -61,14 +67,39 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section with Background Image */}
+      {/* Hero Section with Carousel Background */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroTajMahal})` }}
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 4000,
+            }),
+          ]}
+          className="absolute inset-0 w-full h-full"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/70 to-background/60"></div>
-        </div>
+          <CarouselContent className="h-screen">
+            {[
+              { img: heroTajMahal, alt: "Taj Mahal" },
+              { img: keralaBackwaters, alt: "Kerala Backwaters" },
+              { img: jaipurPalace, alt: "Jaipur Palace" },
+              { img: himalayanMountains, alt: "Himalayan Mountains" },
+              { img: goaBeach, alt: "Goa Beach" },
+            ].map((slide, index) => (
+              <CarouselItem key={index} className="h-screen p-0">
+                <div 
+                  className="relative w-full h-full bg-cover bg-center transition-all duration-1000"
+                  style={{ backgroundImage: `url(${slide.img})` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/70 to-background/60"></div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
           <div className="mb-8">
