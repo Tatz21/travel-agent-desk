@@ -227,7 +227,7 @@ const AuthPage = () => {
         <div className="w-full max-w-md mx-4 relative z-10 animate-fade-in">
           <Card className="shadow-2xl border-0 rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
             <div className="bg-gradient-to-r from-primary to-primary/80 p-8 text-center">
-              <img src={logo} alt="Travelopedia" className="h-40 w-40 mx-auto mb-4 object-contain" />
+              <img src={logo} alt="Travelopedia" className="h-52 w-52 mx-auto mb-4 object-contain" />
               <h1 className="text-3xl font-bold text-white">
                 Sign In <span className="font-normal">to</span>
               </h1>
