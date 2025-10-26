@@ -167,7 +167,7 @@ const AuthPage = () => {
               <img 
                 src={logo} 
                 alt="Travelopedia" 
-                className="h-24 w-24 mx-auto mb-4 object-contain"
+                className="h-40 w-40 mx-auto mb-4 object-contain"
               />
               <h1 className="text-3xl font-bold text-white">
                 Sign In <span className="font-normal">to</span>
