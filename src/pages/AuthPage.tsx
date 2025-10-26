@@ -28,6 +28,29 @@ const AuthPage = () => {
       navigate('/');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('section-visible');
+        }
+      });
+    }, observerOptions);
+
+    sectionRefs.current.forEach(section => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       const pageYOffset = window.pageYOffset;
@@ -286,7 +309,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 2: Why Choose Us */}
-      <section ref={el => sectionRefs.current[1] = el} className="min-h-screen py-20 px-4 relative">
+      <section ref={el => sectionRefs.current[1] = el} className="min-h-screen py-20 px-4 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -312,7 +335,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 3: Our Products */}
-      <section ref={el => sectionRefs.current[2] = el} className="min-h-screen py-20 px-4 bg-white/50 relative">
+      <section ref={el => sectionRefs.current[2] = el} className="min-h-screen py-20 px-4 bg-white/50 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -337,7 +360,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 4: Features */}
-      <section ref={el => sectionRefs.current[3] = el} className="min-h-screen py-20 px-4 relative">
+      <section ref={el => sectionRefs.current[3] = el} className="min-h-screen py-20 px-4 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -362,7 +385,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 5: Contact Us */}
-      <section ref={el => sectionRefs.current[4] = el} className="min-h-screen py-20 px-4 bg-white/50 relative">
+      <section ref={el => sectionRefs.current[4] = el} className="min-h-screen py-20 px-4 bg-white/50 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">

@@ -91,4 +91,8 @@ All colors MUST be HSL.
   html {
     background-color: hsl(var(--background));
   }
+
+  .section-visible {
+    @apply opacity-100 translate-y-0;
+  }
 }
