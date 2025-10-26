@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, Award, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned } from 'lucide-react';
 import logo from '@/assets/logo.gif';
+import watermark from '@/assets/watermark-logo.png';
 const AuthPage = () => {
   const {
     user,
@@ -211,6 +212,14 @@ const AuthPage = () => {
 
       {/* Section 1: Login */}
       <section ref={el => sectionRefs.current[0] = el} className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        {/* Watermark Logo Pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+          backgroundImage: `url(${watermark})`,
+          backgroundSize: '150px',
+          backgroundRepeat: 'repeat',
+          backgroundPosition: 'center'
+        }} />
+        
         {/* Floating Travel Icons */}
         {floatingIcons.map(({
         Icon,
