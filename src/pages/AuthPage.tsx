@@ -423,18 +423,6 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* Geometric Triangle Pattern at Bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 overflow-hidden">
-          <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1200 150" preserveAspectRatio="none">
-            <defs>
-              <pattern id="triangles" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                <polygon points="0,0 30,60 60,0" fill="hsl(var(--primary) / 0.1)" />
-                <polygon points="0,60 30,0 60,60" fill="hsl(var(--primary) / 0.15)" />
-              </pattern>
-            </defs>
-            <rect width="1200" height="150" fill="url(#triangles)" />
-          </svg>
-        </div>
       </section>
     </div>;
 };
