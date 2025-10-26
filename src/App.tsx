@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { useAgent } from "@/hooks/useAgent";
-import WatermarkBackground from "@/components/WatermarkBackground";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AgentSetup from "./pages/AgentSetup";
@@ -75,7 +74,6 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <TooltipProvider>
         <AuthProvider>
-          <WatermarkBackground />
           <Toaster />
           <Sonner />
           <BrowserRouter>
