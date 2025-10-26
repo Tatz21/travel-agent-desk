@@ -215,9 +215,11 @@ const AuthPage = () => {
         {/* Watermark Logo Pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
           backgroundImage: `url(${watermark})`,
-          backgroundSize: '150px',
+          backgroundSize: '250px',
           backgroundRepeat: 'repeat',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          transform: 'rotate(45deg)',
+          transformOrigin: 'center'
         }} />
         
         {/* Floating Travel Icons */}
