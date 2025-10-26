@@ -162,7 +162,7 @@ const AuthPage = () => {
         ))}
 
         <div className="w-full max-w-md mx-4 relative z-10 animate-fade-in">
-          <Card className="shadow-2xl border-0 rounded-2xl overflow-hidden">
+          <Card className="shadow-2xl border-0 rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
             <div className="bg-gradient-to-r from-primary to-primary/80 p-8 text-center">
               <img 
                 src={logo} 
