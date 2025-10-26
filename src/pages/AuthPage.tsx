@@ -31,8 +31,8 @@ const AuthPage = () => {
 
   useEffect(() => {
     const observerOptions = {
-      threshold: 0.15,
-      rootMargin: '0px 0px -100px 0px'
+      threshold: 0.1,
+      rootMargin: '0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -43,13 +43,19 @@ const AuthPage = () => {
       });
     }, observerOptions);
 
-    sectionRefs.current.forEach(section => {
-      if (section) {
-        observer.observe(section);
-      }
-    });
+    // Small delay to ensure refs are set
+    const timeoutId = setTimeout(() => {
+      sectionRefs.current.forEach(section => {
+        if (section) {
+          observer.observe(section);
+        }
+      });
+    }, 100);
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
   }, []);
   useEffect(() => {
     const handleScroll = () => {
