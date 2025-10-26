@@ -17,6 +17,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
+  const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set([0]));
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -31,19 +32,21 @@ const AuthPage = () => {
 
   useEffect(() => {
     const observerOptions = {
-      threshold: 0.1,
+      threshold: 0.2,
       rootMargin: '0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('section-visible');
+          const sectionIndex = sectionRefs.current.indexOf(entry.target as HTMLElement);
+          if (sectionIndex !== -1) {
+            setVisibleSections(prev => new Set(prev).add(sectionIndex));
+          }
         }
       });
     }, observerOptions);
 
-    // Small delay to ensure refs are set
     const timeoutId = setTimeout(() => {
       sectionRefs.current.forEach(section => {
         if (section) {
@@ -315,7 +318,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 2: Why Choose Us */}
-      <section ref={el => sectionRefs.current[1] = el} className="min-h-screen py-20 px-4 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
+      <section ref={el => sectionRefs.current[1] = el} className={`min-h-screen py-20 px-4 relative transition-all duration-1000 ease-out ${visibleSections.has(1) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -341,7 +344,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 3: Our Products */}
-      <section ref={el => sectionRefs.current[2] = el} className="min-h-screen py-20 px-4 bg-white/50 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
+      <section ref={el => sectionRefs.current[2] = el} className={`min-h-screen py-20 px-4 bg-white/50 relative transition-all duration-1000 ease-out ${visibleSections.has(2) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -366,7 +369,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 4: Features */}
-      <section ref={el => sectionRefs.current[3] = el} className="min-h-screen py-20 px-4 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
+      <section ref={el => sectionRefs.current[3] = el} className={`min-h-screen py-20 px-4 relative transition-all duration-1000 ease-out ${visibleSections.has(3) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -391,7 +394,7 @@ const AuthPage = () => {
       </section>
 
       {/* Section 5: Contact Us */}
-      <section ref={el => sectionRefs.current[4] = el} className="min-h-screen py-20 px-4 bg-white/50 relative opacity-0 translate-y-20 transition-all duration-1000 ease-out">
+      <section ref={el => sectionRefs.current[4] = el} className={`min-h-screen py-20 px-4 bg-white/50 relative transition-all duration-1000 ease-out ${visibleSections.has(4) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
