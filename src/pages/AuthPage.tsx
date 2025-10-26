@@ -213,7 +213,7 @@ const AuthPage = () => {
       {/* Section 1: Login */}
       <section ref={el => sectionRefs.current[0] = el} className="min-h-screen flex items-center justify-center relative overflow-hidden">
         {/* Watermark Logo Pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.06]" style={{
+        <div className="absolute inset-0 pointer-events-none opacity-[0.06] scale-150" style={{
           backgroundImage: `url(${watermark})`,
           backgroundSize: '250px',
           backgroundRepeat: 'repeat',
