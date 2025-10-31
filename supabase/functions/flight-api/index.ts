@@ -7,8 +7,6 @@ const corsHeaders = {
 };
 
 const FLIGHT_API_URL = 'https://omairiq.azurewebsites.net';
-const FLIGHT_API_USERNAME = '9555202202';
-const FLIGHT_API_PASSWORD = '112233344';
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -19,48 +17,18 @@ serve(async (req) => {
     const { action, ...params } = await req.json();
     const apiKey = Deno.env.get('BUS_API_KEY');
 
-    console.log('Flight API request:', { action, params });
-
-    // Authenticate with the API
-    const authResponse = await fetch(`${FLIGHT_API_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': apiKey,
-      },
-      body: JSON.stringify({
-        Username: FLIGHT_API_USERNAME,
-        Password: FLIGHT_API_PASSWORD,
-      }),
-    });
-
-    const authResponseText = await authResponse.text();
-    console.log('Auth response status:', authResponse.status);
-    console.log('Auth response:', authResponseText);
-
-    if (!authResponse.ok) {
-      console.error('Authentication failed');
+    if (!apiKey) {
+      console.error('BUS_API_KEY not configured');
       return new Response(
-        JSON.stringify({ 
-          error: 'Authentication failed', 
-          status: authResponse.status,
-          response: authResponseText 
-        }),
+        JSON.stringify({ error: 'API key not configured' }),
         {
-          status: 401,
+          status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    let authData;
-    try {
-      authData = JSON.parse(authResponseText);
-    } catch (e) {
-      authData = { token: authResponseText };
-    }
-    
-    console.log('Authentication successful, token:', authData.token);
+    console.log('Flight API request:', { action, params });
 
     // Handle different actions
     let response;
@@ -73,7 +41,6 @@ serve(async (req) => {
           method: 'GET',
           headers: {
             'api-key': apiKey,
-            'Authorization': authData.token,
           },
         });
         break;
@@ -85,7 +52,6 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
-            'Authorization': authData.token,
           },
           body: JSON.stringify({
             Origin: params.origin,
@@ -107,7 +73,6 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
-            'Authorization': authData.token,
           },
           body: JSON.stringify(params.searchData),
         });
@@ -120,7 +85,6 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
-            'Authorization': authData.token,
           },
           body: JSON.stringify(params.bookingData),
         });
@@ -132,19 +96,16 @@ serve(async (req) => {
           method: 'GET',
           headers: {
             'api-key': apiKey,
-            'Authorization': authData.token,
           },
         });
         break;
 
       case 'test':
-        // Just return auth success for testing
         return new Response(
           JSON.stringify({ 
             success: true, 
-            message: 'API connection successful',
-            user: authData.user,
-            balance: authData.user?.balance
+            message: 'API key configured',
+            apiKeyPrefix: apiKey.substring(0, 10) + '...'
           }),
           {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
