@@ -30,7 +30,7 @@ serve(async (req) => {
 
     console.log('Flight API request:', { action, params });
 
-    // Handle different actions
+    // Handle different actions - use api-key header directly
     let response;
     let endpoint = '';
     
@@ -40,7 +40,7 @@ serve(async (req) => {
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'api-key': apiKey,
           },
         });
         break;
@@ -51,7 +51,7 @@ serve(async (req) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            'api-key': apiKey,
           },
           body: JSON.stringify({
             Origin: params.origin,
@@ -72,7 +72,7 @@ serve(async (req) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            'api-key': apiKey,
           },
           body: JSON.stringify(params.searchData),
         });
@@ -84,7 +84,7 @@ serve(async (req) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            'api-key': apiKey,
           },
           body: JSON.stringify(params.bookingData),
         });
@@ -95,7 +95,7 @@ serve(async (req) => {
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'api-key': apiKey,
           },
         });
         break;
