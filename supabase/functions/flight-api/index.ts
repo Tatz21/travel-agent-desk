@@ -15,9 +15,9 @@ serve(async (req) => {
 
   try {
     const { action, ...params } = await req.json();
-    const apiKey = Deno.env.get('BUS_API_KEY');
+    const encodedApiKey = Deno.env.get('BUS_API_KEY');
 
-    if (!apiKey) {
+    if (!encodedApiKey) {
       console.error('BUS_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'API key not configured' }),
@@ -30,7 +30,81 @@ serve(async (req) => {
 
     console.log('Flight API request:', { action, params });
 
-    // Handle different actions - use api-key directly as authorization
+    // Decode the base64 API key to get credentials
+    let decodedKey: string;
+    try {
+      decodedKey = atob(encodedApiKey);
+      console.log('Decoded API key format (masked):', decodedKey.substring(0, 20) + '...');
+    } catch (e) {
+      console.error('Failed to decode API key:', e);
+      return new Response(
+        JSON.stringify({ error: 'Invalid API key format' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Parse credentials: format is agentId:companyName:phone:password
+    const parts = decodedKey.split(':');
+    if (parts.length !== 4) {
+      console.error('Unexpected credential format, parts:', parts.length);
+      return new Response(
+        JSON.stringify({ error: 'Invalid credential format in API key' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const agentId = parts[0];
+    const password = parts[3];
+    console.log('Using agent ID as username:', agentId);
+
+    // Authenticate with the API
+    const authResponse = await fetch(`${FLIGHT_API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': encodedApiKey,
+      },
+      body: JSON.stringify({
+        Username: agentId,
+        Password: password,
+      }),
+    });
+
+    const authResponseText = await authResponse.text();
+    console.log('Auth response status:', authResponse.status);
+    console.log('Auth response:', authResponseText.substring(0, 200));
+
+    if (!authResponse.ok) {
+      console.error('Authentication failed');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Authentication failed', 
+          status: authResponse.status,
+          response: authResponseText 
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    let authData;
+    try {
+      authData = JSON.parse(authResponseText);
+    } catch (e) {
+      authData = { token: authResponseText };
+    }
+    
+    console.log('Authentication successful, token received:', !!authData.token);
+
+    // Handle different actions
     let response;
     let endpoint = '';
     
@@ -40,7 +114,8 @@ serve(async (req) => {
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Basic ${apiKey}`,
+            'api-key': encodedApiKey,
+            'Authorization': authData.token,
           },
         });
         break;
@@ -51,7 +126,8 @@ serve(async (req) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Basic ${apiKey}`,
+            'api-key': encodedApiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify({
             Origin: params.origin,
@@ -72,7 +148,8 @@ serve(async (req) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Basic ${apiKey}`,
+            'api-key': encodedApiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify(params.searchData),
         });
@@ -84,7 +161,8 @@ serve(async (req) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Basic ${apiKey}`,
+            'api-key': encodedApiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify(params.bookingData),
         });
@@ -95,7 +173,8 @@ serve(async (req) => {
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Basic ${apiKey}`,
+            'api-key': encodedApiKey,
+            'Authorization': authData.token,
           },
         });
         break;
@@ -104,8 +183,9 @@ serve(async (req) => {
         return new Response(
           JSON.stringify({ 
             success: true, 
-            message: 'API key configured',
-            apiKeyPrefix: apiKey.substring(0, 10) + '...'
+            message: 'API connection successful',
+            user: authData.user,
+            balance: authData.user?.balance
           }),
           {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
