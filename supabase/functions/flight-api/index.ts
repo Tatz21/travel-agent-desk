@@ -15,9 +15,9 @@ serve(async (req) => {
 
   try {
     const { action, ...params } = await req.json();
-    const apiKey = Deno.env.get('BUS_API_KEY');
+    const encodedApiKey = Deno.env.get('BUS_API_KEY');
 
-    if (!apiKey) {
+    if (!encodedApiKey) {
       console.error('BUS_API_KEY not configured');
       return new Response(
         JSON.stringify({ error: 'API key not configured' }),
@@ -30,6 +30,91 @@ serve(async (req) => {
 
     console.log('Flight API request:', { action, params });
 
+    // Decode the base64 API key to get credentials
+    let decodedKey: string;
+    try {
+      decodedKey = atob(encodedApiKey);
+      console.log('Decoded API key format (masked):', decodedKey.substring(0, 20) + '...');
+    } catch (e) {
+      console.error('Failed to decode API key:', e);
+      return new Response(
+        JSON.stringify({ error: 'Invalid API key format' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Parse credentials from decoded key (format: agentId:companyName:phone:password or similar)
+    const parts = decodedKey.split(':');
+    let username: string;
+    let password: string;
+    let apiKey: string = encodedApiKey;
+
+    // Try different credential parsing strategies
+    if (parts.length >= 4) {
+      // Format appears to be: agentId:companyName:phone:password
+      username = parts[2]; // Use phone as username
+      password = parts[3]; // Last part is password
+      console.log('Using parsed credentials, username:', username);
+    } else if (parts.length === 2) {
+      // Format: username:password
+      username = parts[0];
+      password = parts[1];
+      console.log('Using simple username:password format');
+    } else {
+      console.error('Unexpected credential format, parts:', parts.length);
+      return new Response(
+        JSON.stringify({ error: 'Invalid credential format in API key' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Authenticate with the API
+    const authResponse = await fetch(`${FLIGHT_API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': apiKey,
+      },
+      body: JSON.stringify({
+        Username: username,
+        Password: password,
+      }),
+    });
+
+    const authResponseText = await authResponse.text();
+    console.log('Auth response status:', authResponse.status);
+    console.log('Auth response:', authResponseText.substring(0, 200));
+
+    if (!authResponse.ok) {
+      console.error('Authentication failed');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Authentication failed', 
+          status: authResponse.status,
+          response: authResponseText 
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    let authData;
+    try {
+      authData = JSON.parse(authResponseText);
+    } catch (e) {
+      authData = { token: authResponseText };
+    }
+    
+    console.log('Authentication successful, token received:', !!authData.token);
+
     // Handle different actions
     let response;
     let endpoint = '';
@@ -41,6 +126,7 @@ serve(async (req) => {
           method: 'GET',
           headers: {
             'api-key': apiKey,
+            'Authorization': authData.token,
           },
         });
         break;
@@ -52,6 +138,7 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify({
             Origin: params.origin,
@@ -73,6 +160,7 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify(params.searchData),
         });
@@ -85,6 +173,7 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': authData.token,
           },
           body: JSON.stringify(params.bookingData),
         });
@@ -96,6 +185,7 @@ serve(async (req) => {
           method: 'GET',
           headers: {
             'api-key': apiKey,
+            'Authorization': authData.token,
           },
         });
         break;
@@ -104,8 +194,9 @@ serve(async (req) => {
         return new Response(
           JSON.stringify({ 
             success: true, 
-            message: 'API key configured',
-            apiKeyPrefix: apiKey.substring(0, 10) + '...'
+            message: 'API connection successful',
+            user: authData.user,
+            balance: authData.user?.balance
           }),
           {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
