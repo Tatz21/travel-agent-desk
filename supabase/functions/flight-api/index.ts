@@ -8,6 +8,40 @@ const corsHeaders = {
 
 const FLIGHT_API_URL = 'https://omairiq.azurewebsites.net';
 
+// Helper function to get auth token
+async function getAuthToken(apiKey: string): Promise<string> {
+  // Decode the API key to extract credentials
+  const decoded = atob(apiKey);
+  const parts = decoded.split(':');
+  
+  const username = parts[0]; // Agency ID
+  const password = parts[3]; // The last part after the third colon
+  
+  console.log('Attempting login with username:', username);
+  
+  const loginResponse = await fetch(`${FLIGHT_API_URL}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': apiKey,
+    },
+    body: JSON.stringify({
+      Username: username,
+      Password: password,
+    }),
+  });
+
+  if (!loginResponse.ok) {
+    const errorText = await loginResponse.text();
+    console.error('Login failed:', errorText);
+    throw new Error(`Login failed: ${errorText}`);
+  }
+
+  const loginData = await loginResponse.json();
+  console.log('Login successful, got token');
+  return loginData.token; // Returns "Bearer xyz..."
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -30,7 +64,13 @@ serve(async (req) => {
 
     console.log('Flight API request:', { action, params });
 
-    // Handle different actions - use api-key header directly
+    // Get auth token for all actions except test
+    let token = '';
+    if (action !== 'test') {
+      token = await getAuthToken(apiKey);
+    }
+
+    // Handle different actions - use both api-key and Authorization token
     let response;
     let endpoint = '';
     
@@ -41,6 +81,7 @@ serve(async (req) => {
           method: 'GET',
           headers: {
             'api-key': apiKey,
+            'Authorization': token,
           },
         });
         break;
@@ -52,6 +93,7 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': token,
           },
           body: JSON.stringify({
             Origin: params.origin,
@@ -73,6 +115,7 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': token,
           },
           body: JSON.stringify(params.searchData),
         });
@@ -85,6 +128,7 @@ serve(async (req) => {
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': token,
           },
           body: JSON.stringify(params.bookingData),
         });
@@ -96,6 +140,7 @@ serve(async (req) => {
           method: 'GET',
           headers: {
             'api-key': apiKey,
+            'Authorization': token,
           },
         });
         break;
