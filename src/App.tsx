@@ -19,6 +19,7 @@ import GroupBooking from "./pages/GroupBooking";
 import ServiceCharge from "./pages/ServiceCharge";
 import BankDetails from "./pages/BankDetails";
 import ContactRepresentative from "./pages/ContactRepresentative";
+import ApiTest from "./pages/ApiTest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -80,6 +81,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/api-test" element={<ApiTest />} />
               <Route path="/setup" element={
                 <SetupRoute>
                   <AgentSetup />
