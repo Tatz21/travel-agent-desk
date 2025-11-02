@@ -17,14 +17,15 @@ function decodeApiKey(apiKey: string): { username: string; password: string } | 
   try {
     // Decode base64
     const decoded = atob(apiKey);
-    console.log('Decoded API key format:', decoded.split(':').length, 'parts');
+    console.log('Decoded API key:', decoded);
     
     // Format appears to be: AgencyId:AgencyName:MobileNo:EncodedPassword
     const parts = decoded.split(':');
     if (parts.length >= 4) {
       const username = parts[2]; // Mobile number
-      const password = atob(parts[3]); // Decode password
-      console.log('Extracted username:', username);
+      // Try the password as-is first (might not need additional decoding)
+      const password = parts[3];
+      console.log('Extracted credentials - username:', username, 'password length:', password.length);
       return { username, password };
     }
   } catch (e) {
