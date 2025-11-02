@@ -8,6 +8,42 @@ const corsHeaders = {
 
 const FLIGHT_API_URL = 'https://omairiq.azurewebsites.net';
 
+// Token cache (in production, use a proper cache like Redis)
+let cachedToken: string | null = null;
+let tokenExpiry: number = 0;
+
+// Function to get or refresh token
+async function getAuthToken(apiKey: string, username: string, password: string): Promise<string> {
+  // Check if cached token is still valid (with 5 minute buffer)
+  if (cachedToken && Date.now() < tokenExpiry - 300000) {
+    return cachedToken;
+  }
+
+  console.log('Logging in to get new token...');
+  const loginResponse = await fetch(`${FLIGHT_API_URL}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': apiKey,
+    },
+    body: JSON.stringify({
+      Username: username,
+      Password: password,
+    }),
+  });
+
+  if (!loginResponse.ok) {
+    throw new Error(`Login failed: ${loginResponse.status}`);
+  }
+
+  const loginData = await loginResponse.json();
+  cachedToken = loginData.token;
+  tokenExpiry = Date.now() + (loginData.expiration * 1000);
+  
+  console.log('Token obtained successfully');
+  return cachedToken;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -16,6 +52,8 @@ serve(async (req) => {
   try {
     const { action, ...params } = await req.json();
     const apiKey = Deno.env.get('BUS_API_KEY');
+    const username = Deno.env.get('FLIGHT_API_USERNAME') || '9555202202';
+    const password = Deno.env.get('FLIGHT_API_PASSWORD') || '112233344';
 
     if (!apiKey) {
       console.error('BUS_API_KEY not configured');
@@ -30,7 +68,7 @@ serve(async (req) => {
 
     console.log('Flight API request:', { action, params });
 
-    // Handle different actions - use api-key header only
+    // Handle different actions
     let response;
     let endpoint = '';
     
@@ -52,21 +90,25 @@ serve(async (req) => {
 
       case 'sectors':
         endpoint = '/sectors';
+        const token = await getAuthToken(apiKey, username, password);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
             'api-key': apiKey,
+            'Authorization': token,
           },
         });
         break;
 
       case 'availability':
         endpoint = '/availability';
+        const availToken = await getAuthToken(apiKey, username, password);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': availToken,
           },
           body: JSON.stringify({
             Origin: params.origin,
@@ -83,11 +125,13 @@ serve(async (req) => {
 
       case 'search':
         endpoint = '/searchtickets';
+        const searchToken = await getAuthToken(apiKey, username, password);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': searchToken,
           },
           body: JSON.stringify(params.searchData),
         });
@@ -95,11 +139,13 @@ serve(async (req) => {
 
       case 'book':
         endpoint = '/ticketbooking';
+        const bookToken = await getAuthToken(apiKey, username, password);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'api-key': apiKey,
+            'Authorization': bookToken,
           },
           body: JSON.stringify(params.bookingData),
         });
@@ -107,10 +153,12 @@ serve(async (req) => {
 
       case 'ticket-details':
         endpoint = `/ticketdetails?BookingId=${params.bookingId}`;
+        const detailsToken = await getAuthToken(apiKey, username, password);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
             'api-key': apiKey,
+            'Authorization': detailsToken,
           },
         });
         break;
