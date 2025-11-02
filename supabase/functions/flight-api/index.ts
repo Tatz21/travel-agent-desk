@@ -12,11 +12,37 @@ const FLIGHT_API_URL = 'https://omairiq.azurewebsites.net';
 let cachedToken: string | null = null;
 let tokenExpiry: number = 0;
 
+// Decode API key to extract credentials
+function decodeApiKey(apiKey: string): { username: string; password: string } | null {
+  try {
+    // Decode base64
+    const decoded = atob(apiKey);
+    console.log('Decoded API key format:', decoded.split(':').length, 'parts');
+    
+    // Format appears to be: AgencyId:AgencyName:MobileNo:EncodedPassword
+    const parts = decoded.split(':');
+    if (parts.length >= 4) {
+      const username = parts[2]; // Mobile number
+      const password = atob(parts[3]); // Decode password
+      console.log('Extracted username:', username);
+      return { username, password };
+    }
+  } catch (e) {
+    console.error('Failed to decode API key:', e);
+  }
+  return null;
+}
+
 // Function to get or refresh token
-async function getAuthToken(apiKey: string, username: string, password: string): Promise<string> {
+async function getAuthToken(apiKey: string): Promise<string> {
   // Check if cached token is still valid (with 5 minute buffer)
   if (cachedToken && Date.now() < tokenExpiry - 300000) {
     return cachedToken;
+  }
+
+  const credentials = decodeApiKey(apiKey);
+  if (!credentials) {
+    throw new Error('Could not extract credentials from API key');
   }
 
   console.log('Logging in to get new token...');
@@ -27,12 +53,14 @@ async function getAuthToken(apiKey: string, username: string, password: string):
       'api-key': apiKey,
     },
     body: JSON.stringify({
-      Username: username,
-      Password: password,
+      Username: credentials.username,
+      Password: credentials.password,
     }),
   });
 
   if (!loginResponse.ok) {
+    const errorText = await loginResponse.text();
+    console.error('Login failed:', loginResponse.status, errorText);
     throw new Error(`Login failed: ${loginResponse.status}`);
   }
 
@@ -52,8 +80,6 @@ serve(async (req) => {
   try {
     const { action, ...params } = await req.json();
     const apiKey = Deno.env.get('BUS_API_KEY');
-    const username = Deno.env.get('FLIGHT_API_USERNAME') || '9555202202';
-    const password = Deno.env.get('FLIGHT_API_PASSWORD') || '112233344';
 
     if (!apiKey) {
       console.error('BUS_API_KEY not configured');
@@ -75,6 +101,14 @@ serve(async (req) => {
     switch (action) {
       case 'login':
         endpoint = '/login';
+        const loginCreds = params.username && params.password 
+          ? { username: params.username, password: params.password }
+          : decodeApiKey(apiKey);
+        
+        if (!loginCreds) {
+          throw new Error('No credentials provided');
+        }
+        
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
@@ -82,15 +116,15 @@ serve(async (req) => {
             'api-key': apiKey,
           },
           body: JSON.stringify({
-            Username: params.username,
-            Password: params.password,
+            Username: loginCreds.username,
+            Password: loginCreds.password,
           }),
         });
         break;
 
       case 'sectors':
         endpoint = '/sectors';
-        const token = await getAuthToken(apiKey, username, password);
+        const token = await getAuthToken(apiKey);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
@@ -102,7 +136,7 @@ serve(async (req) => {
 
       case 'availability':
         endpoint = '/availability';
-        const availToken = await getAuthToken(apiKey, username, password);
+        const availToken = await getAuthToken(apiKey);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
@@ -125,7 +159,7 @@ serve(async (req) => {
 
       case 'search':
         endpoint = '/searchtickets';
-        const searchToken = await getAuthToken(apiKey, username, password);
+        const searchToken = await getAuthToken(apiKey);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
@@ -139,7 +173,7 @@ serve(async (req) => {
 
       case 'book':
         endpoint = '/ticketbooking';
-        const bookToken = await getAuthToken(apiKey, username, password);
+        const bookToken = await getAuthToken(apiKey);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
@@ -153,7 +187,7 @@ serve(async (req) => {
 
       case 'ticket-details':
         endpoint = `/ticketdetails?BookingId=${params.bookingId}`;
-        const detailsToken = await getAuthToken(apiKey, username, password);
+        const detailsToken = await getAuthToken(apiKey);
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'GET',
           headers: {
