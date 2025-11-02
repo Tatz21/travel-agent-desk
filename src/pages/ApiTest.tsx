@@ -6,8 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 const ApiTest = () => {
-  const [username, setUsername] = useState('9555202202');
-  const [password, setPassword] = useState('112233344');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -16,32 +14,6 @@ const ApiTest = () => {
   const [destination, setDestination] = useState('BOM');
   const [departureDate, setDepartureDate] = useState('2025-12-01');
   const [adultCount, setAdultCount] = useState(1);
-
-  const testLogin = async () => {
-    setLoading(true);
-    setResponse('Testing...');
-    
-    try {
-      const res = await fetch('https://votwokvmqroxidvokexh.supabase.co/functions/v1/flight-api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'login',
-          username: username,
-          password: password,
-        }),
-      });
-
-      const data = await res.text();
-      setResponse(`Status: ${res.status}\n\n${data}`);
-    } catch (error: any) {
-      setResponse(`Error: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const testSectors = async () => {
     setLoading(true);
@@ -105,32 +77,6 @@ const ApiTest = () => {
           <CardTitle>Flight API Test</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="border-t pt-6 space-y-4">
-            <h3 className="font-semibold">Test Login Endpoint</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Username</Label>
-                <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter username"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Password</Label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                />
-              </div>
-            </div>
-            <Button onClick={testLogin} disabled={loading}>
-              Test Login
-            </Button>
-          </div>
-
           <div className="border-t pt-6 space-y-4">
             <h3 className="font-semibold">Test Sectors Endpoint</h3>
             <Button onClick={testSectors} disabled={loading}>
