@@ -6,9 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 const ApiTest = () => {
-  const [apiKey, setApiKey] = useState('MTQ3MDM1MDA6UEhPRU5JWCBUUkFWRUxPUEVESUE6MTg0NzM2MDM1Nzc2Njpya2FaYS9OdWNMOS9YejBEcmVtdGp3PT0=');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('9555202202');
+  const [password, setPassword] = useState('112233344');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,15 +16,15 @@ const ApiTest = () => {
     setResponse('Testing...');
     
     try {
-      const res = await fetch('https://omairiq.azurewebsites.net/login', {
+      const res = await fetch('https://votwokvmqroxidvokexh.supabase.co/functions/v1/flight-api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'api-key': apiKey,
         },
         body: JSON.stringify({
-          Username: username,
-          Password: password,
+          action: 'login',
+          username: username,
+          password: password,
         }),
       });
 
@@ -43,11 +42,14 @@ const ApiTest = () => {
     setResponse('Testing sectors...');
     
     try {
-      const res = await fetch('https://omairiq.azurewebsites.net/sectors', {
-        method: 'GET',
+      const res = await fetch('https://votwokvmqroxidvokexh.supabase.co/functions/v1/flight-api', {
+        method: 'POST',
         headers: {
-          'api-key': apiKey,
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          action: 'sectors',
+        }),
       });
 
       const data = await res.text();
@@ -66,15 +68,6 @@ const ApiTest = () => {
           <CardTitle>Flight API Test</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label>API Key</Label>
-            <Input
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter API key"
-            />
-          </div>
-
           <div className="border-t pt-6 space-y-4">
             <h3 className="font-semibold">Test Login Endpoint</h3>
             <div className="grid grid-cols-2 gap-4">

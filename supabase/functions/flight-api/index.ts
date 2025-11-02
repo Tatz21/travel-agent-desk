@@ -35,6 +35,21 @@ serve(async (req) => {
     let endpoint = '';
     
     switch (action) {
+      case 'login':
+        endpoint = '/login';
+        response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': apiKey,
+          },
+          body: JSON.stringify({
+            Username: params.username,
+            Password: params.password,
+          }),
+        });
+        break;
+
       case 'sectors':
         endpoint = '/sectors';
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
