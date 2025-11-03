@@ -617,21 +617,21 @@ const FlightBooking = () => {
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg bg-white shadow-sm flex items-center justify-center p-1.5 border">
+                          <div className="w-12 h-12 rounded-lg shadow-sm flex items-center justify-center font-bold text-lg border-2">
                             {(() => {
                               const airlineName = flight.airline?.toLowerCase() || '';
                               if (airlineName.includes('indigo') || airlineName.includes('6e')) {
-                                return <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/IndiGo_Airlines_logo.svg" alt="IndiGo" className="w-full h-full object-contain" />;
+                                return <span className="text-blue-700 bg-blue-50 w-full h-full flex items-center justify-center rounded-lg">6E</span>;
                               } else if (airlineName.includes('air india')) {
-                                return <img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Air_India_Logo.svg" alt="Air India" className="w-full h-full object-contain" />;
+                                return <span className="text-red-600 bg-red-50 w-full h-full flex items-center justify-center rounded-lg">AI</span>;
                               } else if (airlineName.includes('spicejet')) {
-                                return <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/SpiceJet_logo.svg" alt="SpiceJet" className="w-full h-full object-contain" />;
+                                return <span className="text-red-500 bg-red-50 w-full h-full flex items-center justify-center rounded-lg">SG</span>;
                               } else if (airlineName.includes('vistara')) {
-                                return <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Vistara_Logo.svg" alt="Vistara" className="w-full h-full object-contain" />;
+                                return <span className="text-purple-700 bg-purple-50 w-full h-full flex items-center justify-center rounded-lg">UK</span>;
                               } else if (airlineName.includes('go first') || airlineName.includes('go air')) {
-                                return <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/GoAir_logo.svg" alt="Go First" className="w-full h-full object-contain" />;
+                                return <span className="text-green-600 bg-green-50 w-full h-full flex items-center justify-center rounded-lg">G8</span>;
                               } else if (airlineName.includes('akasa')) {
-                                return <span className="text-2xl font-bold text-orange-600">QP</span>;
+                                return <span className="text-orange-600 bg-orange-50 w-full h-full flex items-center justify-center rounded-lg">QP</span>;
                               } else {
                                 return <Plane className="h-6 w-6 text-primary" />;
                               }
