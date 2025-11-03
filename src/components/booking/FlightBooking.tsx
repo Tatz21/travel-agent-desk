@@ -109,8 +109,19 @@ const FlightBooking = () => {
       if (availData?.data && Array.isArray(availData.data) && availData.data.length > 0) {
         setAvailableDates(availData.data);
         
-        // Use the first available date to search for flights
-        const searchDate = availData.data[0]; // Use first available date
+        // Check if user's selected date is available
+        const userSelectedDate = format(departureDate, 'dd-MMM-yyyy');
+        const isDateAvailable = availData.data.includes(userSelectedDate);
+        
+        let searchDate;
+        if (isDateAvailable) {
+          searchDate = userSelectedDate;
+          toast.success(`Flight available on your selected date: ${userSelectedDate}`);
+        } else {
+          // Use the first available date if user's date is not available
+          searchDate = availData.data[0];
+          toast.info(`Selected date not available. Showing flights for: ${searchDate}. Available dates: ${availData.data.join(', ')}`);
+        }
         
         // Now search for actual flight details
         const { data: searchData, error: searchError } = await supabase.functions.invoke('flight-api', {
