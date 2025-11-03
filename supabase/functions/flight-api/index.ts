@@ -138,8 +138,10 @@ serve(async (req) => {
         break;
 
       case 'search':
-        endpoint = '/searchtickets';
+        // Try different possible endpoint names
+        endpoint = '/search'; // Changed from /searchtickets
         const searchToken = await getAuthToken(apiKey);
+        console.log('Searching flights with params:', JSON.stringify(params.searchData, null, 2));
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
           headers: {
