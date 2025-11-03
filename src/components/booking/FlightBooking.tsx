@@ -105,18 +105,21 @@ const FlightBooking = () => {
 
       if (availError) throw availError;
 
-      // If availability returns dates, use the first available date to search for flights
+      // Check if there are available dates
       if (availData?.data && Array.isArray(availData.data) && availData.data.length > 0) {
         setAvailableDates(availData.data);
         
-        // Now search for actual flight details - using correct field names
+        // Use the first available date to search for flights
+        const searchDate = availData.data[0]; // Use first available date
+        
+        // Now search for actual flight details
         const { data: searchData, error: searchError } = await supabase.functions.invoke('flight-api', {
           body: {
             action: 'search',
             searchData: {
               origin: from,
               destination: to,
-              departure_date: format(departureDate, 'yyyy-MM-dd'),
+              departure_date: searchDate, // Use the available date from API
               return_date: returnDate ? format(returnDate, 'yyyy-MM-dd') : '',
               adult: adults,
               child: children,
@@ -128,14 +131,18 @@ const FlightBooking = () => {
 
         if (searchError) throw searchError;
 
-        if (searchData?.data && Array.isArray(searchData.data)) {
+        // Check if search returned actual flight data
+        if (searchData?.data && Array.isArray(searchData.data) && searchData.data.length > 0) {
           setSearchResults(searchData.data);
-          toast.success(`Found ${searchData.data.length} flights`);
+          toast.success(`Found ${searchData.data.length} flights on ${searchDate}`);
+        } else if (searchData?.message === "Data not found") {
+          // Show available dates if no flights found
+          toast.info(`No flights found. Available dates: ${availData.data.join(', ')}`);
         } else {
-          toast.info(`Flights available on: ${availData.data.slice(0, 3).join(', ')}...`);
+          toast.info(`Flights available on these dates: ${availData.data.join(', ')}`);
         }
       } else {
-        toast.error("No flights available for selected route and date");
+        toast.error("No flights available for selected route");
       }
     } catch (error: any) {
       console.error('Search error:', error);
