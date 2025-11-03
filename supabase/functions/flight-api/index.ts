@@ -12,26 +12,12 @@ const FLIGHT_API_URL = 'https://omairiq.azurewebsites.net';
 let cachedToken: string | null = null;
 let tokenExpiry: number = 0;
 
-// Decode API key to extract credentials
-function decodeApiKey(apiKey: string): { username: string; password: string } | null {
-  try {
-    // Decode base64
-    const decoded = atob(apiKey);
-    console.log('Decoded API key:', decoded);
-    
-    // Format appears to be: AgencyId:AgencyName:MobileNo:EncodedPassword
-    const parts = decoded.split(':');
-    if (parts.length >= 4) {
-      const username = parts[2]; // Mobile number
-      // Try the password as-is first (might not need additional decoding)
-      const password = parts[3];
-      console.log('Extracted credentials - username:', username, 'password length:', password.length);
-      return { username, password };
-    }
-  } catch (e) {
-    console.error('Failed to decode API key:', e);
-  }
-  return null;
+// Use provided credentials for authentication
+function getCredentials(): { username: string; password: string } {
+  return {
+    username: '9330102817',
+    password: '309371'
+  };
 }
 
 // Function to get or refresh token
@@ -41,12 +27,9 @@ async function getAuthToken(apiKey: string): Promise<string> {
     return cachedToken;
   }
 
-  const credentials = decodeApiKey(apiKey);
-  if (!credentials) {
-    throw new Error('Could not extract credentials from API key');
-  }
-
+  const credentials = getCredentials();
   console.log('Logging in to get new token...');
+  
   const loginResponse = await fetch(`${FLIGHT_API_URL}/login`, {
     method: 'POST',
     headers: {
@@ -104,11 +87,7 @@ serve(async (req) => {
         endpoint = '/login';
         const loginCreds = params.username && params.password 
           ? { username: params.username, password: params.password }
-          : decodeApiKey(apiKey);
-        
-        if (!loginCreds) {
-          throw new Error('No credentials provided');
-        }
+          : getCredentials();
         
         response = await fetch(`${FLIGHT_API_URL}${endpoint}`, {
           method: 'POST',
