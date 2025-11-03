@@ -116,8 +116,8 @@ const FlightBooking = () => {
             searchData: {
               origin: from,
               destination: to,
-              departure: format(departureDate, 'yyyy-MM-dd'),
-              return: returnDate ? format(returnDate, 'yyyy-MM-dd') : '',
+              departure_date: format(departureDate, 'yyyy-MM-dd'),
+              return_date: returnDate ? format(returnDate, 'yyyy-MM-dd') : '',
               adult: adults,
               child: children,
               infant: infants,
