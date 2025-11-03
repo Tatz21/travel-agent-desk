@@ -642,6 +642,21 @@ const FlightBooking = () => {
                       
                       <div className="flex flex-col items-center">
                         <Clock className="h-4 w-4 text-muted-foreground mb-1" />
+                        <p className="text-xs font-medium text-muted-foreground">
+                          {(() => {
+                            if (flight.departure_time && flight.arival_time) {
+                              const [depHours, depMins] = flight.departure_time.split(':').map(Number);
+                              const [arrHours, arrMins] = flight.arival_time.split(':').map(Number);
+                              const depMinutes = depHours * 60 + depMins;
+                              const arrMinutes = arrHours * 60 + arrMins;
+                              const durationMins = arrMinutes - depMinutes;
+                              const hours = Math.floor(durationMins / 60);
+                              const mins = durationMins % 60;
+                              return `${hours}h ${mins}m`;
+                            }
+                            return 'N/A';
+                          })()}
+                        </p>
                         <div className="w-full h-px bg-border my-2" />
                         <p className="text-xs text-muted-foreground">
                           {flight.flight_route}
