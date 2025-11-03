@@ -616,16 +616,37 @@ const FlightBooking = () => {
                     {/* Airline and Flight Number */}
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <Plane className="h-5 w-5 text-primary" />
-                          <p className="font-bold text-lg">
-                            {flight.airline}
-                          </p>
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-lg bg-white shadow-sm flex items-center justify-center p-1.5 border">
+                            {(() => {
+                              const airlineName = flight.airline?.toLowerCase() || '';
+                              if (airlineName.includes('indigo') || airlineName.includes('6e')) {
+                                return <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/IndiGo_Airlines_logo.svg" alt="IndiGo" className="w-full h-full object-contain" />;
+                              } else if (airlineName.includes('air india')) {
+                                return <img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Air_India_Logo.svg" alt="Air India" className="w-full h-full object-contain" />;
+                              } else if (airlineName.includes('spicejet')) {
+                                return <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/SpiceJet_logo.svg" alt="SpiceJet" className="w-full h-full object-contain" />;
+                              } else if (airlineName.includes('vistara')) {
+                                return <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Vistara_Logo.svg" alt="Vistara" className="w-full h-full object-contain" />;
+                              } else if (airlineName.includes('go first') || airlineName.includes('go air')) {
+                                return <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/GoAir_logo.svg" alt="Go First" className="w-full h-full object-contain" />;
+                              } else if (airlineName.includes('akasa')) {
+                                return <span className="text-2xl font-bold text-orange-600">QP</span>;
+                              } else {
+                                return <Plane className="h-6 w-6 text-primary" />;
+                              }
+                            })()}
+                          </div>
+                          <div>
+                            <p className="font-bold text-lg">
+                              {flight.airline}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Flight {flight.flight_number}
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          Flight {flight.flight_number}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground ml-15">
                           {flight.flight_route}
                         </p>
                       </div>
