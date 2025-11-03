@@ -49,17 +49,43 @@ const FlightBooking = () => {
 
   const loadSectors = async () => {
     try {
+      // Check if sectors are cached in localStorage (valid for 24 hours)
+      const cachedData = localStorage.getItem('flight_sectors');
+      const cacheTimestamp = localStorage.getItem('flight_sectors_timestamp');
+      
+      if (cachedData && cacheTimestamp) {
+        const hoursSinceCache = (Date.now() - parseInt(cacheTimestamp)) / (1000 * 60 * 60);
+        if (hoursSinceCache < 24) {
+          setSectors(JSON.parse(cachedData));
+          console.log('Loaded sectors from cache');
+          return;
+        }
+      }
+
+      // Fetch from API only if cache is invalid or doesn't exist
       const { data, error } = await supabase.functions.invoke('flight-api', {
         body: { action: 'sectors' }
       });
 
-      if (error) throw error;
+      if (error) {
+        // If API limit exceeded, try to use old cache if available
+        if (cachedData) {
+          setSectors(JSON.parse(cachedData));
+          toast.error('Using cached flight routes. API limit reached for today.');
+          return;
+        }
+        throw error;
+      }
       
       if (data?.data) {
         setSectors(data.data);
+        // Cache the data
+        localStorage.setItem('flight_sectors', JSON.stringify(data.data));
+        localStorage.setItem('flight_sectors_timestamp', Date.now().toString());
       }
     } catch (error: any) {
       console.error('Failed to load sectors:', error);
+      toast.error('Failed to load flight routes. Please try again later.');
     }
   };
 
