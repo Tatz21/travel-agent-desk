@@ -554,36 +554,117 @@ const FlightBooking = () => {
             <CardTitle>Available Flights ({searchResults.length})</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {searchResults.map((flight: any, index: number) => (
-              <Card 
-                key={index}
-                className={cn(
-                  "cursor-pointer transition-all hover:shadow-md",
-                  selectedFlight === flight && "ring-2 ring-primary"
-                )}
-                onClick={() => setSelectedFlight(flight)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-semibold">{flight.Airline || 'Flight'}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {flight.DepartureTime || 'N/A'} - {flight.ArrivalTime || 'N/A'}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {flight.FlightNumber || 'N/A'}
-                      </p>
+            {searchResults.map((flight: any, index: number) => {
+              console.log('Flight data:', flight); // Debug log
+              return (
+                <Card 
+                  key={index}
+                  className={cn(
+                    "cursor-pointer transition-all hover:shadow-md",
+                    selectedFlight === flight && "ring-2 ring-primary"
+                  )}
+                  onClick={() => setSelectedFlight(flight)}
+                >
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      {/* Airline and Flight Number */}
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <Plane className="h-5 w-5 text-primary" />
+                            <p className="font-bold text-lg">
+                              {flight.AirlineName || flight.Airline || flight.CarrierName || 'Airline'}
+                            </p>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            Flight {flight.FlightNumber || flight.FlightNo || flight.FlightCode || 'N/A'}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {flight.AircraftType || flight.Aircraft || ''}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-3xl font-bold text-primary">
+                            ₹{flight.TotalFare || flight.Fare || flight.Price || flight.TotalPrice || flight.BaseFare || 'N/A'}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {flight.Class || flight.CabinClass || flightClass}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Flight Times and Duration */}
+                      <div className="grid grid-cols-3 gap-4 items-center">
+                        <div className="text-center">
+                          <p className="text-2xl font-bold">
+                            {flight.DepartureTime || flight.DepartTime || flight.DepTime || 'N/A'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {flight.Origin || flight.OriginCode || from}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {flight.DepartureDate || flight.DepDate || ''}
+                          </p>
+                        </div>
+                        
+                        <div className="flex flex-col items-center">
+                          <Clock className="h-4 w-4 text-muted-foreground mb-1" />
+                          <p className="text-xs text-muted-foreground">
+                            {flight.Duration || flight.FlightDuration || flight.TravelTime || 'N/A'}
+                          </p>
+                          <div className="w-full h-px bg-border my-2" />
+                          <p className="text-xs text-muted-foreground">
+                            {flight.Stops === 0 || flight.Stops === '0' ? 'Non-stop' : 
+                             flight.Stops ? `${flight.Stops} stop${flight.Stops > 1 ? 's' : ''}` : 'Direct'}
+                          </p>
+                        </div>
+                        
+                        <div className="text-center">
+                          <p className="text-2xl font-bold">
+                            {flight.ArrivalTime || flight.ArrTime || 'N/A'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {flight.Destination || flight.DestCode || to}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {flight.ArrivalDate || flight.ArrDate || ''}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Additional Information */}
+                      <div className="flex gap-4 text-xs text-muted-foreground pt-2 border-t">
+                        {flight.Baggage && (
+                          <div className="flex items-center gap-1">
+                            <span>✈️ Baggage: {flight.Baggage}</span>
+                          </div>
+                        )}
+                        {flight.RefundableStatus !== undefined && (
+                          <div className="flex items-center gap-1">
+                            <span>{flight.RefundableStatus ? '✓ Refundable' : '✗ Non-refundable'}</span>
+                          </div>
+                        )}
+                        {flight.SeatsAvailable && (
+                          <div className="flex items-center gap-1">
+                            <span>💺 {flight.SeatsAvailable} seats left</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Raw data for debugging - remove after testing */}
+                      {process.env.NODE_ENV === 'development' && (
+                        <details className="text-xs">
+                          <summary className="cursor-pointer text-muted-foreground">Debug Info</summary>
+                          <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-auto">
+                            {JSON.stringify(flight, null, 2)}
+                          </pre>
+                        </details>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-primary">
-                        ₹{flight.TotalFare || flight.Fare || 'N/A'}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{flight.Class || flightClass}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </CardContent>
         </Card>
       )}
