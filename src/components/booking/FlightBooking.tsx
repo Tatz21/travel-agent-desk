@@ -21,6 +21,7 @@ const FlightBooking = () => {
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
   const [sectors, setSectors] = useState<any[]>([]);
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedFlight, setSelectedFlight] = useState<any>(null);
   const [tripType, setTripType] = useState<'one-way' | 'round-trip'>('one-way');
@@ -84,9 +85,11 @@ const FlightBooking = () => {
 
     setSearching(true);
     setSearchResults([]);
+    setAvailableDates([]);
 
     try {
-      const { data, error } = await supabase.functions.invoke('flight-api', {
+      // First, check availability to get available dates
+      const { data: availData, error: availError } = await supabase.functions.invoke('flight-api', {
         body: {
           action: 'availability',
           origin: from,
@@ -100,15 +103,42 @@ const FlightBooking = () => {
         }
       });
 
-      if (error) throw error;
+      if (availError) throw availError;
 
-      if (data?.data) {
-        setSearchResults(data.data);
-        toast.success(`Found ${data.data.length} flights`);
+      // If availability returns dates, use the first available date to search for flights
+      if (availData?.data && Array.isArray(availData.data) && availData.data.length > 0) {
+        setAvailableDates(availData.data);
+        
+        // Now search for actual flight details
+        const { data: searchData, error: searchError } = await supabase.functions.invoke('flight-api', {
+          body: {
+            action: 'search',
+            searchData: {
+              Origin: from,
+              Destination: to,
+              DepartureDate: format(departureDate, 'yyyy-MM-dd'),
+              ReturnDate: returnDate ? format(returnDate, 'yyyy-MM-dd') : null,
+              AdultCount: adults,
+              ChildCount: children,
+              InfantCount: infants,
+              Class: flightClass.charAt(0).toUpperCase() + flightClass.slice(1).replace('-', ' '),
+            }
+          }
+        });
+
+        if (searchError) throw searchError;
+
+        if (searchData?.data && Array.isArray(searchData.data)) {
+          setSearchResults(searchData.data);
+          toast.success(`Found ${searchData.data.length} flights`);
+        } else {
+          toast.info(`Flights available on: ${availData.data.slice(0, 3).join(', ')}...`);
+        }
       } else {
-        toast.error("No flights found");
+        toast.error("No flights available for selected route and date");
       }
     } catch (error: any) {
+      console.error('Search error:', error);
       toast.error(error.message || "Failed to search flights");
     } finally {
       setSearching(false);
