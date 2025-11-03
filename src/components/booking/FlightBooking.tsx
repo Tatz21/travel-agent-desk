@@ -49,7 +49,7 @@ const FlightBooking = () => {
 
   const loadSectors = async () => {
     try {
-      // Check if sectors are cached in localStorage (valid for 24 hours)
+      // Check if sectors are cached in localStorage
       const cachedData = localStorage.getItem('flight_sectors');
       const cacheTimestamp = localStorage.getItem('flight_sectors_timestamp');
       
@@ -62,30 +62,54 @@ const FlightBooking = () => {
         }
       }
 
-      // Fetch from API only if cache is invalid or doesn't exist
-      const { data, error } = await supabase.functions.invoke('flight-api', {
-        body: { action: 'sectors' }
-      });
+      // Try to fetch from API only if cache is invalid or doesn't exist
+      try {
+        const { data, error } = await supabase.functions.invoke('flight-api', {
+          body: { action: 'sectors' }
+        });
 
-      if (error) {
-        // If API limit exceeded, try to use old cache if available
-        if (cachedData) {
-          setSectors(JSON.parse(cachedData));
-          toast.error('Using cached flight routes. API limit reached for today.');
+        if (error) throw error;
+        
+        if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
+          setSectors(data.data);
+          // Cache the data
+          localStorage.setItem('flight_sectors', JSON.stringify(data.data));
+          localStorage.setItem('flight_sectors_timestamp', Date.now().toString());
+          toast.success('Flight routes loaded successfully');
           return;
         }
-        throw error;
-      }
-      
-      if (data?.data) {
-        setSectors(data.data);
-        // Cache the data
-        localStorage.setItem('flight_sectors', JSON.stringify(data.data));
+      } catch (apiError: any) {
+        console.error('API error:', apiError);
+        
+        // If API limit exceeded or failed, use old cache if available
+        if (cachedData) {
+          setSectors(JSON.parse(cachedData));
+          toast.info('Using cached flight routes (API limit reached for today)');
+          return;
+        }
+        
+        // If no cache available, use minimal fallback data for common routes
+        const fallbackSectors = [
+          { Sector: "Delhi // Mumbai", Origin: "DEL", Destination: "BOM" },
+          { Sector: "Mumbai // Delhi", Origin: "BOM", Destination: "DEL" },
+          { Sector: "Bangalore // Delhi", Origin: "BLR", Destination: "DEL" },
+          { Sector: "Delhi // Bangalore", Origin: "DEL", Destination: "BLR" },
+          { Sector: "Mumbai // Bangalore", Origin: "BOM", Destination: "BLR" },
+          { Sector: "Bangalore // Mumbai", Origin: "BLR", Destination: "BOM" },
+          { Sector: "Kolkata // Delhi", Origin: "CCU", Destination: "DEL" },
+          { Sector: "Delhi // Kolkata", Origin: "DEL", Destination: "CCU" },
+          { Sector: "Mumbai // Kolkata", Origin: "BOM", Destination: "CCU" },
+          { Sector: "Kolkata // Mumbai", Origin: "CCU", Destination: "BOM" },
+        ];
+        
+        setSectors(fallbackSectors);
+        localStorage.setItem('flight_sectors', JSON.stringify(fallbackSectors));
         localStorage.setItem('flight_sectors_timestamp', Date.now().toString());
+        toast.warning('Using limited flight routes. Full routes will be available after 24 hours.');
       }
     } catch (error: any) {
       console.error('Failed to load sectors:', error);
-      toast.error('Failed to load flight routes. Please try again later.');
+      toast.error('Unable to load flight routes. Please refresh the page.');
     }
   };
 
