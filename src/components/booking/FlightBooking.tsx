@@ -722,13 +722,6 @@ const FlightBooking = () => {
                         </div>
                       )}
                     </div>
-
-                    {/* Ticket ID - Hidden but useful for booking */}
-                    {flight.ticket_id && (
-                      <p className="text-xs text-muted-foreground pt-2">
-                        Ticket ID: {flight.ticket_id.substring(0, 40)}...
-                      </p>
-                    )}
                   </div>
                 </CardContent>
               </Card>
