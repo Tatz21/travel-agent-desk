@@ -109,19 +109,19 @@ const FlightBooking = () => {
       if (availData?.data && Array.isArray(availData.data) && availData.data.length > 0) {
         setAvailableDates(availData.data);
         
-        // Now search for actual flight details
+        // Now search for actual flight details - using correct field names
         const { data: searchData, error: searchError } = await supabase.functions.invoke('flight-api', {
           body: {
             action: 'search',
             searchData: {
-              Origin: from,
-              Destination: to,
-              DepartureDate: format(departureDate, 'yyyy-MM-dd'),
-              ReturnDate: returnDate ? format(returnDate, 'yyyy-MM-dd') : null,
-              AdultCount: adults,
-              ChildCount: children,
-              InfantCount: infants,
-              Class: flightClass.charAt(0).toUpperCase() + flightClass.slice(1).replace('-', ' '),
+              origin: from,
+              destination: to,
+              departure: format(departureDate, 'yyyy-MM-dd'),
+              return: returnDate ? format(returnDate, 'yyyy-MM-dd') : '',
+              adult: adults,
+              child: children,
+              infant: infants,
+              class: flightClass.charAt(0).toUpperCase() + flightClass.slice(1).replace('-', ' '),
             }
           }
         });
