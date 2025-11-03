@@ -617,21 +617,21 @@ const FlightBooking = () => {
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg shadow-sm flex items-center justify-center font-bold text-lg border-2">
+                          <div className="w-12 h-12 rounded-lg bg-white shadow-sm flex items-center justify-center p-1 border">
                             {(() => {
                               const airlineName = flight.airline?.toLowerCase() || '';
                               if (airlineName.includes('indigo') || airlineName.includes('6e')) {
-                                return <span className="text-blue-700 bg-blue-50 w-full h-full flex items-center justify-center rounded-lg">6E</span>;
+                                return <img src="/airlines/indigo.png" alt="IndiGo" className="w-full h-full object-contain" />;
                               } else if (airlineName.includes('air india')) {
-                                return <span className="text-red-600 bg-red-50 w-full h-full flex items-center justify-center rounded-lg">AI</span>;
+                                return <img src="/airlines/airindia.png" alt="Air India" className="w-full h-full object-contain" />;
                               } else if (airlineName.includes('spicejet')) {
-                                return <span className="text-red-500 bg-red-50 w-full h-full flex items-center justify-center rounded-lg">SG</span>;
+                                return <img src="/airlines/spicejet.png" alt="SpiceJet" className="w-full h-full object-contain" />;
                               } else if (airlineName.includes('vistara')) {
-                                return <span className="text-purple-700 bg-purple-50 w-full h-full flex items-center justify-center rounded-lg">UK</span>;
+                                return <img src="/airlines/vistara.png" alt="Vistara" className="w-full h-full object-contain" />;
                               } else if (airlineName.includes('go first') || airlineName.includes('go air')) {
-                                return <span className="text-green-600 bg-green-50 w-full h-full flex items-center justify-center rounded-lg">G8</span>;
+                                return <span className="text-green-600 bg-green-50 w-full h-full flex items-center justify-center rounded-lg font-bold">G8</span>;
                               } else if (airlineName.includes('akasa')) {
-                                return <span className="text-orange-600 bg-orange-50 w-full h-full flex items-center justify-center rounded-lg">QP</span>;
+                                return <img src="/airlines/akasa.png" alt="Akasa Air" className="w-full h-full object-contain" />;
                               } else {
                                 return <Plane className="h-6 w-6 text-primary" />;
                               }
