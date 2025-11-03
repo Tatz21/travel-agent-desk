@@ -188,6 +188,132 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({ booking, isOpen, onClos
               <Separator />
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Additional Details</h3>
+                
+                {/* Flight Specific Details */}
+                {booking.booking_type === 'flight' && booking.booking_details.flight_details && (
+                  <>
+                    <div className="p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg space-y-4">
+                      <h4 className="font-semibold text-primary flex items-center gap-2">
+                        <Plane className="h-4 w-4" />
+                        Flight Details
+                      </h4>
+                      
+                      {/* Airline and Flight Number */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {booking.booking_details.flight_details.airline && (
+                          <div>
+                            <label className="text-sm font-medium text-muted-foreground">Airline</label>
+                            <p className="font-semibold text-lg">{booking.booking_details.flight_details.airline}</p>
+                          </div>
+                        )}
+                        {booking.booking_details.flight_details.flight_number && (
+                          <div>
+                            <label className="text-sm font-medium text-muted-foreground">Flight Number</label>
+                            <p className="font-semibold">{booking.booking_details.flight_details.flight_number}</p>
+                          </div>
+                        )}
+                        {booking.booking_details.flight_details.flight_route && (
+                          <div>
+                            <label className="text-sm font-medium text-muted-foreground">Route</label>
+                            <p className="font-semibold">{booking.booking_details.flight_details.flight_route}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Departure and Arrival Times */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-3 bg-background rounded border">
+                          <label className="text-sm font-medium text-muted-foreground">Departure</label>
+                          <p className="text-2xl font-bold text-primary">
+                            {booking.booking_details.flight_details.departure_time || 'N/A'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {booking.booking_details.flight_details.departure_date}
+                          </p>
+                          <p className="text-sm font-medium">
+                            {booking.booking_details.flight_details.origin || booking.from_location}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-background rounded border">
+                          <label className="text-sm font-medium text-muted-foreground">Arrival</label>
+                          <p className="text-2xl font-bold text-primary">
+                            {booking.booking_details.flight_details.arival_time || 'N/A'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {booking.booking_details.flight_details.arival_date}
+                          </p>
+                          <p className="text-sm font-medium">
+                            {booking.booking_details.flight_details.destination || booking.to_location}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Baggage Information */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {booking.booking_details.flight_details.cabin_baggage && (
+                          <div className="flex items-center gap-2 p-2 bg-background rounded">
+                            <span className="text-2xl">✈️</span>
+                            <div>
+                              <label className="text-xs text-muted-foreground">Cabin Baggage</label>
+                              <p className="font-semibold">{booking.booking_details.flight_details.cabin_baggage}</p>
+                            </div>
+                          </div>
+                        )}
+                        {booking.booking_details.flight_details.hand_luggage && (
+                          <div className="flex items-center gap-2 p-2 bg-background rounded">
+                            <span className="text-2xl">👜</span>
+                            <div>
+                              <label className="text-xs text-muted-foreground">Hand Luggage</label>
+                              <p className="font-semibold">{booking.booking_details.flight_details.hand_luggage}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Price Breakdown */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {booking.booking_details.flight_details.price && (
+                          <div className="p-2 bg-background rounded">
+                            <label className="text-xs text-muted-foreground">Base Price</label>
+                            <p className="font-semibold text-lg">₹{booking.booking_details.flight_details.price}</p>
+                          </div>
+                        )}
+                        {booking.booking_details.flight_details.infant_price && (
+                          <div className="p-2 bg-background rounded">
+                            <label className="text-xs text-muted-foreground">Infant Price</label>
+                            <p className="font-semibold">₹{booking.booking_details.flight_details.infant_price}</p>
+                          </div>
+                        )}
+                        {booking.booking_details.flight_details.pax && (
+                          <div className="p-2 bg-background rounded">
+                            <label className="text-xs text-muted-foreground">Available Seats</label>
+                            <p className="font-semibold">{booking.booking_details.flight_details.pax} seats</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Flight Type and Ticket ID */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-2 bg-background rounded">
+                          <label className="text-xs text-muted-foreground">Flight Type</label>
+                          <p className="font-semibold">
+                            {booking.booking_details.flight_details.isinternational ? '🌍 International' : '🇮🇳 Domestic'}
+                          </p>
+                        </div>
+                        {booking.booking_details.flight_details.ticket_id && (
+                          <div className="p-2 bg-background rounded">
+                            <label className="text-xs text-muted-foreground">Ticket ID</label>
+                            <p className="text-xs font-mono break-all">
+                              {booking.booking_details.flight_details.ticket_id.substring(0, 50)}...
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* General Booking Details */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {booking.booking_details.class && (
                     <div>
