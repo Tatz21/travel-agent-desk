@@ -662,24 +662,47 @@ const FlightBooking = () => {
                     </div>
 
                     {/* Additional Information */}
-                    <div className="flex flex-wrap gap-4 text-xs text-muted-foreground pt-2 border-t">
-                      <div className="flex items-center gap-1">
-                        <span>✈️ Cabin: {flight.cabin_baggage}</span>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs pt-2 border-t">
+                      <div className="flex flex-col gap-1 p-2 bg-muted/30 rounded">
+                        <span className="text-muted-foreground">Cabin Baggage</span>
+                        <span className="font-semibold">✈️ {flight.cabin_baggage}</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span>👜 Hand: {flight.hand_luggage}</span>
+                      <div className="flex flex-col gap-1 p-2 bg-muted/30 rounded">
+                        <span className="text-muted-foreground">Hand Luggage</span>
+                        <span className="font-semibold">👜 {flight.hand_luggage}</span>
                       </div>
                       {flight.infant_price && (
-                        <div className="flex items-center gap-1">
-                          <span>👶 Infant: ₹{flight.infant_price}</span>
+                        <div className="flex flex-col gap-1 p-2 bg-muted/30 rounded">
+                          <span className="text-muted-foreground">Infant Price</span>
+                          <span className="font-semibold">👶 ₹{flight.infant_price}</span>
                         </div>
                       )}
-                      {flight.isinternational && (
-                        <div className="flex items-center gap-1">
-                          <span>🌍 International</span>
+                      {flight.pax && (
+                        <div className="flex flex-col gap-1 p-2 bg-muted/30 rounded">
+                          <span className="text-muted-foreground">Available Seats</span>
+                          <span className="font-semibold">💺 {flight.pax} seats</span>
+                        </div>
+                      )}
+                      <div className="flex flex-col gap-1 p-2 bg-muted/30 rounded">
+                        <span className="text-muted-foreground">Flight Type</span>
+                        <span className="font-semibold">
+                          {flight.isinternational ? '🌍 International' : '🇮🇳 Domestic'}
+                        </span>
+                      </div>
+                      {flight.inventory_type && (
+                        <div className="flex flex-col gap-1 p-2 bg-muted/30 rounded">
+                          <span className="text-muted-foreground">Inventory Type</span>
+                          <span className="font-semibold">{flight.inventory_type}</span>
                         </div>
                       )}
                     </div>
+
+                    {/* Ticket ID - Hidden but useful for booking */}
+                    {flight.ticket_id && (
+                      <p className="text-xs text-muted-foreground pt-2">
+                        Ticket ID: {flight.ticket_id.substring(0, 40)}...
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
