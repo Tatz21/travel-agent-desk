@@ -49,8 +49,8 @@ const ContactRepresentative = () => {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <div className="font-semibold">Rajesh Kumar</div>
-                <div className="text-sm text-muted-foreground">Senior Account Manager</div>
+                <div className="font-semibold">Dipa Singha</div>
+                <div className="text-sm text-muted-foreground">Sales Manager</div>
                 <Badge variant="secondary" className="bg-green-100 text-green-800 mt-1">
                   Online
                 </Badge>
@@ -61,7 +61,7 @@ const ContactRepresentative = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">+91 98765 43210</div>
+                  <div className="font-medium">+91 91477 11694</div>
                   <div className="text-xs text-muted-foreground">Direct line</div>
                 </div>
               </div>
@@ -69,7 +69,7 @@ const ContactRepresentative = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">rajesh.kumar@travelopedia.com</div>
+                  <div className="font-medium">dipa@travelopedia.com</div>
                   <div className="text-xs text-muted-foreground">Email support</div>
                 </div>
               </div>
@@ -78,15 +78,15 @@ const ContactRepresentative = () => {
                 <MessageCircle className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <div className="font-medium">WhatsApp Support</div>
-                  <div className="text-xs text-muted-foreground">+91 98765 43210</div>
+                  <div className="text-xs text-muted-foreground">+91 91477 11694</div>
                 </div>
               </div>
 
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Mumbai Office</div>
-                  <div className="text-xs text-muted-foreground">Western Region</div>
+                  <div className="font-medium">Kolkata Office</div>
+                  <div className="text-xs text-muted-foreground">East Region</div>
                 </div>
               </div>
             </div>
