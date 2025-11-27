@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, Mail, MessageCircle, Clock, User, MapPin, ArrowLeft } from 'lucide-react';
+import { Phone, Mail, MessageCircle, User, MapPin, ArrowLeft } from 'lucide-react';
 
 const ContactRepresentative = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const ContactRepresentative = () => {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <div className="font-semibold">Dipa Singha</div>
+                <div className="font-semibold">Dipa Singh</div>
                 <div className="text-sm text-muted-foreground">Sales Manager</div>
                 <Badge variant="secondary" className="bg-green-100 text-green-800 mt-1">
                   Online
@@ -61,7 +61,7 @@ const ContactRepresentative = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">+91 91477 11694</div>
+                  <div className="font-medium">+91 9147711694</div>
                   <div className="text-xs text-muted-foreground">Direct line</div>
                 </div>
               </div>
@@ -69,7 +69,7 @@ const ContactRepresentative = () => {
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">dipa@travelopedia.com</div>
+                  <div className="font-medium">dipa@phoenixtravelopedia.com</div>
                   <div className="text-xs text-muted-foreground">Email support</div>
                 </div>
               </div>
@@ -78,7 +78,7 @@ const ContactRepresentative = () => {
                 <MessageCircle className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <div className="font-medium">WhatsApp Support</div>
-                  <div className="text-xs text-muted-foreground">+91 91477 11694</div>
+                  <div className="text-xs text-muted-foreground">+91 9147711694</div>
                 </div>
               </div>
 
@@ -94,11 +94,13 @@ const ContactRepresentative = () => {
                 <div className="flex flex-col gap-3 pt-4">
                   <Button className="w-full h-11">
                     <Phone className="h-4 w-4 mr-2" />
+                    <a href="tel:9147711694"> 
                     Call Now
+                    </a>
                   </Button>
                   <Button variant="outline" className="w-full h-11">
                     <MessageCircle className="h-4 w-4 mr-2" />
-                    WhatsApp
+                    <a href="https://wa.me/9147711694" target="_blank">WhatsApp</a>
                   </Button>
                 </div>
               </CardContent>
@@ -113,7 +115,7 @@ const ContactRepresentative = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
                     <span className="font-medium">Monday - Friday</span>
-                    <span className="font-medium text-primary">9:00 AM - 8:00 PM</span>
+                    <span className="font-medium text-primary">24 Hours</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
                     <span className="font-medium">Saturday</span>
@@ -131,7 +133,7 @@ const ContactRepresentative = () => {
                     <div className="text-sm text-muted-foreground mb-1">
                       For urgent travel-related issues outside business hours:
                     </div>
-                    <div className="font-semibold text-red-700">+91 1800 123 456</div>
+                    <div className="font-semibold text-red-700">+91 9147711694</div>
                   </div>
                 </div>
 
@@ -167,26 +169,12 @@ const ContactRepresentative = () => {
                   </div>
                 </Button>
                 
-                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                {/* <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
                   <div>
                     <div className="font-medium">Commission Queries</div>
                     <div className="text-xs text-muted-foreground mt-1">Payment and commission issues</div>
                   </div>
-                </Button>
-
-                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
-                  <div>
-                    <div className="font-medium">Technical Support</div>
-                    <div className="text-xs text-muted-foreground mt-1">Platform and system issues</div>
-                  </div>
-                </Button>
-
-                <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
-                  <div>
-                    <div className="font-medium">Account Setup</div>
-                    <div className="text-xs text-muted-foreground mt-1">Profile and settings help</div>
-                  </div>
-                </Button>
+                </Button> */}
 
                 <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
                   <div>
@@ -197,10 +185,24 @@ const ContactRepresentative = () => {
 
                 <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
                   <div>
+                    <div className="font-medium">Technical Support</div>
+                    <div className="text-xs text-muted-foreground mt-1">Platform and system issues</div>
+                  </div>
+                </Button>
+
+                {/* <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
+                    <div className="font-medium">Account Setup</div>
+                    <div className="text-xs text-muted-foreground mt-1">Profile and settings help</div>
+                  </div>
+                </Button> */}
+
+                {/* <Button variant="outline" className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200">
+                  <div>
                     <div className="font-medium">Partnership Opportunities</div>
                     <div className="text-xs text-muted-foreground mt-1">Business development</div>
                   </div>
-                </Button>
+                </Button> */}
               </div>
             </CardContent>
           </Card>
