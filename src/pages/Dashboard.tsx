@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plane, Bus, Hotel, User, LogOut, Plus, Menu } from 'lucide-react';
+import { Plane, Bus, Hotel, User, LogOut, Plus, Menu, Sliders } from 'lucide-react';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import WalletComponent from '@/components/Wallet';
@@ -14,7 +14,9 @@ import FlightBooking from '@/components/booking/FlightBooking';
 import BusBooking from '@/components/booking/BusBooking';
 import HotelBooking from '@/components/booking/HotelBooking';
 import BookingsList from '@/components/booking/BookingsList';
-import logo from '@/assets/logo.gif';
+import logo from '../assets/logo.gif';
+import DashboardCarousel from '@/components/ui/DashboardCarousel';
+
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -49,7 +51,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between h-16 px-3 md:px-6">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <SidebarTrigger />
-                <img src={logo} alt="Travelopedia" className="h-40 w-40 object-contain" style={{ imageRendering: 'crisp-edges', filter: 'contrast(1.1) brightness(1.05)' }} />
+                <img src={logo} alt="Travelopedia" className="w-40 object-contain" style={{ imageRendering: 'crisp-edges', backgroundColor:'#fff' }} />
               </div>
               
               <div className="flex items-center space-x-1 md:space-x-4">
@@ -88,7 +90,7 @@ const Dashboard = () => {
               </div>
 
               <TabsContent value="overview" className="space-y-4 md:space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Agent Code</CardTitle>
@@ -101,8 +103,8 @@ const Dashboard = () => {
                       </p>
                     </CardContent>
                   </Card>
-                  
-                  <Card>
+                                    
+                  {/* <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Commission Rate</CardTitle>
                       <span className="h-4 w-4 text-muted-foreground">%</span>
@@ -113,8 +115,8 @@ const Dashboard = () => {
                         Your earning percentage
                       </p>
                     </CardContent>
-                  </Card>
-
+                  </Card> */}
+                  
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
@@ -206,6 +208,8 @@ const Dashboard = () => {
                 <BookingsList />
               </TabsContent>
             </Tabs>
+            <div className="mb-6"></div>
+            <DashboardCarousel />
           </div>
         </main>
       </div>
