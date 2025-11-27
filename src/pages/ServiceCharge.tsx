@@ -49,19 +49,28 @@ const ServiceCharge = () => {
             </Button>
           </div>
 
-          {/* Hero Section */}
-          <div className="text-center space-y-4 py-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-              <Calculator className="h-8 w-8 text-primary" />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight">Service Charges</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Transparent pricing for all booking types with competitive commission rates
-            </p>
-          </div>
-
+          
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Calculator className="h-5 w-5 mr-2" />
+                    Service Charges
+                  </CardTitle>
+                  <CardDescription>
+                    Transparent pricing for all booking types with competitive commission rates
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center py-16">
+                  <Calculator className="h-16 w-16 text-muted-foreground mb-4" />
+                  <h3 className="text-2xl font-semibold text-foreground mb-2">Coming Soon</h3>
+                  <p className="text-muted-foreground text-center max-w-md">
+                    Service Charges functionality is under development. Stay tuned for updates!
+                  </p>
+                </CardContent>
+              </Card>          
+          
           {/* Service Charges Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {serviceCharges.map((item) => (
               <Card key={item.service} className="shadow-lg border-0 bg-card/50 backdrop-blur hover:shadow-xl transition-all duration-300">
                 <CardHeader className="text-center pb-4">
@@ -87,10 +96,10 @@ const ServiceCharge = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </div> */}
 
           {/* Commission Structure */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
+          {/* <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
             <CardHeader className="text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3 mx-auto">
                 <Percent className="h-6 w-6 text-primary" />
@@ -119,10 +128,10 @@ const ServiceCharge = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Important Notes */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
+          {/* <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-xl">Important Notes & Terms</CardTitle>
             </CardHeader>
@@ -154,7 +163,8 @@ const ServiceCharge = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
+
         </div>
       </div>
     </div>
