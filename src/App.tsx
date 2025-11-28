@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { useAgent } from "@/hooks/useAgent";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
+import AgentRegister from "./pages/AgentRegister";
 import AgentSetup from "./pages/AgentSetup";
 import Dashboard from "./pages/Dashboard";
 import FlightBookingPage from "./pages/FlightBookingPage";
@@ -21,6 +22,7 @@ import BankDetails from "./pages/BankDetails";
 import ContactRepresentative from "./pages/ContactRepresentative";
 import ApiTest from "./pages/ApiTest";
 import NotFound from "./pages/NotFound";
+import Tawk from "./components/tawk";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +83,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/register" element={<AgentRegister />} />
               <Route path="/api-test" element={<ApiTest />} />
               <Route path="/setup" element={
                 <SetupRoute>
