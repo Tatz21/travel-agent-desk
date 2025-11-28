@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 
 const DashboardCarousel: React.FC = () => {
   const slides = [
-    "/images/k.jpg",
-    "/images/k2.jpg",
-    "/images/goa.jpg",
-    "/images/rajasthan.jpg",
+    "/k.jpg",
+    "/k2.jpg",
+    "/goa.jpg",
+    "/rajasthan.jpg",
   ];
 
   const [current, setCurrent] = useState(0);
@@ -63,3 +63,4 @@ const DashboardCarousel: React.FC = () => {
 };
 
 export default DashboardCarousel;
+
