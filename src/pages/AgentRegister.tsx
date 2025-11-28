@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { toast } from "@/hooks/use-toast";
 import { useAgent } from '@/hooks/useAgent';
 import axios from "axios";
+import { supabase } from '@/integrations/supabase/client';
 
 
 const AgentRegister = () => {
@@ -27,11 +28,11 @@ const AgentRegister = () => {
     phone: '',
     email: '',
     trade_licence: '',
-    trade_licence_file: null as File | null,
+    trade_licence_file: '',
     pan: '',
-    pan_file: null as File | null,
+    pan_file: '',
     aadhaar: '',
-    aadhaar_file: null as File | null,
+    aadhaar_file: '',
     address: '',
     city: '',
     state: '',
@@ -107,7 +108,6 @@ const AgentRegister = () => {
     // Save actual file object in formData
     setFormData({ ...formData, [name]: file });
   };
-
 
   const sendPhoneOtp = async () => {
     try {
@@ -195,6 +195,44 @@ const AgentRegister = () => {
     }
   };
 
+  // Upload helper: uploads file to SUPABASE_STORAGE bucket and returns public url (string) or null
+  const uploadFile = async (file: File) => {
+    try {
+      const timestamp = Date.now();
+      // sanitize file name
+      const safeName = encodeURIComponent(file.name.replace(/\s+/g, '_'));
+      const filePath = `${timestamp}_${safeName}`;
+
+      const { data, error: uploadError } = await supabase
+        .storage
+        .from('agent-documents')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        // If file exists, you could consider using upsert: true — but here we treat as failure
+        console.error("Supabase upload error:", uploadError);
+        toast({ title: "Upload failed", description: uploadError.message || "Failed to upload file", variant: "destructive" });
+        return null;
+      }
+
+      // get public URL
+      // getPublicUrl returns { data: { publicUrl } } in supabase-js v2
+      const { data: urlData } = supabase.storage.from('agent-documents').getPublicUrl(filePath) as any;
+      const publicUrl = urlData?.publicUrl ?? null;
+
+      if (!publicUrl) {
+        toast({ title: "Upload failed", description: "Could not get public URL for uploaded file", variant: "destructive" });
+        return null;
+      }
+
+      return publicUrl;
+    } catch (err: any) {
+      console.error("Unexpected upload error:", err);
+      toast({ title: "Upload error", description: err?.message || "Unexpected error during file upload", variant: "destructive" });
+      return null;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -216,6 +254,7 @@ const AgentRegister = () => {
 
     setLoading(true);
     try {
+      
       const { error } = await createAgent(formData);
       if (error) {
         toast({ title: "Error", description: error.message, variant: "destructive" });
