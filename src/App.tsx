@@ -140,6 +140,7 @@ const App = () => (
           </BrowserRouter>
         </AuthProvider>
       </TooltipProvider>
+      <Tawk />
     </ThemeProvider>
   </QueryClientProvider>
 );
