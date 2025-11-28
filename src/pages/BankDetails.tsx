@@ -57,7 +57,7 @@ const BankDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="accountHolder">Account Holder Name</Label>
-              <Input id="accountHolder" value={agent?.contact_person || ''} readOnly />
+              <Input id="accountHolder" value="Phoenix Travelopedia" readOnly />
             </div>
             <div className="space-y-2">
               <Label htmlFor="bankName">Bank Name</Label>
@@ -87,7 +87,7 @@ const BankDetails = () => {
             </div>
           </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+               {/* <div className="flex flex-col sm:flex-row gap-3">
                 <Button variant="outline" className="flex-1">
                   <Edit className="h-4 w-4 mr-2" />
                   Edit Details
@@ -96,7 +96,7 @@ const BankDetails = () => {
                   <Plus className="h-4 w-4 mr-2" />
                   Add Another Account
                 </Button>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
 
@@ -139,7 +139,7 @@ const BankDetails = () => {
           </Card>
 
           {/* Payment Schedule */}
-          <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
+          {/* <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-xl">Payment Schedule</CardTitle>
               <CardDescription className="text-base">Commission payment information and schedule</CardDescription>
@@ -164,7 +164,7 @@ const BankDetails = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>
