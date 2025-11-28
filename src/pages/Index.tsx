@@ -59,7 +59,7 @@ const Index = () => {
               <Button variant="outline" onClick={() => navigate('/auth')} className="hidden sm:inline-flex">
                 Sign In
               </Button>
-              <Button onClick={() => navigate('/auth')} className="bg-primary hover:bg-primary/90">
+              <Button onClick={() => navigate('/register')} className="bg-primary hover:bg-primary/90">
                 Get Started
               </Button>
             </div>
@@ -120,7 +120,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <Button 
               size="lg" 
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/register')}
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg shadow-2xl hover:shadow-xl transition-all"
             >
               Start Your Journey
@@ -349,7 +349,7 @@ const Index = () => {
               </p>
               <Button 
                 size="lg" 
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/register')}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
               >
                 Create Agent Account
