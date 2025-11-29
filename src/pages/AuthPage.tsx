@@ -310,7 +310,7 @@ const AuthPage = () => {
 
           <p className="text-center mt-6 text-sm text-muted-foreground">
             Don't have an account?{' '}
-            <a href="#" className="text-primary hover:underline font-medium">
+            <a href="register" className="text-primary hover:underline font-medium">
               Register Now
             </a>
           </p>
