@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { useAgent } from '@/hooks/useAgent';
-import axios from "axios";
 import { supabase } from '@/integrations/supabase/client';
 
 
@@ -111,69 +110,83 @@ const AgentRegister = () => {
 
   const sendPhoneOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/send-otp-phone", {
-        phone: formData.phone,
+      const { data, error } = await supabase.functions.invoke('sms-otp', {
+        body: { action: 'send', phone: formData.phone }
       });
 
-      if (res.data.success) {
+      if (error) throw error;
+
+      if (data.success) {
         toast({ title: "OTP Sent", description: "Mobile OTP sent successfully" });
         startTimer("phone");
+      } else {
+        toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('Send phone OTP error:', err);
       toast({ title: "Error", description: "Failed to send Mobile OTP", variant: "destructive" });
     }
   };
 
   const verifyPhoneOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/verify-otp-phone", {
-        phone: formData.phone,
-        otp: otpPhone,
+      const { data, error } = await supabase.functions.invoke('sms-otp', {
+        body: { action: 'verify', phone: formData.phone, otp: otpPhone }
       });
 
-      if (res.data.success) {
+      if (error) throw error;
+
+      if (data.success) {
         setPhoneVerified(true);
         toast({ title: "Verified", description: "Mobile number verified" });
       } else {
-        toast({ title: "Invalid OTP", variant: "destructive" });
+        toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
       }
-    } catch {
+    } catch (err: any) {
+      console.error('Verify phone OTP error:', err);
       toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
     }
   };
 
   const sendEmailOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/send-otp-email", {
-        email: formData.email,
+      const { data, error } = await supabase.functions.invoke('email-otp', {
+        body: { action: 'send', email: formData.email }
       });
 
-      if (res.data.success) {
+      if (error) throw error;
+
+      if (data.success) {
         toast({ title: "OTP Sent", description: "Email OTP sent successfully" });
         startTimer("email");
+      } else {
+        toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('Send email OTP error:', err);
       toast({ title: "Error", description: "Failed to send Email OTP", variant: "destructive" });
     }
   };
 
   const verifyEmailOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:5001/verify-otp-email", {
-        email: formData.email,
-        otp: otpEmail,
+      const { data, error } = await supabase.functions.invoke('email-otp', {
+        body: { action: 'verify', email: formData.email, otp: otpEmail }
       });
 
-      if (res.data.success) {
+      if (error) throw error;
+
+      if (data.success) {
         setEmailVerified(true);
         toast({ title: "Verified", description: "Email verified" });
       } else {
-        toast({ title: "Invalid OTP", variant: "destructive" });
+        toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
       }
-    } catch {
+    } catch (err: any) {
+      console.error('Verify email OTP error:', err);
       toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
     }
-  };  
+  };
   
   const panRegex = /^[A-Z]{5}\d{4}[A-Z]$/;
   const aadhaarRegex = /^\d{12}$/;  
