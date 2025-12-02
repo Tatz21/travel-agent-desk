@@ -210,7 +210,6 @@ const Dashboard = () => {
               </TabsContent>
             </Tabs>
             <div className="mb-6"></div>
-            <DashboardCarousel />
           </div>
         </main>
       </div>
