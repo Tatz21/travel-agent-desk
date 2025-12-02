@@ -163,6 +163,36 @@ export type Database = {
           },
         ]
       }
+      otp_verifications: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          identifier: string
+          otp_code: string
+          type: string
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          identifier: string
+          otp_code: string
+          type: string
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          identifier?: string
+          otp_code?: string
+          type?: string
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           agent_id: string
