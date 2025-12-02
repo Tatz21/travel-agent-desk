@@ -190,6 +190,7 @@ const Dashboard = () => {
                     </CardContent>
                   </Card>
                 </div>
+                <DashboardCarousel />
               </TabsContent>
 
               <TabsContent value="flights">
