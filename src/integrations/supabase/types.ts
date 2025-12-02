@@ -16,8 +16,10 @@ export type Database = {
     Tables: {
       agents: {
         Row: {
+          aadhaar: number | null
+          aadhaar_file: string | null
           address: string | null
-          agent_code: string
+          agent_code: string | null
           city: string | null
           commission_rate: number | null
           company_name: string
@@ -26,16 +28,22 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          pan: string | null
+          pan_file: string | null
           phone: string
           pincode: string | null
           state: string | null
           status: Database["public"]["Enums"]["agent_status"] | null
+          trade_licence: string | null
+          trade_licence_file: string | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
+          aadhaar?: number | null
+          aadhaar_file?: string | null
           address?: string | null
-          agent_code: string
+          agent_code?: string | null
           city?: string | null
           commission_rate?: number | null
           company_name: string
@@ -44,16 +52,22 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          pan?: string | null
+          pan_file?: string | null
           phone: string
           pincode?: string | null
           state?: string | null
           status?: Database["public"]["Enums"]["agent_status"] | null
+          trade_licence?: string | null
+          trade_licence_file?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
+          aadhaar?: number | null
+          aadhaar_file?: string | null
           address?: string | null
-          agent_code?: string
+          agent_code?: string | null
           city?: string | null
           commission_rate?: number | null
           company_name?: string
@@ -62,10 +76,14 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          pan?: string | null
+          pan_file?: string | null
           phone?: string
           pincode?: string | null
           state?: string | null
           status?: Database["public"]["Enums"]["agent_status"] | null
+          trade_licence?: string | null
+          trade_licence_file?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -282,14 +300,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      generate_agent_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_booking_reference: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_agent_code: { Args: never; Returns: string }
+      generate_booking_reference: { Args: never; Returns: string }
       get_agent_for_auth: {
         Args: { agent_email: string }
         Returns: {
@@ -298,10 +310,7 @@ export type Database = {
           user_id: string
         }[]
       }
-      is_admin: {
-        Args: { user_uuid?: string }
-        Returns: boolean
-      }
+      is_admin: { Args: { user_uuid?: string }; Returns: boolean }
     }
     Enums: {
       agent_status: "pending" | "active" | "suspended"
