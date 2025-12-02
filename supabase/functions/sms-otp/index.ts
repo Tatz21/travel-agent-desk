@@ -37,7 +37,9 @@ serve(async (req) => {
 
       console.log(`Sending OTP ${generatedOtp} to phone: ${phone}`);
 
-      // Send OTP via Fast2SMS
+      // Send OTP via Fast2SMS using quick route (no verification needed)
+      const message = `Your OTP for Travelopedia registration is: ${generatedOtp}. Valid for 10 minutes. Do not share this code.`;
+      
       const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
         method: 'POST',
         headers: {
@@ -45,8 +47,9 @@ serve(async (req) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          route: 'otp',
-          variables_values: generatedOtp,
+          route: 'q',
+          message: message,
+          language: 'english',
           flash: 0,
           numbers: phone
         })
