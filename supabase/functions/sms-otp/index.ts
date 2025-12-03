@@ -30,6 +30,7 @@ serve(async (req) => {
     if (action === 'send') {
       // Generate 6-digit OTP
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      const validTime = 10; // 10 minutes
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
       // Delete any existing OTPs for this phone
@@ -60,7 +61,7 @@ serve(async (req) => {
       console.log(`Sending OTP ${generatedOtp} to phone: ${phone}`);
 
       // Send OTP via Fast2SMS using quick route
-      const message = `Your OTP for Travelopedia registration is: ${generatedOtp}. Valid for 10 minutes. Do not share this code.`;
+      //const message = `Your OTP for Travelopedia registration is: ${generatedOtp}. Valid for 10 minutes. Do not share this code.`;
       
       const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
         method: 'POST',
@@ -69,8 +70,10 @@ serve(async (req) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          route: 'q',
-          message: message,
+          route: 'dlt',
+          sender_id: 'PHEWAN',
+          message: 203806,
+          variables_values: `${generatedOtp}|${validTime}`,
           language: 'english',
           flash: 0,
           numbers: phone
