@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SmtpClient } from "https://deno.land/x/smtp/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,6 +18,21 @@ serve(async (req) => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+    // Gmail SMTP Credentials
+    const SMTP_USER = Deno.env.get("SMTP_USER"); // your Gmail address
+    const SMTP_PASS = Deno.env.get("SMTP_PASS"); // Gmail App Password
+
+    if (!SMTP_USER || !SMTP_PASS) {
+      console.error("Missing Gmail credentials");
+      return new Response(JSON.stringify({
+        success: false,
+        message: "Email credentials not configured",
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     if (action === 'send') {
       // Generate 6-digit OTP
@@ -52,9 +68,27 @@ serve(async (req) => {
 
       // For now, just log the OTP (in production, send via email service)
       // Email sending would be implemented here with a proper email service
+
+      const client = new SmtpClient();
+
+      await client.connectTLS({
+        hostname: "smtp.gmail.com",
+        port: 465,
+        username: SMTP_USER,
+        password: SMTP_PASS,
+      });
       
+      await client.send({
+        from: SMTP_USER,
+        to: email,
+        subject: "Your OTP Code",
+        content: `Your OTP is: ${generatedOtp}`,
+      });
+
+      await client.close();
+
       return new Response(
-        JSON.stringify({ success: true, message: 'OTP sent successfully' }),
+        JSON.stringify({ success: true, message: 'Email OTP sent successfully' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -113,7 +147,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in email-otp function:', error);
     return new Response(
-      JSON.stringify({ success: false, message: error instanceof Error ? error.message : 'Unknown error' }),
+      JSON.stringify({ success: false, message: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
