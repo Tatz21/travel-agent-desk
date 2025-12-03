@@ -71,8 +71,8 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           route: 'dlt',
-          sender_id: 'PHEWAN',
-          message: 204304,
+          sender_id: 'BANMSF',
+          message: 203806,
           variables_values: `${generatedOtp}|${validTime}`,
           language: 'english',
           flash: 0,
