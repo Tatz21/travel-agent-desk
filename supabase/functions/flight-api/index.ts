@@ -53,7 +53,7 @@ async function getAuthToken(apiKey: string): Promise<string> {
   tokenExpiry = Date.now() + (loginData.expiration * 1000);
   
   console.log('Token obtained successfully');
-  return cachedToken;
+  return cachedToken!;
 }
 
 serve(async (req) => {
@@ -229,7 +229,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in flight-api function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
