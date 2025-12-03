@@ -17,26 +17,26 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
+    // Gmail SMTP Credentials
+    const SMTPHOST = Deno.env.get("SMTP_HOST");
+    const SMTPUSER = Deno.env.get("SMTP_USER"); // your Gmail address
+    const SMTPPASS = Deno.env.get("SMTP_PASS"); // Gmail App Password
+
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
-    // Gmail SMTP Credentials
-    const SMTP_USER = Deno.env.get("SMTP_USER"); // your Gmail address
-    const SMTP_PASS = Deno.env.get("SMTP_PASS"); // Gmail App Password
-
-    if (!SMTP_USER || !SMTP_PASS) {
+    if (!SMTPUSER || !SMTPPASS) {
       console.error("Missing Gmail credentials");
-      return new Response(JSON.stringify({
-        success: false,
-        message: "Email credentials not configured",
-      }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+        success: false, message: "Email credentials not configured",}), 
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     if (action === 'send') {
       // Generate 6-digit OTP
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      const validTime = 10; // 10 minutes
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
       // Delete any existing OTPs for this email
@@ -71,15 +71,15 @@ serve(async (req) => {
 
       const client = new SmtpClient();
 
-      await client.connectTLS({
-        hostname: "smtp.gmail.com",
-        port: 465,
-        username: SMTP_USER,
-        password: SMTP_PASS,
+      await client.connect({
+        hostname: SMTPHOST,
+        port: 587,
+        username: SMTPUSER,
+        password: SMTPPASS,
       });
       
       await client.send({
-        from: SMTP_USER,
+        from: SMTPUSER,
         to: email,
         subject: "Your OTP Code",
         content: `Your OTP is: ${generatedOtp}`,
@@ -145,7 +145,7 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in email-otp function:', error);
+    console.error('Error in email otp function:', error);
     return new Response(
       JSON.stringify({ success: false, message: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
