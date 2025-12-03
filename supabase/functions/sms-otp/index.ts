@@ -72,7 +72,7 @@ serve(async (req) => {
         body: JSON.stringify({
           route: 'dlt',
           sender_id: 'PHEWAN',
-          message: 203806,
+          message: 204304,
           variables_values: `${generatedOtp}|${validTime}`,
           language: 'english',
           flash: 0,
