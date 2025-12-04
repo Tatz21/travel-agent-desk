@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SmtpClient } from "https://deno.land/x/smtp/mod.ts";
+//import { SmtpClient } from "https://deno.land/x/smtp@0.8.0/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,13 +16,14 @@ serve(async (req) => {
     const { action, email, otp } = await req.json();
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const MSG91_AUTH_KEY = Deno.env.get('MSG91_AUTH_KEY');
     
     // Read secrets from Supabase Environment
-    const host = Deno.env.get("SMTP_HOST")!;
+    /* const host = Deno.env.get("SMTP_HOST")!;
     const port = Number(Deno.env.get("SMTP_PORT"));
     const user = Deno.env.get("SMTP_USERNAME")!;
     const pass = Deno.env.get("SMTP_PASSWORD")!;
-    const from = Deno.env.get("FROM_EMAIL")!;
+    const from = Deno.env.get("FROM_EMAIL")!; */
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -30,6 +31,7 @@ serve(async (req) => {
       // Generate 6-digit OTP
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
+      const cName = "Phoenix Travelopedia";
 
       // Delete any existing OTPs for this email
       await supabase
@@ -60,8 +62,8 @@ serve(async (req) => {
 
       // For now, just log the OTP (in production, send via email service)
       // Email sending would be implemented here with a proper email service
-      
-/*       const response = await fetch('https://control.msg91.com/api/v5/email/send', {
+       
+      const response = await fetch('https://control.msg91.com/api/v5/email/send', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +74,7 @@ serve(async (req) => {
           recipients: [
             {
               to: [{ email }],
-              variables: { generatedOtp }
+              variables: `${cName}|${generatedOtp}`
             }
           ],
           from: {
@@ -82,9 +84,25 @@ serve(async (req) => {
           domain: "t7apiq.mailer91.com", // your MSG91 domain
           template_id: "global_otp", // MSG91 Email template ID
         })
-      }); */
+      }); 
+      const result = await response.json();
+      console.log('MSG91 Email response:', JSON.stringify(result));
+
+      if (result.return === true || result.status_code === 200) {
+        return new Response(
+          JSON.stringify({ success: true, message: 'Email OTP sent successfully' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } else {
+        console.error('MSG91 Email error:', result);
+        return new Response(
+          JSON.stringify({ success: false, message: result.message || 'Failed to send Email OTP' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       
       // SMTP client connect
+    /*       
       const client = new SmtpClient();
       await client.connectTLS({
         hostname: host,
@@ -101,12 +119,14 @@ serve(async (req) => {
         content: `Your OTP code is: ${generatedOtp}\n\nThis OTP is valid for 10 minutes.`,
       });
 
-      await client.close();
+      await client.close(); 
+      
 
       return new Response(
         JSON.stringify({ success: true,  message: 'Email OTP sent successfully' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+      */
     }
 
     if (action === 'verify') {
@@ -163,7 +183,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in email otp function:', error);
     return new Response(
-      JSON.stringify({ success: false, message: error.message }),
+      JSON.stringify({ success: false, message: error instanceof Error ? error.message : 'Unknown error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
