@@ -16,27 +16,19 @@ serve(async (req) => {
     const { action, email, otp } = await req.json();
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
-    // Gmail SMTP Credentials
-    const SMTPHOST = Deno.env.get("SMTP_HOST");
-    const SMTPUSER = Deno.env.get("SMTP_USER"); // your Gmail address
-    const SMTPPASS = Deno.env.get("SMTP_PASS"); // Gmail App Password
+    
+    // Read secrets from Supabase Environment
+    const host = Deno.env.get("SMTP_HOST")!;
+    const port = Number(Deno.env.get("SMTP_PORT"));
+    const user = Deno.env.get("SMTP_USERNAME")!;
+    const pass = Deno.env.get("SMTP_PASSWORD")!;
+    const from = Deno.env.get("FROM_EMAIL")!;
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
-
-    if (!SMTPUSER || !SMTPPASS) {
-      console.error("Missing Gmail credentials");
-      return new Response(
-        JSON.stringify({
-        success: false, message: "Email credentials not configured",}), 
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
 
     if (action === 'send') {
       // Generate 6-digit OTP
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      const validTime = 10; // 10 minutes
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
       // Delete any existing OTPs for this email
@@ -64,31 +56,55 @@ serve(async (req) => {
         );
       }
 
-      console.log(`Email OTP ${generatedOtp} generated for ${email}`);
+      console.log(`Email Sending OTP ${generatedOtp} generated for ${email}`);
 
       // For now, just log the OTP (in production, send via email service)
       // Email sending would be implemented here with a proper email service
-
-      const client = new SmtpClient();
-
-      await client.connect({
-        hostname: SMTPHOST,
-        port: 587,
-        username: SMTPUSER,
-        password: SMTPPASS,
-      });
       
+/*       const response = await fetch('https://control.msg91.com/api/v5/email/send', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "authkey": MSG91_AUTH_KEY
+        },
+        body: JSON.stringify({
+          recipients: [
+            {
+              to: [{ email }],
+              variables: { generatedOtp }
+            }
+          ],
+          from: {
+            email: "phoenixrealesthaticbusiness@gmail.com",
+            name: "Phoenix Travelopedia"
+          },
+          domain: "t7apiq.mailer91.com", // your MSG91 domain
+          template_id: "global_otp", // MSG91 Email template ID
+        })
+      }); */
+      
+      // SMTP client connect
+      const client = new SmtpClient();
+      await client.connectTLS({
+        hostname: host,
+        port,
+        username: user,
+        password: pass,
+      });
+
+      // Send email
       await client.send({
-        from: SMTPUSER,
+        from,
         to: email,
-        subject: "Your OTP Code",
-        content: `Your OTP is: ${generatedOtp}`,
+        subject: "Your OTP Verification Code",
+        content: `Your OTP code is: ${generatedOtp}\n\nThis OTP is valid for 10 minutes.`,
       });
 
       await client.close();
 
       return new Response(
-        JSON.stringify({ success: true, message: 'Email OTP sent successfully' }),
+        JSON.stringify({ success: true,  message: 'Email OTP sent successfully' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
