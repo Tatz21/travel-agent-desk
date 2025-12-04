@@ -17,6 +17,14 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     const MSG91_AUTH_KEY = Deno.env.get('MSG91_AUTH_KEY');
+
+    if (!MSG91_AUTH_KEY) {
+      console.error('MSG91_AUTH_KEY not configured');
+      return new Response(
+        JSON.stringify({ success: false, message: 'Email service not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
     
     // Read secrets from Supabase Environment
     /* const host = Deno.env.get("SMTP_HOST")!;
