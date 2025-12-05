@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-//import { SmtpClient } from "https://deno.land/x/smtp@0.8.0/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,13 +24,6 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
-    // Read secrets from Supabase Environment
-    /* const host = Deno.env.get("SMTP_HOST")!;
-    const port = Number(Deno.env.get("SMTP_PORT"));
-    const user = Deno.env.get("SMTP_USERNAME")!;
-    const pass = Deno.env.get("SMTP_PASSWORD")!;
-    const from = Deno.env.get("FROM_EMAIL")!; */
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -71,28 +63,37 @@ serve(async (req) => {
       // For now, just log the OTP (in production, send via email service)
       // Email sending would be implemented here with a proper email service
        
-      const response = await fetch('https://control.msg91.com/api/v5/email/send', {
-        method: 'POST',
+      const response = await fetch("https://control.msg91.com/api/v5/email/send", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
-          "authkey": MSG91_AUTH_KEY
+          Accept: "application/json",
+          authkey: MSG91_AUTH_KEY
         },
         body: JSON.stringify({
           recipients: [
             {
-              to: [{ email }],
-              variables: `${cName}|${generatedOtp}`
-            }
+              to: [
+                {
+                  name: "Mukteswar Mondal",
+                  email: email
+                },
+              ],
+              variables: {
+                company_name: cName,
+                otp: generatedOtp
+              },
+            },
           ],
           from: {
-            email: "phoenixrealesthaticbusiness@gmail.com",
-            name: "Phoenix Travelopedia"
+            name: "Phoenix Travelopedia",
+            email: "notest@t7apiq.mailer91.com"
           },
-          domain: "t7apiq.mailer91.com", // your MSG91 domain
-          template_id: "global_otp", // MSG91 Email template ID
-        })
+          domain: "t7apiq.mailer91.com",
+          template_id: "global_otp"
+        }),
       }); 
+
       const result = await response.json();
       console.log('MSG91 Email response:', JSON.stringify(result));
 
@@ -108,33 +109,6 @@ serve(async (req) => {
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      
-      // SMTP client connect
-    /*       
-      const client = new SmtpClient();
-      await client.connectTLS({
-        hostname: host,
-        port,
-        username: user,
-        password: pass,
-      });
-
-      // Send email
-      await client.send({
-        from,
-        to: email,
-        subject: "Your OTP Verification Code",
-        content: `Your OTP code is: ${generatedOtp}\n\nThis OTP is valid for 10 minutes.`,
-      });
-
-      await client.close(); 
-      
-
-      return new Response(
-        JSON.stringify({ success: true,  message: 'Email OTP sent successfully' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-      */
     }
 
     if (action === 'verify') {
