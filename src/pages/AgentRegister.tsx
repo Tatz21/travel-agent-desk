@@ -86,7 +86,30 @@ const AgentRegister = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadDocument = async (file: File, fieldName: string) => {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("field", fieldName);
+
+  const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
+      body: form,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (error || !data?.url) {
+      console.error(error);
+      toast({
+        title: "File Upload failed",
+        description: error?.message || "Could not upload file",
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    return data.url;
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
 
     if (!files || files.length === 0) return;
@@ -104,8 +127,12 @@ const AgentRegister = () => {
       return;
     }
 
-    // Save actual file object in formData
-    setFormData({ ...formData, [name]: file });
+    const url = await uploadDocument(file, name);
+    if (url) {
+      toast({ title: "Uploaded", description: `${name} uploaded successfully.` });
+      setFormData({ ...formData, [name]: url }); // SAVE URL ONLY
+    }
+
   };
 
   const sendPhoneOtp = async () => {
@@ -208,43 +235,6 @@ const AgentRegister = () => {
     }
   };
 
-  // Upload helper: uploads file to SUPABASE_STORAGE bucket and returns public url (string) or null
-  const uploadFile = async (file: File) => {
-    try {
-      const timestamp = Date.now();
-      // sanitize file name
-      const safeName = encodeURIComponent(file.name.replace(/\s+/g, '_'));
-      const filePath = `${timestamp}_${safeName}`;
-
-      const { data, error: uploadError } = await supabase
-        .storage
-        .from('agent-documents')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        // If file exists, you could consider using upsert: true — but here we treat as failure
-        console.error("Supabase upload error:", uploadError);
-        toast({ title: "Upload failed", description: uploadError.message || "Failed to upload file", variant: "destructive" });
-        return null;
-      }
-
-      // get public URL
-      // getPublicUrl returns { data: { publicUrl } } in supabase-js v2
-      const { data: urlData } = supabase.storage.from('agent-documents').getPublicUrl(filePath) as any;
-      const publicUrl = urlData?.publicUrl ?? null;
-
-      if (!publicUrl) {
-        toast({ title: "Upload failed", description: "Could not get public URL for uploaded file", variant: "destructive" });
-        return null;
-      }
-
-      return publicUrl;
-    } catch (err: any) {
-      console.error("Unexpected upload error:", err);
-      toast({ title: "Upload error", description: err?.message || "Unexpected error during file upload", variant: "destructive" });
-      return null;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -266,9 +256,9 @@ const AgentRegister = () => {
     }
 
     setLoading(true);
-    try {
-      
+    try {      
       const { error } = await createAgent(formData);
+      
       if (error) {
         toast({ title: "Error", description: error.message, variant: "destructive" });
       } else {
@@ -527,4 +517,3 @@ const AgentRegister = () => {
 };
 
 export default AgentRegister;
-
