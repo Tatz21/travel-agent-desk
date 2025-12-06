@@ -92,8 +92,11 @@ const AgentRegister = () => {
     form.append("field", fieldName);
 
   const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
+      method: "POST",
       body: form,
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 
+        Authorization:`Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+      },
     });
 
     if (error || !data?.url) {
