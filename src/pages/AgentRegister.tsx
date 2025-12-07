@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,14 +7,16 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { toast } from "@/hooks/use-toast";
 import { useAgent } from '@/hooks/useAgent';
 import { supabase } from '@/integrations/supabase/client';
-import PhoneEmailVerify from '@/components/PhoneEmailVerify';
+
 
 const AgentRegister = () => {
   const navigate = useNavigate();  
   const { createAgent } = useAgent();
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(0);  
+  const [emailTimer, setEmailTimer] = useState(0);  
   const [otpPhone, setOtpPhone] = useState("");
+  const [otpEmail, setOtpEmail] = useState("");
 
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
@@ -39,35 +41,42 @@ const AgentRegister = () => {
     commission_rate: 5.00
   });
 
-  const startTimer = () => {
-    setTimer(60);
+  const startTimer = (type: "phone" | "email") => {
+    if (type === "phone") setTimer(60);
+    if (type === "email") setEmailTimer(60);
+
     const interval = setInterval(() => {
-      setTimer((t) => {
-        if (t <= 1) clearInterval(interval);
-        return t - 1;
-      });
+      if (type === "phone") {
+        setTimer((t) => {
+          if (t <= 1) clearInterval(interval);
+          return t - 1;
+        });
+      }
+      if (type === "email") {
+        setEmailTimer((t) => {
+          if (t <= 1) clearInterval(interval);
+          return t - 1;
+        });
+      }
     }, 1000);
   };
-
-  const handleEmailVerified = useCallback((verifiedEmail: string) => {
-    setFormData(prev => ({ ...prev, email: verifiedEmail }));
-    setEmailVerified(true);
-    toast({ title: "Email Verified", description: `Email ${verifiedEmail} verified successfully` });
-  }, []);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    // sanitize aadhaar to digits only and limit to 12 chars
     if (name === 'aadhaar') {
       const digitsOnly = value.replace(/\D/g, '').slice(0, 12);
       setFormData({ ...formData, aadhaar: digitsOnly });
       return;
     }
+    // force PAN to uppercase and limit to 10 chars
     if (name === 'pan') {
       const up = value.toUpperCase().slice(0, 10);
       setFormData({ ...formData, pan: up });
       return;
     }
+    // sanitize pincode to digits only and limit to 6 chars
     if (name === 'pincode') {
       const digit = value.replace(/\D/g, '').slice(0, 10);
       setFormData({ ...formData, pincode: digit });
@@ -82,7 +91,7 @@ const AgentRegister = () => {
     form.append("file", file);
     form.append("field", fieldName);
 
-    const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
+  const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
       method: "POST",
       body: form,
       headers: { 
@@ -110,21 +119,23 @@ const AgentRegister = () => {
 
     const file = files[0];
 
+    // 2 MB limit (2 * 1024 * 1024)
     if (file.size > 2 * 1024 * 1024) {
       toast({
         title: "File too large",
         description: "File size must be less than 2 MB",
         variant: "destructive",
       });
-      e.target.value = "";
+      e.target.value = ""; // reset input
       return;
     }
 
     const url = await uploadDocument(file, name);
     if (url) {
       toast({ title: "Uploaded", description: `${name} uploaded successfully.` });
-      setFormData({ ...formData, [name]: url });
+      setFormData({ ...formData, [name]: url }); // SAVE URL ONLY
     }
+
   };
 
   const sendPhoneOtp = async () => {
@@ -137,7 +148,7 @@ const AgentRegister = () => {
 
       if (data.success) {
         toast({ title: "OTP Sent", description: "Mobile OTP sent successfully" });
-        startTimer();
+        startTimer("phone");
       } else {
         toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
       }
@@ -167,6 +178,46 @@ const AgentRegister = () => {
     }
   };
 
+  const sendEmailOtp = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('email-otp', {
+        body: { action: 'send', email: formData.email }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast({ title: "OTP Sent", description: "Email OTP sent successfully" });
+        startTimer("email");
+      } else {
+        toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
+      }
+    } catch (err: any) {
+      console.error('Send email OTP error:', err);
+      toast({ title: "Error", description: "Failed to send Email OTP", variant: "destructive" });
+    }
+  };
+
+  const verifyEmailOtp = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('email-otp', {
+        body: { action: 'verify', email: formData.email, otp: otpEmail }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        setEmailVerified(true);
+        toast({ title: "Verified", description: "Email verified" });
+      } else {
+        toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
+      }
+    } catch (err: any) {
+      console.error('Verify email OTP error:', err);
+      toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
+    }
+  };
+  
   const panRegex = /^[A-Z]{5}\d{4}[A-Z]$/;
   const aadhaarRegex = /^\d{12}$/;  
   const validatePAN = (pan: string) => panRegex.test(pan);
@@ -176,6 +227,7 @@ const AgentRegister = () => {
     if (!formData.pan) return;
     if (!validatePAN(formData.pan)) {
       toast({ title: "Invalid PAN", description: "PAN must be in format ABCDE1234F", variant: "destructive" });
+      focus();
     }
   };
 
@@ -186,6 +238,7 @@ const AgentRegister = () => {
     }
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -194,6 +247,7 @@ const AgentRegister = () => {
       return;
     }    
     
+    // validate PAN & Aadhaar before submission
     if (!validatePAN(formData.pan)) {
       toast({ title: "Invalid PAN", description: "PAN must be in format ABCDE1234F", variant: "destructive" });
       return;
@@ -240,6 +294,7 @@ const AgentRegister = () => {
                   name="company_name"
                   value={formData.company_name}
                   onChange={handleInputChange}
+                  onBlur={handleAadhaarBlur}
                   placeholder="Enter Your Company Name"
                   required
                 />
@@ -283,18 +338,32 @@ const AgentRegister = () => {
                   </div>
                 </div>
               )}
-              <div className="space-y-2 md:col-span-2">
-                <Label>Email Verification *</Label>
-                {emailVerified ? (
-                  <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-md">
-                    <span className="text-green-600 font-medium">✓ Email Verified: {formData.email}</span>
-                  </div>
-                ) : (
-                  <div className="border rounded-md p-4 bg-muted/30">
-                    <PhoneEmailVerify onVerified={handleEmailVerified} />
-                  </div>
-                )}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter Your Email Address"
+                  required
+                />
               </div>
+              <div className="space-y-2 flex items-end">
+                <Button type="button" onClick={sendEmailOtp} disabled={emailVerified || emailTimer > 0}> 
+                  {emailVerified ? "Verified" : emailTimer > 0 ? `Retry in ${emailTimer}`: "Send OTP"}
+                </Button>
+              </div>
+              {!emailVerified && (
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Enter Email OTP</Label>
+                  <div className="flex gap-2">
+                    <Input value={otpEmail} onChange={(e) => setOtpEmail(e.target.value)} placeholder="Enter OTP" />
+                    <Button type="button" onClick={verifyEmailOtp}>Verify</Button>
+                  </div>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="trade">Trade Licence Number *</Label>
                 <Input
@@ -360,7 +429,6 @@ const AgentRegister = () => {
                   name="aadhaar"
                   value={formData.aadhaar}
                   onChange={handleInputChange}
-                  onBlur={handleAadhaarBlur}
                   placeholder="Enter Your Aadhaar Number"
                   required
                 />
