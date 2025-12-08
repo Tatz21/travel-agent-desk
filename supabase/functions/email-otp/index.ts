@@ -75,7 +75,7 @@ serve(async (req) => {
             {
               to: [
                 {
-                  name: "Mukteswar Mondal",
+                  name: "User",
                   email: email
                 },
               ],
@@ -86,13 +86,12 @@ serve(async (req) => {
             },
           ],
           from: {
-            name: "Phoenix Travelopedia",
-            email: "notest@t7apiq.mailer91.com"
+            email: "no-reply@phoenixtravelopedia.com"
           },
-          domain: "t7apiq.mailer91.com",
+          domain: "phoenixtravelopedia.com",
           template_id: "global_otp"
         }),
-      }); 
+      });
 
       const result = await response.json();
       console.log('MSG91 Email response:', JSON.stringify(result));
