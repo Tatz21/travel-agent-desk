@@ -127,7 +127,11 @@ serve(async (req) => {
       }
 
       // Verify OTP
-      if (otpData.otp_code === otp) {
+      const submittedOtp = String(otp).trim();
+      const storedOtp = String(otpData.otp_code).trim();
+      console.log(`Verifying OTP for ${phone}: submitted="${submittedOtp}", stored="${storedOtp}"`);
+      
+      if (storedOtp === submittedOtp) {
         // Mark as verified and delete
         await supabase.from('otp_verifications').delete().eq('id', otpData.id);
         console.log('OTP verified successfully for phone:', phone);
@@ -136,7 +140,7 @@ serve(async (req) => {
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       } else {
-        console.log('Invalid OTP provided for phone:', phone);
+        console.log(`Invalid OTP for ${phone}: submitted="${submittedOtp}", expected="${storedOtp}"`);
         return new Response(
           JSON.stringify({ success: false, message: 'Invalid OTP' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
