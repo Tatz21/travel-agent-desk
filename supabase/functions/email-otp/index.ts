@@ -81,7 +81,7 @@ serve(async (req) => {
               ],
               variables: {
                 company_name: cName,
-                otp: generatedOtp
+                OTP: generatedOtp
               },
             },
           ],
@@ -141,6 +141,7 @@ serve(async (req) => {
       }
 
       // Verify OTP
+      console.log(`Verifying OTP for ${email}: submitted=${otp}, stored=${otpData.otp_code}`);
       if (otpData.otp_code === otp) {
         await supabase.from('otp_verifications').delete().eq('id', otpData.id);
         console.log('OTP verified successfully for email:', email);
@@ -149,7 +150,7 @@ serve(async (req) => {
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       } else {
-        console.log('Invalid OTP provided for email:', email);
+        console.log(`Invalid OTP for ${email}: submitted=${otp}, expected=${otpData.otp_code}`);
         return new Response(
           JSON.stringify({ success: false, message: 'Invalid OTP' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
