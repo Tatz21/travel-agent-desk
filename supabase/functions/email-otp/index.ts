@@ -80,8 +80,8 @@ serve(async (req) => {
                 },
               ],
               variables: {
-                company_name: cName,
-                OTP: generatedOtp
+                VAR1: generatedOtp,
+                company_name: cName
               },
             },
           ],
