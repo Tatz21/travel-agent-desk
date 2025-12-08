@@ -96,7 +96,8 @@ serve(async (req) => {
       const result = await response.json();
       console.log('MSG91 Email response:', JSON.stringify(result));
 
-      if (result.return === true || result.status_code === 200) {
+      if (result.status === 'success' || result.hasError === false) {
+        console.log('MSG91 Email sent successfully:', result.data?.unique_id);
         return new Response(
           JSON.stringify({ success: true, message: 'Email OTP sent successfully' }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
