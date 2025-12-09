@@ -4,15 +4,16 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 };
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { agent_code, password, action, otp } = await req.json();
+    const { action, agent_code, password, otp } = await req.json();
 
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -110,12 +111,11 @@ serve(async (req) => {
         }),
       }); 
 
-      return new Response(JSON.stringify({
-        success: true,
-        message: "OTP sent successfully",
-        email: user.email,
-        mobile: user.mobile,
-      }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: true,  message: "OTP sent successfully" }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // ---------- STEP 4: VERIFY OTP ----------
@@ -136,11 +136,12 @@ serve(async (req) => {
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
 
-      return new Response(JSON.stringify({ success: true, message: "OTP verified" }), {
-        status: 200,
-      });
+      return new Response(
+        JSON.stringify({ success: true, message: "OTP verified" }), 
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
-
     return new Response("Invalid action", { status: 400 });
   } catch (error) {
     console.error('Error processing request:', error);
