@@ -9,21 +9,33 @@ import { toast } from '@/hooks/use-toast';
 import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, Award, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned } from 'lucide-react';
 import logo from '@/assets/logo.gif';
 import watermark from '@/assets/watermark-logo.png';
+import { supabase } from '@/integrations/supabase/client';
+
 const AuthPage = () => {
-  const {
-    user,
-    signIn
-  } = useAuth();
+  const { user, signIn } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set([0]));
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ agent_code: '', password: '' ,});
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const sections = ['login', 'why-choose', 'products', 'features', 'contact'];
+
+  const [step, setStep] = useState(1);
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(60);
+
+  const startTimer = () => {
+    setTimer(60);
+
+    const interval = setInterval(() => {
+        setTimer((t) => {
+          if (t <= 1) clearInterval(interval);
+          return t - 1;
+        });
+      }, 1000);
+  };
+
   useEffect(() => {
     if (user) {
       navigate('/');
@@ -88,35 +100,48 @@ const AuthPage = () => {
       [e.target.name]: e.target.value
     });
   };
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+
+  const sendOtp = async () => {
     try {
-      const {
-        error
-      } = await signIn(formData.email, formData.password);
-      if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: "Signed in successfully!"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive"
+      const { data, error } = await supabase.functions.invoke('login-otp', {
+        body: { action: 'send', agent_code: formData.agent_code, password: formData.password, }
       });
-    } finally {
-      setLoading(false);
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast({ title: "OTP Sent", description: "OTP sent successfully" });
+        setStep(2);
+        startTimer();
+      } else {
+        toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
+      }
+    } catch (err: any) {
+      console.error('Send OTP error:', err);
+      toast({ title: "Error", description: "Failed to send OTP", variant: "destructive" });
     }
   };
+  
+  const verifyOtp = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('login-otp', {
+        body: { action: 'verify', agent_code: formData.agent_code, otp: otp }
+      });
+
+      if (error) throw error;
+      
+      if (data.success) {
+        toast({ title: "OTP Verified", description: "Login successful!" });
+        navigate("/");
+      } else {
+        toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
+      }
+    } catch (err: any) {
+      console.error('Verify error:', err);
+      toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
+    }
+  };
+
   const floatingIcons = [{
     Icon: Plane,
     delay: '0s',
@@ -276,12 +301,13 @@ const AuthPage = () => {
             </div>
             
             <CardContent className="p-8">
-              <form onSubmit={handleSignIn} className="space-y-6">
+            {step === 1 && (
+              <form onSubmit={(e) => { e.preventDefault(); sendOtp(); }} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">
-                    Email / Username
+                  <Label htmlFor="agent_code" className="text-sm font-medium">
+                    Agent Code
                   </Label>
-                  <Input id="email" name="email" type="email" placeholder="Enter your email" value={formData.email} onChange={handleInputChange} required className="h-12 px-4 border-2 focus:border-primary" />
+                  <Input id="agent_code" name="agent_code" type="text" placeholder="Enter your agent code" value={formData.agent_code} onChange={handleInputChange} required className="h-12 px-4 border-2 focus:border-primary" />
                 </div>
                 
                 <div className="space-y-2">
@@ -302,9 +328,28 @@ const AuthPage = () => {
                 </div>
 
                 <Button type="submit" className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all" disabled={loading}>
-                  {loading ? 'Signing in...' : 'LOG IN'}
+                  {loading ? "Checking..." : "Login"}
                 </Button>
               </form>
+              )}
+              {step === 2 && (
+                <div className="space-y-2">
+                  <Label htmlFor="otp" className="text-sm font-medium">
+                    Enter OTP
+                  </Label>
+                  <Input id="agent_code" name="agent_code" type="text" placeholder="Enter 6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} required className="h-12 px-4 border-2 focus:border-primary" />
+                <Button onClick={verifyOtp} className="w-full h-12" disabled={loading}>
+                  {loading ? "Verifying..." : "Verify OTP"}
+                </Button>
+                {timer > 0 ? (
+                  <p className="text-center text-muted-foreground">Resend OTP in {timer}s</p>
+                ) : (
+                  <button className="text-primary underline" onClick={sendOtp}>
+                    Resend OTP
+                  </button>
+                )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -468,3 +513,4 @@ const AuthPage = () => {
     </div>;
 };
 export default AuthPage;
+
