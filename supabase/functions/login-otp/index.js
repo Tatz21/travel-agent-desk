@@ -10,6 +10,7 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
+
   try {
     const { agent_code, password, action, otp } = await req.json();
 
@@ -31,9 +32,10 @@ serve(async (req) => {
         .single();
 
       if (error || !user) {
-        return new Response(JSON.stringify({ success: false, message: "Invalid credentials" }), {
-          status: 400,
-        });
+        return new Response(
+          JSON.stringify({ success: false,  message: 'Agent Not Found' }),
+          {status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
 
       // ---------- STEP 2: Create OTP ----------
@@ -43,11 +45,19 @@ serve(async (req) => {
       const cName = "Phoenix Travelopedia";
 
       // Store OTP with expiry 10 mins
-      await supabase.from("daily_login_otp").insert({
-        agent_code,
+      const { error: insertError } = await supabase.from("daily_login_otp").insert({
+        agent_code: agent_code,
         otp: generatedOtp,
-        expiry: expiresAt,
-      });
+        expires_at: expiresAt,
+      });      
+      
+      if (insertError) {
+        console.error('Error storing OTP:', insertError);
+        return new Response(
+          JSON.stringify({ success: false, message: 'Failed to store OTP' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
       // ---------- STEP 3: Send OTP via Email + SMS ----------
       // Use your SMS provider API (FAST2SMS)    
