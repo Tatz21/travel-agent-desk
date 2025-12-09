@@ -138,6 +138,7 @@ serve(async (req) => {
 
       return new Response(
         JSON.stringify({ success: true, message: "OTP verified" }), 
+        await supabase.from('otp_verifications').update({ verified: 'TRUE' }).eq('id', record.id);
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
@@ -151,4 +152,5 @@ serve(async (req) => {
     });
   }
 });
+
 
