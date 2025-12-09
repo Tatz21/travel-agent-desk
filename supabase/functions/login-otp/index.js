@@ -135,10 +135,11 @@ serve(async (req) => {
       if (new Date(record.expiry) < new Date()) {
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
-
+      
+      await supabase.from("otp_verifications").update({ verified: true }).ep("agent_code", agent_code).ep("otp", record.otp).eq("id", record.id);
+      
       return new Response(
-        JSON.stringify({ success: true, message: "OTP verified" }), 
-        await supabase.from('otp_verifications').update({ verified: 'true' }).eq("agent_code", agent_code).eq('otp', record.otp);
+        JSON.stringify({ success: true, message: "OTP verified" }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
@@ -152,6 +153,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
