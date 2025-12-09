@@ -71,7 +71,7 @@ serve(async (req) => {
         body: JSON.stringify({
           route: 'dlt',
           sender_id: 'PHOETR',
-          message: 204604,
+          message: 204605,
           variables_values: `${generatedOtp}|${validTime}`,
           language: 'english',
           flash: 0,
@@ -151,3 +151,4 @@ serve(async (req) => {
     });
   }
 });
+
