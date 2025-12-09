@@ -38,7 +38,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('dashboard');
     }
   }, [user, navigate]);
 
@@ -132,7 +132,7 @@ const AuthPage = () => {
       
       if (data.success) {
         toast({ title: "OTP Verified", description: "Login successful!" });
-        navigate("/");
+        navigate("dashboard");
       } else {
         toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
       }
