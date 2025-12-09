@@ -124,7 +124,7 @@ serve(async (req) => {
         .from("daily_login_otp")
         .select("*")
         .eq("agent_code", agent_code)
-        .order("id", { ascending: false })
+        .order("expires_at", { ascending: false })
         .limit(1)
         .single();
 
@@ -138,7 +138,7 @@ serve(async (req) => {
 
       return new Response(
         JSON.stringify({ success: true, message: "OTP verified" }), 
-        await supabase.from('otp_verifications').update({ verified: 'true' }).eq('id', record.id);
+        await supabase.from('otp_verifications').update({ verified: 'true' }).eq("agent_code", agent_code).eq('otp', record.otp);
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
@@ -152,6 +152,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
