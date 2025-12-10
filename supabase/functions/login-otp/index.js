@@ -55,7 +55,7 @@ serve(async (req) => {
         password: password,
       });
       return new Response(
-        JSON.stringify({ success: true, message: "OTP sent successfully", no_otp: true, access_token: tokenData.access_token, refresh_token: tokenData.refresh_token
+        JSON.stringify({ success: true, message: "OTP sent successfully", no_otp: true, access_token: signInData.access_token, refresh_token: signInData.refresh_token
       }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       );
@@ -205,6 +205,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
