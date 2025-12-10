@@ -133,6 +133,16 @@ const AuthPage = () => {
       if (error) throw error;
       
       if (data.success) {
+        // 1. Create Supabase session
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token
+        });
+  
+        if (sessionError) {
+          toast({ title: "Session Error", description: sessionError.message, variant: "destructive" });
+          return;
+        }
         toast({ title: "OTP Verified", description: "Login successful!" });
         // Redirect to dashboard
         navigate("/dashboard", { replace: true });
