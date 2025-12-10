@@ -36,11 +36,13 @@ const AuthPage = () => {
       }, 1000);
   };
 
+  /*
   useEffect(() => {
     if (user) {
       navigate('dashboard');
     }
   }, [user, navigate]);
+  */
 
   useEffect(() => {
     const observerOptions = {
