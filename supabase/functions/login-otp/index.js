@@ -40,7 +40,7 @@ serve(async (req) => {
     
     const today = new Date().toISOString().split("T")[0];
     // Validate credentials (you can replace with actual check)
-    const { record: user, error } = await supabase
+    const { data: record, error: otpError } = await supabase
       .from("daily_login_otp")
       .select("*")
       .eq("agent_code", agent_code)
@@ -155,13 +155,20 @@ serve(async (req) => {
         return new Response(JSON.stringify({ success: false, message: "Invalid OTP" }), { status: 400 });
       }
 
-      if (new Date(record.expiry) < new Date()) {
+      if (new Date(record.expires_at) < new Date()) {
         await supabase.from('daily_login_otp').delete().ep("agent_code", agent_code).ep("otp", record.otp).eq('id', record.id);
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
       
-      await supabase.from("daily_login_otp").update({ "verified": true }).ep("agent_code", agent_code).ep("otp", record.otp).eq("id", record.id);
+      await supabase
+        .from("daily_login_otp")
+        .update({ verified: true })
+        .ep("agent_code", agent_code)
+        .ep("otp", record.otp)
+        .eq("id", record.id);
+      
       const { data: tokenData } = await supabase.auth.admin.createToken(user.id);
+      
       return new Response(
         JSON.stringify({ success: true, access_token: tokenData.access_token, refresh_token: tokenData.refresh_token, message: "OTP verified" }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -177,6 +184,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
