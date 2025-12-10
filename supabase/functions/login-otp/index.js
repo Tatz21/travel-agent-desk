@@ -24,14 +24,14 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
     // Validate credentials (you can replace with actual check)
-    const { data: user, error } = await supabase
+    const { data: agent, error: agentErr } = await supabase
       .from("agents")
       .select("*")
       .eq("agent_code", agent_code)
       .eq("password", password)
       .maybeSingle();
    
-    if (error || !user) {
+    if (agentErr || !agent) {
         return new Response(
           JSON.stringify({ success: false,  message: 'Agent Not Found' }),
           {status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -40,7 +40,7 @@ serve(async (req) => {
     
     const today = new Date().toISOString().split("T")[0];
     // Validate credentials (you can replace with actual check)
-    const { data: record, error: otpError } = await supabase
+    const { data: todayLogin , error: otpError } = await supabase
       .from("daily_login_otp")
       .select("*")
       .eq("agent_code", agent_code)
@@ -48,8 +48,8 @@ serve(async (req) => {
       .eq("verified", true)
       .single();
     
-    if (record && action === "send") {
-      const { data: tokenData } = await supabase.auth.admin.createToken(user.id);
+    if (todayLogin && action === "send") {
+      const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
   
       return new Response(
         JSON.stringify({ success: true, message: "OTP sent successfully", no_otp: true, access_token: tokenData.access_token, refresh_token: tokenData.refresh_token
@@ -97,7 +97,7 @@ serve(async (req) => {
           variables_values: `${generatedOtp}|${validTime}`,
           language: 'english',
           flash: 0,
-          numbers: user.phone
+          numbers: agent.phone
         })
       });
 
@@ -115,7 +115,7 @@ serve(async (req) => {
               to: [
                 {
                   name: "User",
-                  email: user.email
+                  email: agent.email
                 },
               ],
               variables: {
@@ -156,10 +156,12 @@ serve(async (req) => {
       }
 
       if (new Date(record.expires_at) < new Date()) {
+        // Delete OTP
         await supabase.from('daily_login_otp').delete().ep("agent_code", agent_code).ep("otp", record.otp).eq('id', record.id);
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
       
+      // Mark OTP verified
       await supabase
         .from("daily_login_otp")
         .update({ verified: true })
@@ -167,7 +169,7 @@ serve(async (req) => {
         .ep("otp", record.otp)
         .eq("id", record.id);
       
-      const { data: tokenData } = await supabase.auth.admin.createToken(user.id);
+      const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
       
       return new Response(
         JSON.stringify({ success: true, access_token: tokenData.access_token, refresh_token: tokenData.refresh_token, message: "OTP verified" }),
@@ -184,6 +186,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
