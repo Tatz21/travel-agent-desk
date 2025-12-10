@@ -49,8 +49,11 @@ serve(async (req) => {
       .single();
     
     if (todayLogin && action === "send") {
-      const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
-  
+      //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: agent.email,
+        password: password,
+      });
       return new Response(
         JSON.stringify({ success: true, message: "OTP sent successfully", no_otp: true, access_token: tokenData.access_token, refresh_token: tokenData.refresh_token
       }),
@@ -178,7 +181,7 @@ serve(async (req) => {
       
       //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        agent_code: agent.agent_code,
+        email: agent.email,
         password: password,
       });
       
@@ -202,6 +205,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
