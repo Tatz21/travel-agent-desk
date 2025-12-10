@@ -133,10 +133,11 @@ serve(async (req) => {
       }
 
       if (new Date(record.expiry) < new Date()) {
+        await supabase.from('daily_login_otp').delete().ep("agent_code", agent_code).ep("otp", record.otp).eq('id', record.id);
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
       
-      await supabase.from("otp_verifications").update({ verified: true }).ep("agent_code", agent_code).ep("otp", record.otp).eq("id", record.id);
+      await supabase.from("daily_login_otp").update({ verified: true }).ep("agent_code", agent_code).ep("otp", record.otp).eq("id", record.id);
       
       return new Response(
         JSON.stringify({ success: true, message: "OTP verified" }),
@@ -153,6 +154,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
