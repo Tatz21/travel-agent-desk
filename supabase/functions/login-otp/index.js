@@ -65,6 +65,7 @@ serve(async (req) => {
       const validTime = 10; // 10 minutes
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
       const cName = "Phoenix Travelopedia";
+      const today = new Date().toISOString().split("T")[0];
 
       // Store OTP with expiry 10 mins
       const { error: insertError } = await supabase.from("daily_login_otp").insert({
@@ -163,6 +164,7 @@ serve(async (req) => {
           .eq("agent_code", agent_code)
           .eq("otp", record.otp)
           .eq('id', record.id);
+        
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
       
@@ -174,10 +176,19 @@ serve(async (req) => {
         .ep("otp", record.otp)
         .eq("id", record.id);
       
-      const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
+      //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: agent.email,
+        password: password,
+      });
+      
+      if (signInError || !signInData || !signInData.session) {
+        console.error("signInWithPassword error:", signInError);
+        return json({ success: false, message: "Failed to sign in user" }, 500);
+      }
       
       return new Response(
-        JSON.stringify({ success: true, access_token: tokenData.access_token, refresh_token: tokenData.refresh_token, message: "OTP verified" }),
+        JSON.stringify({ success: true, access_token: signInData.session.access_token, refresh_token: signInData.session.refresh_token, message: "OTP verified and signed in" }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
@@ -191,6 +202,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
