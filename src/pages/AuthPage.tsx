@@ -136,16 +136,17 @@ const AuthPage = () => {
   const verifyOtp = async () => {
     try {
       const { data, error } = await supabase.functions.invoke('login-otp', {
-        body: { action: 'verify', agent_code: formData.agent_code, otp: otp }
+        body: { action: 'verify', agent_code: formData.agent_code, otp: otp, password: formData.password }
       });
 
       if (error) throw error;
       
       if (data.success) {
-        // 1. Create Supabase session
+        // Set the real session returned from the server
+        const { access_token, refresh_token } = data;
         const { error: sessionError } = await supabase.auth.setSession({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token
+          access_token,
+          refresh_token
         });
   
         if (sessionError) {
