@@ -134,7 +134,8 @@ const AuthPage = () => {
       
       if (data.success) {
         toast({ title: "OTP Verified", description: "Login successful!" });
-        navigate("/dashboard");
+        // Redirect to dashboard
+        navigate("/dashboard", { replace: true });
       } else {
         toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
       }
