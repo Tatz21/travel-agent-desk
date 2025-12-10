@@ -71,6 +71,7 @@ serve(async (req) => {
         agent_code: agent_code,
         otp: generatedOtp,
         expires_at: expiresAt,
+        login_date: today,
       });      
       
       if (insertError) {
@@ -176,6 +177,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
