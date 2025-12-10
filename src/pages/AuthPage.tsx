@@ -110,6 +110,17 @@ const AuthPage = () => {
       });
 
       if (error) throw error;
+      
+      if (data.no_otp) {
+        // normal login
+        await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token
+        });
+    
+        navigate("/dashboard", { replace: true });
+        return;
+      }
 
       if (data.success) {
         toast({ title: "OTP Sent", description: "OTP sent successfully" });
