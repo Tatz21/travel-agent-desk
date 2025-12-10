@@ -157,7 +157,12 @@ serve(async (req) => {
 
       if (new Date(record.expires_at) < new Date()) {
         // Delete OTP
-        await supabase.from('daily_login_otp').delete().ep("agent_code", agent_code).ep("otp", record.otp).eq('id', record.id);
+        await supabase
+          .from('daily_login_otp')
+          .delete()
+          .eq("agent_code", agent_code)
+          .eq("otp", record.otp)
+          .eq('id', record.id);
         return new Response(JSON.stringify({ success: false, message: "OTP expired" }), { status: 400 });
       }
       
@@ -186,6 +191,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
