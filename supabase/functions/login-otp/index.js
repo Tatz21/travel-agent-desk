@@ -187,7 +187,10 @@ serve(async (req) => {
       
       if (signInError || !signInData || !signInData.session) {
         console.error("signInWithPassword error:", signInError);
-        return json({ success: false, message: "Failed to sign in user" }, 500);
+        return new Response(JSON.stringify({ success: false, message: "Failed to sign in user" }),{
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
       }
       
       return new Response(
@@ -205,18 +208,3 @@ serve(async (req) => {
     });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
