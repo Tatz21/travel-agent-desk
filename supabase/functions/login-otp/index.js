@@ -172,13 +172,13 @@ serve(async (req) => {
       await supabase
         .from("daily_login_otp")
         .update({ verified: true })
-        .ep("agent_code", agent_code)
-        .ep("otp", record.otp)
+        .eq("agent_code", agent_code)
+        .eq("otp", record.otp)
         .eq("id", record.id);
       
       //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: agent.email,
+        agent_code: agent.agent_code,
         password: password,
       });
       
@@ -202,6 +202,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
