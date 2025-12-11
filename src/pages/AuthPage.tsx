@@ -111,10 +111,12 @@ const AuthPage = () => {
       
       if (data.no_otp) {
         // normal login
+        /*
         await supabase.auth.setSession({
           access_token: data.access_token,
           refresh_token: data.refresh_token
         });
+        */
     
         navigate("/dashboard", { replace: true });
         return;
@@ -148,17 +150,20 @@ const AuthPage = () => {
           access_token,
           refresh_token
         });*/
+      /*
       if (data.session) {
         await supabase.auth.setSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token
         });
       }
+      */
   
         /*if (sessionError) {
           toast({ title: "Session Error", description: sessionError.message, variant: "destructive" });
           return;
         }*/
+      if (data.success) {
         toast({ title: "OTP Verified", description: "Login successful!" });
         // Redirect to dashboard
         navigate("/dashboard", { replace: true });
