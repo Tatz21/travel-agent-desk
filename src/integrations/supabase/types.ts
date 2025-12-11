@@ -30,6 +30,7 @@ export type Database = {
           id: string
           pan: string | null
           pan_file: string | null
+          password: string | null
           phone: string
           pincode: string | null
           state: string | null
@@ -54,6 +55,7 @@ export type Database = {
           id?: string
           pan?: string | null
           pan_file?: string | null
+          password?: string | null
           phone: string
           pincode?: string | null
           state?: string | null
@@ -78,6 +80,7 @@ export type Database = {
           id?: string
           pan?: string | null
           pan_file?: string | null
+          password?: string | null
           phone?: string
           pincode?: string | null
           state?: string | null
@@ -162,6 +165,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      daily_login_otp: {
+        Row: {
+          agent_code: string
+          expires_at: string | null
+          id: string
+          login_date: string | null
+          otp: string
+          verified: boolean | null
+        }
+        Insert: {
+          agent_code: string
+          expires_at?: string | null
+          id?: string
+          login_date?: string | null
+          otp: string
+          verified?: boolean | null
+        }
+        Update: {
+          agent_code?: string
+          expires_at?: string | null
+          id?: string
+          login_date?: string | null
+          otp?: string
+          verified?: boolean | null
+        }
+        Relationships: []
       }
       otp_verifications: {
         Row: {
