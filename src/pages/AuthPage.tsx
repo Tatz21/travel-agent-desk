@@ -141,18 +141,29 @@ const AuthPage = () => {
 
       if (error) throw error;
       
-      if (data.success) {
+      /*if (data.success) {
         // Set the real session returned from the server
         const { access_token, refresh_token } = data;
         const { error: sessionError } = await supabase.auth.setSession({
           access_token,
           refresh_token
+        });*/
+      if (data.session) {
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token
         });
+      } else {
+        await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token
+        });
+      }
   
-        if (sessionError) {
+        /*if (sessionError) {
           toast({ title: "Session Error", description: sessionError.message, variant: "destructive" });
           return;
-        }
+        }*/
         toast({ title: "OTP Verified", description: "Login successful!" });
         // Redirect to dashboard
         navigate("/dashboard", { replace: true });
