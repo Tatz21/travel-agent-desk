@@ -148,7 +148,7 @@ const AuthPage = () => {
           access_token,
           refresh_token
         });*/
-      if (data.session) {
+      if (data.success) {
         await supabase.auth.setSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token
