@@ -360,7 +360,7 @@ const AuthPage = () => {
                   <Label htmlFor="otp" className="text-sm font-medium">
                     Enter OTP
                   </Label>
-                  <Input id="agent_code" name="agent_code" type="text" placeholder="Enter 6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} required className="h-12 px-4 border-2 focus:border-primary" />
+                  <Input id="otp" name="otp" type="text" placeholder="Enter 6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} required className="h-12 px-4 border-2 focus:border-primary" />
                 <Button onClick={verifyOtp} className="w-full h-12" disabled={loading}>
                   {loading ? "Verifying..." : "Verify OTP"}
                 </Button>
