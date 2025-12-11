@@ -50,12 +50,19 @@ serve(async (req) => {
     
     if (todayLogin && action === "send") {
       //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
+      /*
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: agent.email,
         password: password,
       });
       return new Response(
         JSON.stringify({ success: true, message: "Login successfully", no_otp: true, access_token: signInData.access_token, refresh_token: signInData.refresh_token }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },}
+      );
+      */
+      
+      return new Response(
+        JSON.stringify({ success: true, message: "Login successfully"}),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },}
       );
     }
@@ -182,6 +189,7 @@ serve(async (req) => {
         .eq("id", record.id);
       
       //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
+      /*
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: agent.email,
         password: password,
@@ -200,6 +208,12 @@ serve(async (req) => {
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
+      */
+      return new Response(
+        JSON.stringify({ success: true, message: "OTP verified and signed in" }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
     return new Response("Invalid action", { status: 400 });
   } catch (error) {
@@ -210,6 +224,7 @@ serve(async (req) => {
     });
   }
 });
+
 
 
 
