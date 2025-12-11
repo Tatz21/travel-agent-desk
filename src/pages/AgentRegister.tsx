@@ -5,13 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { useAgent } from '@/hooks/useAgent';
 import { supabase } from '@/integrations/supabase/client';
 
 
 const AgentRegister = () => {
-  const navigate = useNavigate();  
-  const { createAgent } = useAgent();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(0);  
   const [emailTimer, setEmailTimer] = useState(0);  
@@ -26,6 +24,7 @@ const AgentRegister = () => {
     contact_person: '',
     phone: '',
     email: '',
+    password: '',
     trade_licence: '',
     trade_licence_file: '',
     pan: '',
@@ -246,6 +245,11 @@ const AgentRegister = () => {
       toast({ title: "Verification Required", description: "Please verify mobile & email before submitting", variant: "destructive" });
       return;
     }    
+
+    if (!formData.password || formData.password.length < 6) {
+      toast({ title: "Invalid Password", description: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
     
     // validate PAN & Aadhaar before submission
     if (!validatePAN(formData.pan)) {
@@ -259,14 +263,66 @@ const AgentRegister = () => {
     }
 
     setLoading(true);
-    try {      
-      const { error } = await createAgent(formData);
-      
-      if (error) {
-        toast({ title: "Error", description: error.message, variant: "destructive" });
+    try {
+      // Step 1: Sign up the user with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+
+      if (authError) {
+        toast({ title: "Error", description: authError.message, variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
+      if (!authData.user) {
+        toast({ title: "Error", description: "Failed to create user account", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
+      // Step 2: Generate agent code
+      const { data: agentCode, error: codeError } = await supabase.rpc('generate_agent_code');
+      if (codeError) {
+        toast({ title: "Error", description: "Failed to generate agent code", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
+      // Step 3: Create the agent record
+      const { error: agentError } = await supabase
+        .from('agents')
+        .insert({
+          company_name: formData.company_name,
+          contact_person: formData.contact_person,
+          phone: formData.phone,
+          email: formData.email,
+          trade_licence: formData.trade_licence || null,
+          trade_licence_file: formData.trade_licence_file || null,
+          pan: formData.pan || null,
+          pan_file: formData.pan_file || null,
+          aadhaar: formData.aadhaar ? Number(formData.aadhaar) : null,
+          aadhaar_file: formData.aadhaar_file || null,
+          address: formData.address || null,
+          city: formData.city || null,
+          state: formData.state || null,
+          country: formData.country || null,
+          pincode: formData.pincode || null,
+          status: formData.status,
+          commission_rate: formData.commission_rate,
+          user_id: authData.user.id,
+          agent_code: agentCode,
+        });
+
+      if (agentError) {
+        toast({ title: "Error", description: agentError.message, variant: "destructive" });
       } else {
-        toast({ title: "Success", description: "Agent profile created successfully!" });
-        navigate('/dashboard');
+        toast({ title: "Success", description: "Agent profile created successfully! Please check your email to verify your account." });
+        navigate('/');
       }
     } catch (error) {
       toast({ title: "Error", description: "Unexpected error occurred", variant: "destructive" });
@@ -364,6 +420,19 @@ const AgentRegister = () => {
                   </div>
                 </div>
               )}
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="password">Password *</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Create a password (min 6 characters)"
+                  required
+                  minLength={6}
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="trade">Trade Licence Number *</Label>
                 <Input
