@@ -152,6 +152,7 @@ serve(async (req) => {
         .select("*")
         .eq("agent_code", agent_code)
         .eq("login_date", today)
+        .eq("otp", otp) 
         .order("expires_at", { ascending: false })
         .limit(1)
         .single();
@@ -209,5 +210,6 @@ serve(async (req) => {
     });
   }
 });
+
 
 
