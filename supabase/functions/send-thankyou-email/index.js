@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,9 +13,6 @@ serve(async (req) => {
   try {
     const { email, name } = await req.json();
 
-    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
     const MSG91_AUTH_KEY = Deno.env.get("MSG91_AUTH_KEY");
 
     if (!MSG91_AUTH_KEY) {
@@ -26,26 +22,35 @@ serve(async (req) => {
       );
     }
 
-    const payload = {
-      template_id: 13122025,
-      recipients: [
-        {
-          to: [{ email }],
-          variables: {
-            name: name,
-          },
+    const res = await fetch("https://control.msg91.com/api/v5/email/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          authkey: MSG91_AUTH_KEY
         },
-      ],
-    };
-
-    const res = await fetch("https://api.msg91.com/api/v5/email/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authkey: MSG91_AUTH_KEY,
-      },
-      body: JSON.stringify(payload),
-    });
+        body: JSON.stringify({
+          recipients: [
+            {
+              to: [
+                {
+                  name: name,
+                  email: email
+                },
+              ],
+              variables: {
+                name: name,
+              },
+            },
+          ],
+          from: {
+            name: "Phoenix Travelopedia",
+            email: "no-reply@phoenixtravelopedia.com"
+          },
+          domain: "phoenixtravelopedia.com",
+          template_id: 13122025
+        }),
+    }); 
 
     const result = await res.json();
 
@@ -61,4 +66,3 @@ serve(async (req) => {
     );
   }
 });
-
