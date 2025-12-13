@@ -32,7 +32,7 @@ serve(async (req) => {
         {
           to: [{ email }],
           variables: {
-            NAME: name,
+            name: name,
           },
         },
       ],
@@ -61,3 +61,4 @@ serve(async (req) => {
     );
   }
 });
+
