@@ -321,6 +321,13 @@ const AgentRegister = () => {
       if (agentError) {
         toast({ title: "Error", description: agentError.message, variant: "destructive" });
       } else {
+        // After agent inserted successfully
+        await supabase.functions.invoke("send-thankyou-email", {
+          body: {
+            email: formData.email,
+            name: formData.contact_person,
+          },
+        });
         toast({ title: "Success", description: "Agent profile created successfully! Please check your email to verify your account." });
         navigate('/');
       }
