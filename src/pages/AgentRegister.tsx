@@ -7,7 +7,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { toast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 
-
 const AgentRegister = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -90,7 +89,7 @@ const AgentRegister = () => {
     form.append("file", file);
     form.append("field", fieldName);
 
-  const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
+    const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
       method: "POST",
       body: form,
       headers: { 
