@@ -102,22 +102,26 @@ const AuthPage = () => {
   };
 
   const sendOtp = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('login-otp', {
-        body: { action: 'send', agent_code: formData.agent_code, password: formData.password, }
+        body: { action: 'send', agent_code: formData.agent_code, password: formData.password }
       });
 
       if (error) throw error;
       
       if (data.no_otp) {
-        // normal login
-        /*
-        await supabase.auth.setSession({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token
+        // Already verified today - sign in with Supabase Auth
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: data.agent_email,
+          password: formData.password
         });
-        */
-    
+        
+        if (signInError) {
+          toast({ title: "Login Error", description: signInError.message, variant: "destructive" });
+          return;
+        }
+        
         navigate("/dashboard", { replace: true });
         return;
       }
@@ -132,40 +136,33 @@ const AuthPage = () => {
     } catch (err: any) {
       console.error('Send OTP error:', err);
       toast({ title: "Error", description: "Failed to send OTP", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
   };
   
   const verifyOtp = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('login-otp', {
         body: { action: 'verify', agent_code: formData.agent_code, otp: otp, password: formData.password }
       });
 
       if (error) throw error;
-      
-      /*if (data.success) {
-        // Set the real session returned from the server
-        const { access_token, refresh_token } = data;
-        const { error: sessionError } = await supabase.auth.setSession({
-          access_token,
-          refresh_token
-        });*/
-      /*
-      if (data.session) {
-        await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token
-        });
-      }
-      */
-  
-        /*if (sessionError) {
-          toast({ title: "Session Error", description: sessionError.message, variant: "destructive" });
-          return;
-        }*/
+
       if (data.success) {
+        // Sign in with Supabase Auth to create a persistent session
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: data.agent_email,
+          password: formData.password
+        });
+        
+        if (signInError) {
+          toast({ title: "Login Error", description: signInError.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "OTP Verified", description: "Login successful!" });
-        // Redirect to dashboard
         navigate("/dashboard", { replace: true });
       } else {
         toast({ title: "Invalid OTP", description: data.message, variant: "destructive" });
@@ -173,6 +170,8 @@ const AuthPage = () => {
     } catch (err: any) {
       console.error('Verify error:', err);
       toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
   };
 
