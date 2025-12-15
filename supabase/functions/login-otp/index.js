@@ -49,20 +49,15 @@ serve(async (req) => {
       .single();
     
     if (todayLogin && action === "send") {
-      //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
-      /*
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: agent.email,
-        password: password,
-      });
+      // Already verified today - return agent info for client-side auth
       return new Response(
-        JSON.stringify({ success: true, message: "Login successfully", no_otp: true, access_token: signInData.access_token, refresh_token: signInData.refresh_token }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },}
-      );
-      */
-      
-      return new Response(
-        JSON.stringify({ success: true, message: "Login successfully"}),
+        JSON.stringify({ 
+          success: true, 
+          message: "Login successfully", 
+          no_otp: true,
+          agent_email: agent.email,
+          agent_user_id: agent.user_id
+        }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },}
       );
     }
@@ -188,29 +183,14 @@ serve(async (req) => {
         .eq("otp", record.otp)
         .eq("id", record.id);
       
-      //const { data: tokenData } = await supabase.auth.admin.createToken(agent.id);
-      /*
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: agent.email,
-        password: password,
-      });
-      
-      if (signInError || !signInData || !signInData.session) {
-        console.error("signInWithPassword error:", signInError);
-        return new Response(JSON.stringify({ success: false, message: "Failed to sign in user" }),{
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
-      }
-      
+      // Return agent info for client-side auth
       return new Response(
-        JSON.stringify({ success: true, access_token: signInData.session.access_token, refresh_token: signInData.session.refresh_token, message: "OTP verified and signed in" }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-      */
-      return new Response(
-        JSON.stringify({ success: true, message: "OTP verified and signed in" }),
+        JSON.stringify({ 
+          success: true, 
+          message: "OTP verified successfully",
+          agent_email: agent.email,
+          agent_user_id: agent.user_id
+        }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
