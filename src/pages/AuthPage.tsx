@@ -112,9 +112,15 @@ const AuthPage = () => {
       
       if (data.no_otp) {
         // Already verified today - sign in with Supabase Auth
+        const agentEmail = String((data as any)?.agent_email ?? (data as any)?.email ?? "").trim();
+        if (!agentEmail) {
+          toast({ title: "Login Error", description: "Server response missing agent email.", variant: "destructive" });
+          return;
+        }
+
         const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: data.agent_email,
-          password: formData.password
+          email: agentEmail,
+          password: formData.password,
         });
         
         if (signInError) {
@@ -152,9 +158,15 @@ const AuthPage = () => {
 
       if (data.success) {
         // Sign in with Supabase Auth to create a persistent session
+        const agentEmail = String((data as any)?.agent_email ?? (data as any)?.email ?? "").trim();
+        if (!agentEmail) {
+          toast({ title: "Login Error", description: "Server response missing agent email.", variant: "destructive" });
+          return;
+        }
+
         const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: data.agent_email,
-          password: formData.password
+          email: agentEmail,
+          password: formData.password,
         });
         
         if (signInError) {
