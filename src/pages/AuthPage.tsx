@@ -113,7 +113,7 @@ const AuthPage = () => {
       if (data.no_otp) {
         // Already verified today - sign in with Supabase Auth
         const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: data.agent_email,
+          email: data.email,
           password: formData.password
         });
         
