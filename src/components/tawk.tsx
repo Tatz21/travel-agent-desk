@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 const Tawk = () => {
   useEffect(() => {
-    // Add Tawk API global types
     (window as any).Tawk_API = (window as any).Tawk_API || {};
     (window as any).Tawk_LoadStart = new Date();
 
