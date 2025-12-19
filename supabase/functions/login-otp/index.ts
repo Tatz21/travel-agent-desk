@@ -89,7 +89,6 @@ serve(async (req) => {
 
       // ---------- Send OTP via Email + SMS ----------
       // Use your SMS provider API (FAST2SMS)  
-      /*
       await fetch('https://www.fast2sms.com/dev/bulkV2', {
         method: 'POST',
         headers: {
@@ -106,7 +105,6 @@ serve(async (req) => {
           numbers: agent.phone
         })
       });
-      */
 
       // Email via Supabase internal email service (MSG91) 
       await fetch("https://control.msg91.com/api/v5/email/send", {
@@ -121,7 +119,7 @@ serve(async (req) => {
             {
               to: [
                 {
-                  name: "User",
+                  name: "Noreply",
                   email: agent.email
                 },
               ],
@@ -204,3 +202,4 @@ serve(async (req) => {
     });
   }
 });
+
