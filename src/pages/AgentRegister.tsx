@@ -327,7 +327,7 @@ const AgentRegister = () => {
             name: formData.contact_person,
           },
         });
-        toast({ title: "Success", description: "Agent profile created successfully! Please check your email to verify your account." });
+        toast({ title: "Success", description: "Agent profile created successfully!" });
         navigate('/');
       }
     } catch (error) {
