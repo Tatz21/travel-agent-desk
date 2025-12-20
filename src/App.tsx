@@ -42,7 +42,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!agent) {
-    return <Navigate to="/setup" replace />;
+    return <Navigate to="/register" replace />;
   }
 
   return <>{children}</>;
