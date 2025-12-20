@@ -135,8 +135,31 @@ const AgentRegister = () => {
     }
 
   };
-
+  const checkPhoneExists = async (phone: string) => {
+    const { data, error } = await supabase
+      .from("agents")
+      .select("id")
+      .eq("phone", phone)
+      .limit(1);
+  
+    if (error) {
+      console.error(error);
+      return false;
+    }
+  
+    return data.length > 0;
+  };
+  
   const sendPhoneOtp = async () => {
+    const exists = await checkPhoneExists(formData.phone);
+    if (exists) {
+      toast({
+        title: "Already Registered",
+        description: "This mobile number is already registered",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       const { data, error } = await supabase.functions.invoke('sms-otp', {
         body: { action: 'send', phone: formData.phone }
@@ -175,8 +198,32 @@ const AgentRegister = () => {
       toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
     }
   };
-
-  const sendEmailOtp = async () => {
+  
+  const checkEmailExists = async (email: string) => {
+    const { data, error } = await supabase
+      .from("agents")
+      .select("id")
+      .eq("email", email)
+      .limit(1);
+  
+    if (error) {
+      console.error(error);
+      return false;
+    }
+  
+    return data.length > 0;
+  };
+  
+  const sendEmailOtp = async () => {  
+    const exists = await checkEmailExists(formData.email);
+    if (exists) {
+      toast({
+        title: "Already Registered",
+        description: "This email is already registered",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       const { data, error } = await supabase.functions.invoke('email-otp', {
         body: { action: 'send', email: formData.email }
@@ -273,9 +320,20 @@ const AgentRegister = () => {
       });
 
       if (authError) {
-        toast({ title: "Error", description: authError.message, variant: "destructive" });
-        setLoading(false);
-        return;
+        if (
+          authError.message.toLowerCase().includes("already registered") ||
+          authError.message.toLowerCase().includes("user already exists")
+        ) {
+          toast({
+            title: "Email Already Registered",
+            description: "This email address is already registered. Please login or use another email.",
+            variant: "destructive",
+          });
+        } else{
+          toast({ title: "Signup Failed", description: authError.message, variant: "destructive" });
+          setLoading(false);
+          return;
+        }
       }
 
       if (!authData.user) {
@@ -395,7 +453,7 @@ const AgentRegister = () => {
                 <div className="md:col-span-2 space-y-2">
                   <Label>Enter Mobile OTP</Label>
                   <div className="flex gap-2">
-                    <Input value={otpPhone} onChange={(e) => setOtpPhone(e.target.value)} placeholder="Enter OTP" />
+                    <Input value={otpPhone} onChange={(e) => setOtpPhone(e.target.value)} placeholder="Enter Mobile OTP" />
                     <Button type="button" onClick={verifyPhoneOtp}>Verify</Button>
                   </div>
                 </div>
@@ -421,7 +479,7 @@ const AgentRegister = () => {
                 <div className="space-y-2 md:col-span-2">
                   <Label>Enter Email OTP</Label>
                   <div className="flex gap-2">
-                    <Input value={otpEmail} onChange={(e) => setOtpEmail(e.target.value)} placeholder="Enter OTP" />
+                    <Input value={otpEmail} onChange={(e) => setOtpEmail(e.target.value)} placeholder="Enter Email OTP" />
                     <Button type="button" onClick={verifyEmailOtp}>Verify</Button>
                   </div>
                 </div>
@@ -440,25 +498,23 @@ const AgentRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="trade">Trade Licence Number *</Label>
+                <Label htmlFor="trade">Trade Licence Number </Label>
                 <Input
                   id="trade_licence"
                   name="trade_licence"
                   value={formData.trade_licence}
                   onChange={handleInputChange}
                   placeholder="Enter Your Trade Licence Number"
-                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="trade_licence_file">Trade Licence File *</Label>
+                <Label htmlFor="trade_licence_file">Trade Licence File </Label>
                 <Input 
                   type="file"
                   id="trade_licence_file"
                   name="trade_licence_file"
                   onChange={handleFileChange}
                   placeholder="Upload Your Trade Licence File"
-                  required
                   accept="image/*"
                 />
                 <span className="text-xs text-bold" style={{color:'#bf1212'}}>
@@ -564,7 +620,7 @@ const AgentRegister = () => {
                 <Input
                   id="country"
                   name="country"
-                  value="INDIA"
+                  value="India"
                   onChange={handleInputChange}
                   placeholder="Enter Your Country"
                   required
