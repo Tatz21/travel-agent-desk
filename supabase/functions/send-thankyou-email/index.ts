@@ -20,6 +20,13 @@ serve(async (req) => {
         JSON.stringify({ success: false, message: "MSG91 config missing" }),
         { status: 500, headers: corsHeaders }
       );
+    }    
+    
+    if (!email || !name) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Missing email or name" }),
+        { status: 400 }
+      );
     }
 
     const res = await fetch("https://control.msg91.com/api/v5/email/send", {
@@ -66,3 +73,4 @@ serve(async (req) => {
     );
   }
 });
+
