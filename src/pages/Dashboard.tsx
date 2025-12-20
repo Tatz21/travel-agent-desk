@@ -29,11 +29,11 @@ const Dashboard = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active':
+      case 'active':
         return 'bg-green-500/10 text-green-600 border-green-500/20';
-      case 'Pending':
+      case 'pending':
         return 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20';
-      case 'Suspended':
+      case 'suspended':
         return 'bg-destructive/10 text-destructive border-destructive/20';
       default:
         return 'bg-muted text-muted-foreground border-border';
