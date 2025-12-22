@@ -138,15 +138,11 @@ const AgentRegister = () => {
   const checkPhoneExists = async (phone: string) => {
     const { data, error } = await supabase
       .from("agents")
-      .select("id")
+      .select("phone")
       .eq("phone", phone)
       .limit(1);
   
-    if (error) {
-      console.error(error);
-      return false;
-    }
-  
+    if (error) return false;
     return data.length > 0;
   };
   
@@ -202,15 +198,11 @@ const AgentRegister = () => {
   const checkEmailExists = async (email: string) => {
     const { data, error } = await supabase
       .from("agents")
-      .select("id")
+      .select("email")
       .eq("email", email)
       .limit(1);
   
-    if (error) {
-      console.error(error);
-      return false;
-    }
-  
+    if (error) return false;  
     return data.length > 0;
   };
   
