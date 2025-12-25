@@ -22,6 +22,9 @@ import ContactRepresentative from "./pages/ContactRepresentative";
 import ApiTest from "./pages/ApiTest";
 import NotFound from "./pages/NotFound";
 import Tawk from "./components/tawk";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import AgentStatus from "./pages/AgentStatus";
 
 const queryClient = new QueryClient();
 
@@ -83,7 +86,10 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/register" element={<AgentRegister />} />
+              <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/api-test" element={<ApiTest />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               {/*
               <Route path="/setup" element={
                 <SetupRoute>
