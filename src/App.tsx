@@ -9,7 +9,7 @@ import { useAgent } from "@/hooks/useAgent";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AgentRegister from "./pages/AgentRegister";
-import AgentStatus from "./pages/AgentStatus";
+import AgentSetup from "./pages/AgentSetup";
 import Dashboard from "./pages/Dashboard";
 import FlightBookingPage from "./pages/FlightBookingPage";
 import BusBookingPage from "./pages/BusBookingPage";
@@ -20,8 +20,6 @@ import ServiceCharge from "./pages/ServiceCharge";
 import BankDetails from "./pages/BankDetails";
 import ContactRepresentative from "./pages/ContactRepresentative";
 import ApiTest from "./pages/ApiTest";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Tawk from "./components/tawk";
 
@@ -50,7 +48,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-/*
 const SetupRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const { agent, loading: agentLoading } = useAgent();
@@ -73,7 +70,6 @@ const SetupRoute = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
-*/
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -87,10 +83,14 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/register" element={<AgentRegister />} />
-              <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/api-test" element={<ApiTest />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
+              {/*
+              <Route path="/setup" element={
+                <SetupRoute>
+                  <AgentSetup />
+                </SetupRoute>
+              } />
+              */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
