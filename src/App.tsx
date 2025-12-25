@@ -9,6 +9,7 @@ import { useAgent } from "@/hooks/useAgent";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AgentRegister from "./pages/AgentRegister";
+import AgentStatus from "./pages/AgentStatus";
 import AgentSetup from "./pages/AgentSetup";
 import Dashboard from "./pages/Dashboard";
 import FlightBookingPage from "./pages/FlightBookingPage";
@@ -83,6 +84,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/register" element={<AgentRegister />} />
+              <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/api-test" element={<ApiTest />} />
               {/*
               <Route path="/setup" element={
