@@ -9,7 +9,7 @@ import { useAgent } from "@/hooks/useAgent";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AgentRegister from "./pages/AgentRegister";
-import AgentSetup from "./pages/AgentSetup";
+import AgentStatus from "./pages/AgentStatus";
 import Dashboard from "./pages/Dashboard";
 import FlightBookingPage from "./pages/FlightBookingPage";
 import BusBookingPage from "./pages/BusBookingPage";
@@ -20,11 +20,10 @@ import ServiceCharge from "./pages/ServiceCharge";
 import BankDetails from "./pages/BankDetails";
 import ContactRepresentative from "./pages/ContactRepresentative";
 import ApiTest from "./pages/ApiTest";
-import NotFound from "./pages/NotFound";
-import Tawk from "./components/tawk";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import AgentStatus from "./pages/AgentStatus";
+import NotFound from "./pages/NotFound";
+import Tawk from "./components/tawk";
 
 const queryClient = new QueryClient();
 
@@ -85,18 +84,15 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/register" element={<AgentRegister />} />
+              <Route path="/register" element={
+                <SetupRoute>
+                  <AgentRegister />
+                </SetupRoute>
+              } />
               <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/api-test" element={<ApiTest />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              {/*
-              <Route path="/setup" element={
-                <SetupRoute>
-                  <AgentSetup />
-                </SetupRoute>
-              } />
-              */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
