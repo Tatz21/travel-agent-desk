@@ -18,6 +18,8 @@ const AgentRegister = () => {
 
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [aadhaarExists, setAadhaarExists] = useState(false);
+  const [panExists, setPanExists] = useState(false);
 
   const [formData, setFormData] = useState({
     company_name: '',
@@ -33,7 +35,7 @@ const AgentRegister = () => {
     address: '',
     city: '',
     state: '',
-    country: '',
+    country: 'India',
     pincode: '',
     status: 'pending' as const,
     commission_rate: 5.00
@@ -97,31 +99,6 @@ const AgentRegister = () => {
       }
     }, 1000);
   };
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    // sanitize aadhaar to digits only and limit to 12 chars
-    if (name === 'aadhaar') {
-      const digitsOnly = value.replace(/\D/g, '').slice(0, 12);
-      setFormData({ ...formData, aadhaar: digitsOnly });
-      return;
-    }
-    // force PAN to uppercase and limit to 10 chars
-    if (name === 'pan') {
-      const up = value.toUpperCase().slice(0, 10);
-      setFormData({ ...formData, pan: up });
-      return;
-    }
-    // sanitize pincode to digits only and limit to 6 chars
-    if (name === 'pincode') {
-      const digit = value.replace(/\D/g, '').slice(0, 10);
-      setFormData({ ...formData, pincode: digit });
-      return;
-    }
-
-    setFormData({ ...formData, [name]: value });
-  };
 
   const uploadDocument = async (file: File, fieldName: string) => {
     const form = new FormData();
@@ -174,7 +151,7 @@ const AgentRegister = () => {
     }
 
   };
-  
+
   const checkPhoneExists = async (phone: string): Promise<boolean> => {
     const { data, error } = await supabase
       .from("agents")
@@ -189,7 +166,7 @@ const AgentRegister = () => {
 
     return !!data;
   };
-  
+
   const sendPhoneOtp = async () => {
     const phoneExists = await checkPhoneExists(formData.phone);
     if (phoneExists) {
@@ -241,7 +218,7 @@ const AgentRegister = () => {
       toast({ title: "Error", description: "OTP verification failed", variant: "destructive" });
     }
   };
-  
+
   const checkEmailExists = async (email: string): Promise<boolean> => {
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -290,7 +267,7 @@ const AgentRegister = () => {
       toast({ title: "Error", description: "Failed to send Email OTP", variant: "destructive" });
     }
   };
-  
+
   const verifyEmailOtp = async () => {
     try {
       const { data, error } = await supabase.functions.invoke('email-otp', {
@@ -313,46 +290,135 @@ const AgentRegister = () => {
   
   const panRegex = /^[A-Z]{5}\d{4}[A-Z]$/;
   const aadhaarRegex = /^\d{12}$/;  
+
   const validatePAN = (pan: string) => panRegex.test(pan);
   const validateAadhaar = (aadhaar: string) => aadhaarRegex.test(aadhaar);
   
-  const handlePANBlur = () => {
-    if (!formData.pan) return;
-    if (!validatePAN(formData.pan)) {
-      toast({ title: "Invalid PAN", description: "PAN must be in format ABCDE1234F", variant: "destructive" });
-      focus();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    // sanitize aadhaar to digits only and limit to 12 chars
+    if (name === 'aadhaar') {
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 12);
+      setFormData({ ...formData, aadhaar: digitsOnly });
+      return;
+    }
+    // force PAN to uppercase and limit to 10 chars
+    if (name === 'pan') {
+      const up = value.toUpperCase().slice(0, 10);
+      setFormData({ ...formData, pan: up });
+      return;
+    }
+    // sanitize pincode to digits only and limit to 6 chars
+    if (name === 'pincode') {
+      const digit = value.replace(/\D/g, '').slice(0, 6);
+      setFormData({ ...formData, pincode: digit });
+      return;
+    }
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  /* ------------------ Aadhaar Exists Check ------------------ */
+  const checkAadhaarExists = async (aadhaar: string): Promise<boolean> => {
+    const { data, error } = await supabase
+      .from("agents")
+      .select("id")
+      .eq("aadhaar", Number(aadhaar))
+      .maybeSingle();
+
+    if (error && error.code !== "PGRST116") {
+      console.error(error);
+      return false;
+    }
+
+    return !!data;
+  };
+
+  const handleAadhaarBlur = async () => {
+    if (!formData.aadhaar) return;
+
+    if (!validateAadhaar(formData.aadhaar)) {
+      toast({ title: "Invalid Aadhaar", description: "Aadhaar must be exactly 12 digits", variant: "destructive" });
+      setAadhaarExists(false);
+      return;
+    }
+
+    const exists = await checkAadhaarExists(formData.aadhaar);
+
+    if (exists) {
+      setAadhaarExists(true);
+      toast({ title: "Already Registered", description: "This Aadhaar number is already registered", variant: "destructive" });
+    } else {
+      setAadhaarExists(false);
     }
   };
 
-  const handleAadhaarBlur = () => {
-    if (!formData.aadhaar) return;
-    if (!validateAadhaar(formData.aadhaar)) {
-      toast({ title: "Invalid Aadhaar", description: "Aadhaar must be exactly 12 digits", variant: "destructive" });
+  /* ---------------- PAN VALIDATION ---------------- */
+
+  const checkPanExists = async (pan: string) => {
+    const { data, error } = await supabase
+      .from("agents")
+      .select("id")
+      .eq("pan", pan)
+      .maybeSingle();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("PAN check error:", error);
+      return;
     }
+
+    if (data) {
+      setPanExists(true);
+      toast({ title: "PAN Already Registered", description: "This PAN is already associated with an agent account", variant: "destructive" });
+    } else {
+      setPanExists(false);
+    }
+  };
+
+  const handlePANBlur = async () => {
+    if (!formData.pan) return;
+
+    if (!panRegex.test(formData.pan)) {
+      toast({ title: "Invalid PAN", description: "PAN must be in format ABCDE1234F",variant: "destructive" });
+      return;
+    }
+
+    await checkPanExists(formData.pan);
   };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // ensure phone & email are verified
     if (!phoneVerified || !emailVerified) {
       toast({ title: "Verification Required", description: "Please verify mobile & email before submitting", variant: "destructive" });
       return;
-    }    
+    }   
     
     // validate PAN before submission
+    if (panExists) {
+      toast({ title: "Cannot Proceed", description: "PAN already exists. Registration blocked.", variant: "destructive" });
+      return;
+    }
+    
     if (!validatePAN(formData.pan)) {
       toast({ title: "Invalid PAN", description: "PAN must be in format ABCDE1234F", variant: "destructive" });
       return;
     }
 
     // validate Aadhaar before submission
+    if (aadhaarExists) {
+      toast({ title: "Submission Blocked", description: "Aadhaar already registered", variant: "destructive" });
+      return;
+    }
+
     if (!validateAadhaar(formData.aadhaar)) {
       toast({ title: "Invalid Aadhaar", description: "Aadhaar must be exactly 12 digits", variant: "destructive" });
       return;
     }
-    
+
     setLoading(true);
     try {
       // Create the agent record
@@ -407,7 +473,7 @@ const AgentRegister = () => {
       console.error("Agent creation error:", agentError);
       toast({ title: "Error", description: "Failed to create agent profile", variant: "destructive" });
     }
-    
+
     setLoading(false);
   };
 
@@ -562,7 +628,7 @@ const AgentRegister = () => {
                   name="aadhaar"
                   value={formData.aadhaar}
                   onChange={handleInputChange}
-                  onBlur={handleAadhaarBlur}                  
+                  onBlur={handleAadhaarBlur}
                   maxLength={12}
                   placeholder="Enter Your Aadhaar Number"
                   required
