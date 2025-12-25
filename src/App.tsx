@@ -84,11 +84,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/register" element={
-                <SetupRoute>
-                  <AgentRegister />
-                </SetupRoute>
-              } />
+              <Route path="/register" element={<AgentRegister />} />
               <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/api-test" element={<ApiTest />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
