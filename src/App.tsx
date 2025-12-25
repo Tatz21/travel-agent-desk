@@ -50,6 +50,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+/*
 const SetupRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const { agent, loading: agentLoading } = useAgent();
@@ -72,6 +73,7 @@ const SetupRoute = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
+*/
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
