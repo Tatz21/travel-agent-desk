@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const AgentRegister = () => {
   const navigate = useNavigate();
@@ -23,7 +24,6 @@ const AgentRegister = () => {
     contact_person: '',
     phone: '',
     email: '',
-    password: '',
     trade_licence: '',
     trade_licence_file: '',
     pan: '',
@@ -38,6 +38,45 @@ const AgentRegister = () => {
     status: 'pending' as const,
     commission_rate: 5.00
   });
+
+  const INDIAN_STATES = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Delhi",
+    "Jammu & Kashmir",
+    "Ladakh",
+    "Puducherry",
+    "Chandigarh",
+    "Dadra & Nagar Haveli and Daman & Diu",
+    "Lakshadweep",
+    "Andaman & Nicobar Islands",
+  ];
 
   const startTimer = (type: "phone" | "email") => {
     if (type === "phone") setTimer(60);
@@ -135,20 +174,25 @@ const AgentRegister = () => {
     }
 
   };
-  const checkPhoneExists = async (phone: string) => {
+  
+  const checkPhoneExists = async (phone: string): Promise<boolean> => {
     const { data, error } = await supabase
       .from("agents")
-      .select("phone")
+      .select("id")
       .eq("phone", phone)
-      .limit(1);
-  
-    if (error) return false;
-    return data.length > 0;
+      .maybeSingle();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Phone check error:", error);
+      return false;
+    }
+
+    return !!data;
   };
   
   const sendPhoneOtp = async () => {
-    const exists = await checkPhoneExists(formData.phone);
-    if (exists) {
+    const phoneExists = await checkPhoneExists(formData.phone);
+    if (phoneExists) {
       toast({
         title: "Already Registered",
         description: "This mobile number is already registered",
@@ -161,14 +205,17 @@ const AgentRegister = () => {
         body: { action: 'send', phone: formData.phone }
       });
 
-      if (error) throw error;
-
-      if (data.success) {
-        toast({ title: "OTP Sent", description: "Mobile OTP sent successfully" });
-        startTimer("phone");
-      } else {
-        toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
+      if (error || !data?.success) {
+        toast({
+          title: "Mobile OTP Failed",
+          description: data?.message || "Failed to send Mobile OTP",
+          variant: "destructive",
+        });
+        return;
       }
+
+      toast({ title: "OTP Sent", description: "Mobile OTP sent successfully" });
+      startTimer("phone");
     } catch (err: any) {
       console.error('Send phone OTP error:', err);
       toast({ title: "Error", description: "Failed to send Mobile OTP", variant: "destructive" });
@@ -195,20 +242,26 @@ const AgentRegister = () => {
     }
   };
   
-  const checkEmailExists = async (email: string) => {
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    const normalizedEmail = email.trim().toLowerCase();
+
     const { data, error } = await supabase
       .from("agents")
-      .select("email")
-      .eq("email", email)
-      .limit(1);
-  
-    if (error) return false;  
-    return data.length > 0;
+      .select("id")
+      .eq("email", normalizedEmail)
+      .maybeSingle();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Email check error:", error);
+      return false;
+    }
+
+    return !!data;
   };
   
   const sendEmailOtp = async () => {  
-    const exists = await checkEmailExists(formData.email);
-    if (exists) {
+    const emailExists = await checkEmailExists(formData.email);
+    if (emailExists) {
       toast({
         title: "Already Registered",
         description: "This email is already registered",
@@ -218,23 +271,26 @@ const AgentRegister = () => {
     }
     try {
       const { data, error } = await supabase.functions.invoke('email-otp', {
-        body: { action: 'send', email: formData.email }
+        body: { action: 'send', email: formData.email.trim().toLowerCase() }
       });
 
-      if (error) throw error;
-
-      if (data.success) {
-        toast({ title: "OTP Sent", description: "Email OTP sent successfully" });
-        startTimer("email");
-      } else {
-        toast({ title: "Error", description: data.message || "Failed to send OTP", variant: "destructive" });
+      if (error || !data?.success) {
+        toast({
+          title: "Email OTP Failed",
+          description: data?.message || "Failed to send Email OTP",
+          variant: "destructive",
+        });
+        return;
       }
+
+      toast({ title: "OTP Sent", description: "Email OTP sent successfully" });
+      startTimer("email");
     } catch (err: any) {
       console.error('Send email OTP error:', err);
       toast({ title: "Error", description: "Failed to send Email OTP", variant: "destructive" });
     }
   };
-
+  
   const verifyEmailOtp = async () => {
     try {
       const { data, error } = await supabase.functions.invoke('email-otp', {
@@ -278,112 +334,80 @@ const AgentRegister = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
+    // ensure phone & email are verified
     if (!phoneVerified || !emailVerified) {
       toast({ title: "Verification Required", description: "Please verify mobile & email before submitting", variant: "destructive" });
       return;
     }    
-
-    if (!formData.password || formData.password.length < 6) {
-      toast({ title: "Invalid Password", description: "Password must be at least 6 characters", variant: "destructive" });
-      return;
-    }
     
-    // validate PAN & Aadhaar before submission
+    // validate PAN before submission
     if (!validatePAN(formData.pan)) {
       toast({ title: "Invalid PAN", description: "PAN must be in format ABCDE1234F", variant: "destructive" });
       return;
     }
 
+    // validate Aadhaar before submission
     if (!validateAadhaar(formData.aadhaar)) {
       toast({ title: "Invalid Aadhaar", description: "Aadhaar must be exactly 12 digits", variant: "destructive" });
       return;
     }
-
+    
     setLoading(true);
     try {
-      // Step 1: Sign up the user with Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`
-        }
-      });
-
-      if (authError) {
-        if (
-          authError.message.toLowerCase().includes("already registered") ||
-          authError.message.toLowerCase().includes("user already exists")
-        ) {
-          toast({
-            title: "Email Already Registered",
-            description: "This email address is already registered. Please login or use another email.",
-            variant: "destructive",
-          });
-        } else{
-          toast({ title: "Signup Failed", description: authError.message, variant: "destructive" });
-          setLoading(false);
-          return;
-        }
-      }
-
-      if (!authData.user) {
-        toast({ title: "Error", description: "Failed to create user account", variant: "destructive" });
-        setLoading(false);
-        return;
-      }
-
-      // Step 2: Generate agent code
-      const { data: agentCode, error: codeError } = await supabase.rpc('generate_agent_code');
-      if (codeError) {
-        toast({ title: "Error", description: "Failed to generate agent code", variant: "destructive" });
-        setLoading(false);
-        return;
-      }
-
-      // Step 3: Create the agent record
+      // Create the agent record
       const { error: agentError } = await supabase
         .from('agents')
         .insert({
           company_name: formData.company_name,
           contact_person: formData.contact_person,
           phone: formData.phone,
-          email: formData.email,
+          email: formData.email.toLowerCase(),
           trade_licence: formData.trade_licence || null,
           trade_licence_file: formData.trade_licence_file || null,
-          pan: formData.pan || null,
-          pan_file: formData.pan_file || null,
+          pan: formData.pan,
+          pan_file: formData.pan_file,
           aadhaar: formData.aadhaar ? Number(formData.aadhaar) : null,
-          aadhaar_file: formData.aadhaar_file || null,
-          address: formData.address || null,
-          city: formData.city || null,
-          state: formData.state || null,
-          country: formData.country || null,
-          pincode: formData.pincode || null,
+          aadhaar_file: formData.aadhaar_file,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          pincode: formData.pincode,
           status: formData.status,
-          commission_rate: formData.commission_rate,
-          user_id: authData.user.id,
-          agent_code: agentCode,
+          commission_rate: formData.commission_rate || 5.00,
         });
 
       if (agentError) {
-        toast({ title: "Error", description: agentError.message, variant: "destructive" });
-      } else {
-        // After agent inserted successfully
-        await supabase.functions.invoke("send-thankyou-email", {
-          body: {
-            email: formData.email,
-            name: formData.contact_person,
-          },
+        toast({
+          title: "Error",
+          description: agentError.message,
+          variant: "destructive",
         });
+        return;
+      } else {
+      /* SEND EMAIL AFTER SUCCESSFUL INSERT */
+        const { error: mailError } = await supabase.functions.invoke("send-thankyou-email",
+          {
+            body: {
+              email: formData.email,
+              name: formData.contact_person,
+            },
+          }
+        );
+
+        if (mailError) {
+          console.error("Mail error:", mailError);
+        }
+
         toast({ title: "Success", description: "Agent profile created successfully!" });
         navigate('/');
       }
-    } catch (error) {
-      toast({ title: "Error", description: "Unexpected error occurred", variant: "destructive" });
+    } catch (agentError: any) {
+      console.error("Agent creation error:", agentError);
+      toast({ title: "Error", description: "Failed to create agent profile", variant: "destructive" });
     }
-
+    
     setLoading(false);
   };
 
@@ -406,7 +430,6 @@ const AgentRegister = () => {
                   name="company_name"
                   value={formData.company_name}
                   onChange={handleInputChange}
-                  onBlur={handleAadhaarBlur}
                   placeholder="Enter Your Company Name"
                   required
                 />
@@ -476,19 +499,6 @@ const AgentRegister = () => {
                   </div>
                 </div>
               )}
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="password">Password *</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Create a password (min 6 characters)"
-                  required
-                  minLength={6}
-                />
-              </div>
               <div className="space-y-2">
                 <Label htmlFor="trade">Trade Licence Number </Label>
                 <Input
@@ -552,6 +562,8 @@ const AgentRegister = () => {
                   name="aadhaar"
                   value={formData.aadhaar}
                   onChange={handleInputChange}
+                  onBlur={handleAadhaarBlur}                  
+                  maxLength={12}
                   placeholder="Enter Your Aadhaar Number"
                   required
                 />
@@ -598,14 +610,24 @@ const AgentRegister = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="state">State *</Label>
-                <Input
-                  id="state"
-                  name="state"
+                <Select
                   value={formData.state}
-                  onChange={handleInputChange}
-                  placeholder="Enter Your State"
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, state: value })
+                  }
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your state" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60">
+                    {INDIAN_STATES.map((state) => (
+                      <SelectItem key={state} value={state}>
+                        {state}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="country">Country *</Label>
@@ -636,6 +658,25 @@ const AgentRegister = () => {
               {loading ? 'Setting up...' : 'Register'}
             </Button>
           </form>
+          <div className="text-center text-sm mt-4 space-y-2">
+            <p className="text-muted-foreground">
+              Already have an account?{" "}
+              <a onClick={() => navigate("/auth")}
+                className="text-primary font-medium hover:underline"
+              >
+                Sign in here
+              </a>
+            </p>
+
+            <p className="text-muted-foreground">
+              Already registered?{" "}
+              <a onClick={() => navigate("/check-status")}
+                className="text-primary font-medium hover:underline"
+              >
+                Check your status
+              </a>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
