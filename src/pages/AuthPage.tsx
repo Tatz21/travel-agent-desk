@@ -6,9 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, Award, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned } from 'lucide-react';
+import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, Award, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned, Eye, EyeOff } from 'lucide-react';
 import logo from '@/assets/logo.gif';
-import watermark from '@/assets/watermark-logo.png';
 import { supabase } from '@/integrations/supabase/client';
 
 const AuthPage = () => {
@@ -20,6 +19,7 @@ const AuthPage = () => {
   const [formData, setFormData] = useState({ agent_code: '', password: '' ,});
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const sections = ['login', 'why-choose', 'products', 'features', 'contact'];
+  const [showPassword, setShowPassword] = useState(false);
 
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState("");
@@ -315,12 +315,7 @@ const AuthPage = () => {
       {/* Section 1: Login */}
       <section ref={el => sectionRefs.current[0] = el} className="min-h-screen flex items-center justify-center relative overflow-hidden">
         {/* Watermark Logo Pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.10]" style={{
-          backgroundImage: `url(${watermark})`,
-          backgroundSize: '300px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'center'
-        }} />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.10]" />
         
         {/* Floating Travel Icons */}
         {floatingIcons.map(({
@@ -338,7 +333,7 @@ const AuthPage = () => {
         <div className="w-full max-w-md mx-4 relative z-10 animate-fade-in">
           <Card className="shadow-2xl border-0 rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
             <div className="bg-gradient-to-r from-primary to-primary/80 p-8 text-center">
-              <img src={logo} alt="Travelopedia" className="h-52 w-52 mx-auto mb-4 object-contain" />
+              <img src={logo} alt="Travelopedia" className="bg-white inline-flex items-center justify-center rounded-md p-3 mb-4 shadow-md" />
               <h1 className="text-3xl font-bold text-white">
                 Sign In <span className="font-normal">to</span>
               </h1>
@@ -359,7 +354,17 @@ const AuthPage = () => {
                   <Label htmlFor="password" className="text-sm font-medium">
                     Password
                   </Label>
-                  <Input id="password" name="password" type="password" placeholder="Enter your password" value={formData.password} onChange={handleInputChange} required className="h-12 px-4 border-2 focus:border-primary" />
+                  <div className="relative">
+                  <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" value={formData.password} onChange={handleInputChange} required className="h-12 px-4 border-2 focus:border-primary" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
@@ -367,7 +372,7 @@ const AuthPage = () => {
                     <input type="checkbox" className="rounded border-gray-300" />
                     <span className="text-muted-foreground">Remember me</span>
                   </label>
-                  <a href="#" className="text-primary hover:underline font-medium">
+                  <a onClick={() => navigate("/forgot-password")} className="text-primary hover:underline font-medium">
                     Forgot Password?
                   </a>
                 </div>
