@@ -55,7 +55,6 @@ const Index = () => {
               <img src={logo} alt="Phoenix Travelopedia" className="h-16 w-auto object-contain" />
             </div>
             <div className="flex items-center space-x-4">
-              <ThemeToggle />
               <Button variant="outline" onClick={() => navigate('/auth')} className="hidden sm:inline-flex">
                 Sign In
               </Button>
