@@ -258,8 +258,8 @@ const Index = () => {
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose Phoenix Travelopedia – India’s Trusted B2B Travel Portal</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose Phoenix Travelopedia</h2>
+            <p className="text-xl text-muted-foreground max-w-5xl mx-auto">
               Phoenix Travelopedia is a leading B2B travel portal in India, designed exclusively for travel agents and tour operators. We help agents grow their business with competitive pricing, reliable technology, and end-to-end travel solutions.
             </p>
           </div>
