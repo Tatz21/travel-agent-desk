@@ -212,7 +212,7 @@ const Index = () => {
             <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur animate-slide-in-left" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <CardContent className="p-8 text-center">
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
-                  <Hotel className="h-10 w-10 text-primary" />
+                  <Plane className="h-10 w-10 text-primary" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-4">Flight Booking for Travel Agents</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -224,7 +224,7 @@ const Index = () => {
             <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur animate-scale-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <CardContent className="p-8 text-center">
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
-                  <Plane className="h-10 w-10 text-primary" />
+                  <Bus className="h-10 w-10 text-primary" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-4">Bus Booking Portal</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -236,7 +236,7 @@ const Index = () => {
             <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-primary/20 bg-card/50 backdrop-blur animate-slide-in-right" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
               <CardContent className="p-8 text-center">
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
-                  <Bus className="h-10 w-10 text-primary" />
+                  <Hotel className="h-10 w-10 text-primary" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-4">Hotel Booking System</h3>
                 <p className="text-muted-foreground leading-relaxed">
