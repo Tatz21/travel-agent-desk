@@ -113,8 +113,7 @@ const Index = () => {
           </div>
           
           <p className="text-lg md:text-xl text-foreground/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md animate-fade-in-up" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
-            Your gateway to seamless travel experiences across India. Book flights, buses, and hotels 
-            all in one place and earn competitive commissions as a trusted travel agent.
+            Your trusted travel booking platform across India. Book flights, buses, and hotels effortlessly while earning competitive commissions as a verified travel agent. Grow your travel business with Phoenix Travelopedia.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
@@ -138,19 +137,19 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto bg-background/60 backdrop-blur-md p-6 rounded-lg shadow-2xl animate-scale-in" style={{ animationDelay: '1s', animationFillMode: 'both' }}>
             <div className="text-center hover:scale-110 transition-transform duration-300">
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">500+</p>
-              <p className="text-sm text-foreground/80">Active Agents</p>
+              <p className="text-sm text-foreground/80">Agents Network</p>
             </div>
             <div className="text-center hover:scale-110 transition-transform duration-300" style={{ animationDelay: '0.1s' }}>
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">10K+</p>
-              <p className="text-sm text-foreground/80">Bookings</p>
+              <p className="text-sm text-foreground/80">Transactions Processed</p>
             </div>
             <div className="text-center hover:scale-110 transition-transform duration-300" style={{ animationDelay: '0.2s' }}>
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">50+</p>
-              <p className="text-sm text-foreground/80">Destinations</p>
+              <p className="text-sm text-foreground/80">Service Destinations</p>
             </div>
             <div className="text-center hover:scale-110 transition-transform duration-300" style={{ animationDelay: '0.3s' }}>
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2 animate-pulse-slow">24/7</p>
-              <p className="text-sm text-foreground/80">Support</p>
+              <p className="text-sm text-foreground/80">Dedicated Support</p>
             </div>
           </div>
         </div>
@@ -206,7 +205,7 @@ const Index = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Services</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to grow your travel business
+              Phoenix Travelopedia enables travel agents to book these high-demand routes instantly with real-time pricing and reliable airline partners.
             </p>
           </div>
 
@@ -216,9 +215,9 @@ const Index = () => {
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
                   <Plane className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4">Flight Booking</h3>
+                <h3 className="text-2xl font-semibold mb-4">Flight Booking for Travel Agents</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Access thousands of flights across India and worldwide with competitive rates and instant booking confirmation.
+                  Access real-time domestic flight fares with instant ticketing and reliable airline partners.
                 </p>
               </CardContent>
             </Card>
@@ -228,9 +227,9 @@ const Index = () => {
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
                   <Hotel className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4">Hotel Reservations</h3>
+                <h3 className="text-2xl font-semibold mb-4">Bus Booking Portal</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Book from thousands of hotels across India with best price guarantee and exclusive deals for agents.
+                  Book bus tickets across major routes in India with live seat availability and instant confirmation.
                 </p>
               </CardContent>
             </Card>
@@ -240,9 +239,9 @@ const Index = () => {
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors group-hover:animate-float">
                   <Bus className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4">Bus Tickets</h3>
+                <h3 className="text-2xl font-semibold mb-4">Hotel Booking System</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Book comfortable bus journeys across India's major routes with various operators and seat options.
+                  Choose from a wide range of hotels across India with competitive pricing and flexible booking options.
                 </p>
               </CardContent>
             </Card>
@@ -260,20 +259,20 @@ const Index = () => {
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose Us</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose Phoenix Travelopedia – India’s Trusted B2B Travel Portal</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Built for travel agents, by travel experts
+              Phoenix Travelopedia is a leading B2B travel portal in India, designed exclusively for travel agents and tour operators. We help agents grow their business with competitive pricing, reliable technology, and end-to-end travel solutions.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: Shield, title: "Secure & Reliable", desc: "Enterprise-grade security for all your transactions" },
-              { icon: Clock, title: "24/7 Support", desc: "Round-the-clock customer support for you and your clients" },
-              { icon: Award, title: "Best Commissions", desc: "Earn competitive commissions on every booking" },
-              { icon: MapPin, title: "Pan-India Coverage", desc: "Access to destinations across India" },
-              { icon: Users, title: "Agent Community", desc: "Join a thriving community of travel professionals" },
-              { icon: Star, title: "Premium Service", desc: "Dedicated account manager for your business" },
+              { icon: Shield, title: "Secure & Reliable B2B Travel Platform", desc: "Phoenix Travelopedia offers a secure, scalable, and reliable travel booking platform built with enterprise-grade security. All bookings, payments, and agent data are protected through encrypted systems, ensuring complete trust and transparency for travel agents." },
+              { icon: Clock, title: "24/7 Travel Agent Support", desc: "Our dedicated support team is available 24/7 to assist travel agents with hotel bookings, holiday packages, cancellations, and customer queries. We ensure smooth operations for your business at every stage of the booking process." },
+              { icon: Award, title: "High Commission & Exclusive B2B Rates", desc: "Earn higher margins with competitive commissions and exclusive B2B travel rates. Phoenix Travelopedia provides transparent pricing with no hidden charges, helping travel agents maximize profitability on every booking." },
+              { icon: MapPin, title: "Pan-India Hotel & Destination Coverage", desc: "Access a wide network of hotels, holiday destinations, and travel services across Pan-India locations. From metro cities to popular tourist destinations, Phoenix Travelopedia covers the complete Indian travel market." },
+              { icon: Users, title: "Trusted B2B Travel Partner for Agents", desc: "Phoenix Travelopedia is trusted by travel agents across India as a reliable B2B travel management company. We focus on long-term partnerships by delivering consistent service quality, accurate inventory, and timely support." },
+              { icon: Star, title: "Dedicated Account Manager & Premium Service", desc: "Each registered agent receives personalized support with a dedicated account manager. Our premium service ensures faster issue resolution, better pricing assistance, and strategic support to grow your travel business." },
             ].map((feature, idx) => (
               <Card 
                 key={idx} 
@@ -297,7 +296,7 @@ const Index = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Start your journey in three simple steps
+              Simple, fast, and profitable.
             </p>
           </div>
 
