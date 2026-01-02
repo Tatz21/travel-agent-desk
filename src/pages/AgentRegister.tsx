@@ -11,6 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const AgentRegister = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  
+  /* ---------------- THANK YOU STATE ---------------- */
+  const [showThankYou, setShowThankYou] = useState(false);
 
   /* ---------------- TIMER STATES ---------------- */
   const [timer, setTimer] = useState(0);  
@@ -562,7 +565,7 @@ const AgentRegister = () => {
         }
 
         toast({ title: "Success", description: "Agent profile created successfully!" });
-        navigate('/');
+        setShowThankYou(true);
       }
     } catch (agentError: any) {
       console.error("Agent creation error:", agentError);
@@ -570,7 +573,17 @@ const AgentRegister = () => {
     }
 
     setLoading(false);
-  };
+  };  
+  /* Auto redirect after thank you */
+  useEffect(() => {
+    if (showThankYou) {
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 6000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showThankYou, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-4">
@@ -870,6 +883,33 @@ const AgentRegister = () => {
           </div>
         </CardContent>
       </Card>
+      {/* ---------------- THANK YOU OVERLAY ---------------- */}
+      {showThankYou && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-10 max-w-xl text-center shadow-2xl animate-in fade-in zoom-in">
+            <div className="text-6xl mb-4">🎉</div>
+            <h1 className="text-3xl font-bold mb-3">
+              Thank You for Registering!
+            </h1>
+            <p className="text-gray-600 text-lg mb-6">
+              Your registration has been submitted successfully.
+              <br />
+              Our team will review your details shortly.
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+              <p className="font-medium text-green-800">
+                Status: <strong>Pending Approval</strong>
+              </p>
+            </div>
+            <Button className="w-full" onClick={() => navigate("/")}>
+              Go to Home
+            </Button>
+            <p className="text-sm text-muted-foreground mt-4">
+              Redirecting automatically…
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
