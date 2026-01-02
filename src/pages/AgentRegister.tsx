@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,16 +11,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const AgentRegister = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  /* ---------------- TIMER STATES ---------------- */
   const [timer, setTimer] = useState(0);  
-  const [emailTimer, setEmailTimer] = useState(0);  
+  const [emailTimer, setEmailTimer] = useState(0); 
+
+  /* ---------------- OTP STATES ---------------- */ 
   const [otpPhone, setOtpPhone] = useState("");
   const [otpEmail, setOtpEmail] = useState("");
-
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
+
+  /* ---------------- EXISTENCE STATES ---------------- */
   const [aadhaarExists, setAadhaarExists] = useState(false);
   const [panExists, setPanExists] = useState(false);
 
+  /* ---------------- FILE INPUT REFS (MAP BASED) ---------------- */
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  const setFileRef =
+    (key: string) => (el: HTMLInputElement | null) => {
+      fileInputRefs.current[key] = el;
+    };
+
+  /* ---------------- FILE STATES ---------------- */
+  const [files, setFiles] = useState<Record<string, File>>({});
+  const [previews, setPreviews] = useState<Record<string, string>>({});
+  
+  /* ---------------- FORM DATA STATE ---------------- */
   const [formData, setFormData] = useState({
     company_name: '',
     contact_person: '',
@@ -31,7 +49,8 @@ const AgentRegister = () => {
     pan: '',
     pan_file: '',
     aadhaar: '',
-    aadhaar_file: '',
+    aadhaar_front_file: '',
+    aadhaar_back_file: '',
     address: '',
     city: '',
     state: '',
@@ -100,10 +119,86 @@ const AgentRegister = () => {
     }, 1000);
   };
 
-  const uploadDocument = async (file: File, fieldName: string) => {
+  /* ---------------- FILE HANDLER ---------------- */
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files: selected } = e.target;
+    if (!selected || !selected[0]) return;
+
+    const file = selected[0];
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "File must be under 2 MB",
+        variant: "destructive",
+      });
+      e.target.value = "";
+      return;
+    }
+
+    setFiles((prev) => ({ ...prev, [name]: file }));
+    setPreviews((prev) => ({
+      ...prev,
+      [name]: URL.createObjectURL(file),
+    }));
+  };
+
+  /* ---------------- REMOVE FILE ---------------- */
+  const removeFile = (field: string) => {
+    setFiles((prev) => {
+      const copy = { ...prev };
+      delete copy[field];
+      return copy;
+    });
+
+    setPreviews((prev) => {
+      const copy = { ...prev };
+      if (copy[field]) URL.revokeObjectURL(copy[field]);
+      delete copy[field];
+      return copy;
+    });
+
+    // Clear actual file input value using ref map
+    if (fileInputRefs.current[field]) {
+      fileInputRefs.current[field]!.value = "";
+    }
+  };
+
+  /* ---------------- IMAGE PREVIEW ---------------- */
+  const ImagePreview = ({
+    src,
+    onRemove,
+  }: {
+    src: string;
+    onRemove: () => void;
+  }) => (
+    <div className="relative w-40 mt-2">
+      <img
+        src={src}
+        className="w-full h-24 object-cover rounded border"
+        alt="Preview"
+      />
+      <button
+        type="button"
+        onClick={onRemove}
+        className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 text-xs"
+      >
+        ✕
+      </button>
+    </div>
+  );
+
+  /* ---------------- CLEANUP ---------------- */
+  useEffect(() => {
+    return () => {
+      Object.values(previews).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previews]);
+  /* ---------------- UPLOAD ---------------- */
+  const uploadDocument = async (file: File, field: string) => {
     const form = new FormData();
     form.append("file", file);
-    form.append("field", fieldName);
+    form.append("field", field);
 
     const { data, error } = await supabase.functions.invoke('upload-agent-documents', {
       method: "POST",
@@ -126,30 +221,17 @@ const AgentRegister = () => {
     return data.url;
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
+  const uploadAllDocuments = async () => {
+    const uploaded: any = {};
 
-    if (!files || files.length === 0) return;
+    for (const key in files) {
+      const file = files[key as keyof typeof files];
+      if (!file) continue;
 
-    const file = files[0];
-
-    // 2 MB limit (2 * 1024 * 1024)
-    if (file.size > 2 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "File size must be less than 2 MB",
-        variant: "destructive",
-      });
-      e.target.value = ""; // reset input
-      return;
+      uploaded[key] = await uploadDocument(file, key);
     }
 
-    const url = await uploadDocument(file, name);
-    if (url) {
-      toast({ title: "Uploaded", description: `${name} uploaded successfully.` });
-      setFormData({ ...formData, [name]: url }); // SAVE URL ONLY
-    }
-
+    return uploaded;
   };
 
   const checkPhoneExists = async (phone: string): Promise<boolean> => {
@@ -419,8 +501,20 @@ const AgentRegister = () => {
       return;
     }
 
+    if (!files.pan_file || !files.aadhaar_front_file || !files.aadhaar_back_file) {
+      toast({
+        title: "Documents missing",
+        description: "PAN and Aadhaar front/back are required",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
+      /* Upload files */
+      const uploaded = await uploadAllDocuments();
+
       // Create the agent record
       const { error: agentError } = await supabase
         .from('agents')
@@ -430,11 +524,12 @@ const AgentRegister = () => {
           phone: formData.phone,
           email: formData.email.toLowerCase(),
           trade_licence: formData.trade_licence || null,
-          trade_licence_file: formData.trade_licence_file || null,
+          trade_licence_file: uploaded.trade_licence_file || null,
           pan: formData.pan,
-          pan_file: formData.pan_file,
+          pan_file: uploaded.pan_file,
           aadhaar: formData.aadhaar ? Number(formData.aadhaar) : null,
-          aadhaar_file: formData.aadhaar_file,
+          aadhaar_front_file: uploaded.aadhaar_front_file,
+          aadhaar_back_file: uploaded.aadhaar_back_file,
           address: formData.address,
           city: formData.city,
           state: formData.state,
@@ -581,6 +676,7 @@ const AgentRegister = () => {
                   type="file"
                   id="trade_licence_file"
                   name="trade_licence_file"
+                  ref={setFileRef("trade_licence_file")}
                   onChange={handleFileChange}
                   placeholder="Upload Your Trade Licence File"
                   accept="image/*"
@@ -588,6 +684,9 @@ const AgentRegister = () => {
                 <span className="text-xs text-bold" style={{color:'#bf1212'}}>
                   Please upload a clear image of your Trade Licence. File size must be less than 2 MB.
                 </span>
+                {previews.trade_licence_file && (
+                  <ImagePreview src={previews.trade_licence_file} onRemove={() => removeFile("trade_licence_file")} />
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pan">PAN *</Label>
@@ -611,6 +710,7 @@ const AgentRegister = () => {
                   id="pan_file"
                   name="pan_file"
                   type="file"
+                  ref={setFileRef("pan_file")}
                   onChange={handleFileChange}
                   placeholder="Upload Your PAN File"
                   required
@@ -619,8 +719,11 @@ const AgentRegister = () => {
                 <span className="text-xs text-bold" style={{color:'#bf1212'}}>
                   Please upload a clear image of your PAN card. File size must be less than 2 MB.
                 </span>
+                {previews.pan_file && (
+                  <ImagePreview src={previews.pan_file} onRemove={() => removeFile("pan_file")} />
+                )}
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="aadhaar">Aadhaar Number *</Label>
                 <Input
                   type="tel"
@@ -638,19 +741,41 @@ const AgentRegister = () => {
                 </span>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="aadhaar_file">Aadhaar File *</Label>
+                <Label htmlFor="aadhaar_front_file">Aadhaar Front Photo *</Label>
                 <Input
                   type="file"
-                  id="aadhaar_file"
-                  name="aadhaar_file"
+                  id="aadhaar_front_file"
+                  name="aadhaar_front_file"
+                  ref={setFileRef("aadhaar_front_file")}
                   onChange={handleFileChange}
-                  placeholder="Upload Your Aadhaar File"
                   required
                   accept="image/*"
                 />
-                <span className="text-xs text-bold" style={{color:'#bf1212'}}>
-                  Please upload a clear image of your Aadhaar card. File size must be less than 2 MB.
+                <span className="text-xs text-bold" style={{ color: '#bf1212' }}>
+                  Upload clear front side of Aadhaar (max 2 MB).
                 </span>
+                {previews.aadhaar_front_file && (
+                  <ImagePreview src={previews.aadhaar_front_file} onRemove={() => removeFile("aadhaar_front_file")} />
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="aadhaar_back_file">Aadhaar Back Photo *</Label>
+                <Input
+                  type="file"
+                  id="aadhaar_back_file"
+                  name="aadhaar_back_file"
+                  ref={setFileRef("aadhaar_back_file")}
+                  onChange={handleFileChange}
+                  required
+                  accept="image/*"
+                />
+                <span className="text-xs text-bold" style={{ color: '#bf1212' }}>
+                  Upload clear back side of Aadhaar (max 2 MB).
+                </span>
+                {previews.aadhaar_back_file && (
+                  <ImagePreview src={previews.aadhaar_back_file} onRemove={() => removeFile("aadhaar_back_file")} />
+                )}
               </div>
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="address">Address *</Label>
@@ -750,3 +875,5 @@ const AgentRegister = () => {
 };
 
 export default AgentRegister;
+
+
