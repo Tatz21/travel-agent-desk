@@ -312,6 +312,66 @@ const AuthPage = () => {
     name: 'Insurance',
     color: 'from-indigo-500 to-indigo-600'
   }];
+
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setContactForm({
+      ...contactForm,
+      [e.target.id.replace("contact-", "")]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!contactForm.name || !contactForm.email || !contactForm.message) {
+      toast({
+        title: "Missing Fields",
+        description: "Please fill all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-message", {
+        body: {
+          ...contactForm,
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message Sent",
+        description: "Our team will contact you shortly",
+      });
+
+      // Reset form
+      setContactForm({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Failed",
+        description: "Could not send message. Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+  
   return <div className="relative bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
       {/* Scroll Indicator */}
       <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
@@ -514,8 +574,8 @@ const AuthPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">24/7 Helpline</h3>
-                  <p className="text-muted-foreground">022 7120 0900</p>
-                  <p className="text-muted-foreground">022 6120 0900</p>
+                  <p className="text-muted-foreground"><a href="tel:9147711694">+91 9147711694</a></p>
+                  <p className="text-muted-foreground"><a href="tel:9831208102">+91 9831208102</a></p>
                 </div>
               </div>
 
@@ -525,8 +585,8 @@ const AuthPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Email Us</h3>
-                  <p className="text-muted-foreground">support@travelopedia.com</p>
-                  <p className="text-muted-foreground">sales@travelopedia.com</p>
+                  <p className="text-muted-foreground"><a href="mailto:info@phoenixtravelopedia.com">info@phoenixtravelopedia.com</a></p>
+                  <p className="text-muted-foreground"><a href="mailto:support@phoenixtravelopedia.com">support@phoenixtravelopedia.com</a></p>
                 </div>
               </div>
 
@@ -536,26 +596,33 @@ const AuthPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Visit Us</h3>
-                  <p className="text-muted-foreground">55+ Branches Across India</p>
-                  <p className="text-muted-foreground">Find your nearest branch</p>
+                  <p className="text-muted-foreground">Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India</p>
                 </div>
               </div>
             </div>
 
             <Card className="p-8 animate-scale-in border-2">
               <h3 className="text-2xl font-bold mb-6">Send us a message</h3>
-              <form className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" method="post">
                 <div>
                   <Label htmlFor="contact-name">Name</Label>
-                  <Input id="contact-name" placeholder="Your name" className="h-12" />
+                  <Input id="contact-name" placeholder="Your name" className="h-12" value={contactForm.name} onChange={handleContactChange} />
                 </div>
                 <div>
                   <Label htmlFor="contact-email">Email</Label>
-                  <Input id="contact-email" type="email" placeholder="your@email.com" className="h-12" />
+                  <Input id="contact-email" type="email" placeholder="your@email.com" className="h-12" value={contactForm.email} onChange={handleContactChange} />
+                </div>
+                <div>
+                  <Label htmlFor="contact-phone">Phone Number</Label>
+                  <Input id="contact-phone" type="tel" placeholder="your phone number" className="h-12" value={contactForm.phone} onChange={handleContactChange} />
+                </div>
+                <div>
+                  <Label htmlFor="contact-subject">Subject</Label>
+                  <Input id="contact-subject" type="text" placeholder="subject" className="h-12" value={contactForm.subject} onChange={handleContactChange} />
                 </div>
                 <div>
                   <Label htmlFor="contact-message">Message</Label>
-                  <textarea id="contact-message" placeholder="How can we help you?" className="w-full min-h-[120px] px-3 py-2 rounded-md border border-input bg-background" />
+                  <textarea id="contact-message" placeholder="How can we help you?" className="w-full min-h-[120px] px-3 py-2 rounded-md border border-input bg-background" value={contactForm.message} onChange={handleContactChange} />
                 </div>
                 <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80">
                   Send Message
