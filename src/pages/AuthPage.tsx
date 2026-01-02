@@ -35,6 +35,12 @@ const AuthPage = () => {
         });
       }, 1000);
   };
+  
+  useEffect(() => {
+    // Always start auth page at login section
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setStep(1); // ensure login form (not OTP)
+  }, []);
 
   useEffect(() => {
     if (user) {
