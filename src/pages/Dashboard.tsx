@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { useAgent } from '@/hooks/useAgent';
 import { Button } from '@/components/ui/button';
@@ -19,12 +19,16 @@ import DashboardCarousel from '@/components/ui/DashboardCarousel';
 
 
 const Dashboard = () => {
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const { agent } = useAgent();
   const [activeTab, setActiveTab] = useState('overview');
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const getStatusColor = (status: string) => {
