@@ -87,7 +87,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      setUser(null);
+      setSession(null);
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    } finally {
+      setUser(null);
+      setSession(null);
+      localStorage.removeItem("supabase.auth.token");
+      localStorage.clear();
+      sessionStorage.clear();
+    }
   };
 
   const value = {
