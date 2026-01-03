@@ -62,9 +62,10 @@ const Dashboard = () => {
                 <div className="hidden sm:block">
                   <WalletComponent />
                 </div>
+                {/*
                 <div className="hidden md:block">
                   <ThemeToggle />
-                </div>
+                </div> */}
                 <div className="hidden lg:flex items-center space-x-2">
                   <User className="h-4 w-4" />
                   <span className="text-sm font-medium">{agent?.contact_person}</span>
