@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/components/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,7 +11,8 @@ import logo from '@/assets/logo.gif';
 import { supabase } from '@/integrations/supabase/client';
 
 const AuthPage = () => {
-  const { user, signIn } = useAuth();
+  const { user } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
@@ -35,7 +36,7 @@ const AuthPage = () => {
         });
       }, 1000);
   };
-  
+
   useEffect(() => {
     // Always start auth page at login section
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -43,10 +44,10 @@ const AuthPage = () => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (!loading && user && location.pathname === "/auth") {
       navigate('/dashboard', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   useEffect(() => {
     const observerOptions = {
@@ -371,7 +372,7 @@ const AuthPage = () => {
       });
     }
   };
-  
+
   return <div className="relative bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
       {/* Scroll Indicator */}
       <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
@@ -403,7 +404,7 @@ const AuthPage = () => {
               <h1 className="text-3xl font-bold text-white">
                 Sign In <span className="font-normal">to</span>
               </h1>
-              <p className="text-white/90 text-xl mt-1">Phoenix Travelopedia Portal</p>
+              <p className="text-white/90 text-xl mt-1">Travelopedia Portal</p>
             </div>
             
             <CardContent className="p-8">
