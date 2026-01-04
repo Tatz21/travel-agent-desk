@@ -27,6 +27,17 @@ import Tawk from "./components/tawk";
 
 const queryClient = new QueryClient();
 
+
+
+/* ---------- PUBLIC ROUTE ---------- */
+const PublicRoute = ({ children }: { children: JSX.Element }) => {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) return <Navigate to="/dashboard" replace />;
+  return children;
+};
+
+/* ---------- PROTECTED ROUTE ---------- */
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const { agent, loading: agentLoading } = useAgent();
@@ -50,29 +61,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const SetupRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading: authLoading } = useAuth();
-  const { agent, loading: agentLoading } = useAgent();
-
-  if (authLoading || agentLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  if (agent) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return <>{children}</>;
-};
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
@@ -83,18 +71,11 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/register" element={<AgentRegister />} />
+              <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
+              <Route path="/register" element={<PublicRoute><AgentRegister /></PublicRoute>} />
               <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/api-test" element={<ApiTest />} />
-              {/*
-              <Route path="/setup" element={
-                <SetupRoute>
-                  <AgentSetup />
-                </SetupRoute>
-              } />
-              */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
