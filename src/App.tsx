@@ -7,11 +7,17 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { useAgent } from "@/hooks/useAgent";
 import Index from "./pages/Index";
-import AuthPage from "./pages/AuthPage";
+import About from "./pages/About";
+import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
+import Destinations from "./pages/Destinations";
+import DestinationDetail from "./pages/DestinationDetail";
+import Contact from "./pages/Contact";
 import AgentRegister from "./pages/AgentRegister";
 import AgentStatus from "./pages/AgentStatus";
+import AuthPage from "./pages/AuthPage";
 import ForgotPassword from "./pages/ForgotPassword";
-import AgentSetup from "./pages/AgentSetup";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import FlightBookingPage from "./pages/FlightBookingPage";
 import BusBookingPage from "./pages/BusBookingPage";
@@ -26,8 +32,6 @@ import NotFound from "./pages/NotFound";
 import Tawk from "./components/tawk";
 
 const queryClient = new QueryClient();
-
-
 
 /* ---------- PUBLIC ROUTE ---------- */
 const PublicRoute = ({ children }: { children: JSX.Element }) => {
@@ -71,10 +75,17 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:serviceId" element={<ServiceDetail />} />
+              <Route path="/destinations" element={<Destinations />} />
+              <Route path="/destinations/:destinationId" element={<DestinationDetail />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
               <Route path="/register" element={<PublicRoute><AgentRegister /></PublicRoute>} />
               <Route path="/check-status" element={<AgentStatus />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/api-test" element={<ApiTest />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
