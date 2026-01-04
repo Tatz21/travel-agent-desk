@@ -31,7 +31,7 @@ const Index = () => {
         if (agent) {
           navigate('/dashboard');
         } else {
-          navigate('/setup');
+          navigate('/register');
         }
       }
     }
