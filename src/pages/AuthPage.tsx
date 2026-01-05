@@ -404,7 +404,7 @@ const AuthPage = () => {
               <h1 className="text-3xl font-bold text-white">
                 Sign In <span className="font-normal">to</span>
               </h1>
-              <p className="text-white/90 text-xl mt-1">Travelopedia Portal</p>
+              <p className="text-white/90 text-xl mt-1">Phoenix Travelopedia Portal</p>
             </div>
             
             <CardContent className="p-8">
