@@ -94,7 +94,7 @@ const Services = () => {
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%)'
+            backgroundImage: "url(./service.jpg)"
           }}
         />
         <div className="absolute inset-0 overflow-hidden">
