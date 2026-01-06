@@ -103,13 +103,13 @@ const Services = () => {
         </div>
         
         <div className="relative max-w-7xl mx-auto text-center">
-          <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium tracking-wider uppercase bg-primary-foreground/10 text-primary-foreground rounded-full border border-primary-foreground/20">
+          <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium tracking-wider uppercase bg-primary text-primary-foreground rounded-full border border-primary-foreground/20">
             Our Services
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-primary-foreground mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-primary mb-6">
             Complete Travel Solutions
           </h1>
-          <p className="text-xl text-primary-foreground/80 max-w-3xl mx-auto">
+          <p className="text-xl text-primary max-w-3xl mx-auto">
             Everything you need to run a successful travel business. Book, manage, and earn with our comprehensive platform.
           </p>
         </div>
