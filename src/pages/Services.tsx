@@ -92,7 +92,7 @@ const Services = () => {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url(./service.jpg)"
           }}
