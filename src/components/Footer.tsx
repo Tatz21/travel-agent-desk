@@ -51,9 +51,6 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-secondary-foreground/80 mb-6 leading-relaxed">
-              India’s Trusted B2B Travel Portal for Travel Agents. 
-            </p>
-            <p className="text-secondary-foreground/80 mb-6 leading-relaxed">
             Phoenix Travelopedia is a leading B2B travel portal in India offering hotel bookings, flight bookings, bus ticket bookings, and customized holiday packages with competitive B2B rates and reliable travel management solutions for travel agents.
             </p>
             {/* Social Links */}
