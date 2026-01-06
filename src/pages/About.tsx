@@ -70,7 +70,7 @@ const About = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url(./about-us.jpg)"
+            backgroundImage: "url(./about.png)"
           }}
         />
         <div className="absolute inset-0 overflow-hidden">
