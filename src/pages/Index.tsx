@@ -7,7 +7,6 @@ import HeroContent from '@/components/HeroContent';
 import CTASection from '@/components/CTASection';
 import ServicesSection from '@/components/ServicesSection';
 import HowItSection from '@/components/HowItSection';
-import DestinationsSection from '@/components/DestinationsSection';
 import WhyChooseUsSection from '@/components/WhyChooseUsSection';
 import FAQSection from '@/components/FAQSection';
 import ContactUsSection from '@/components/ContactUsSection';
@@ -49,13 +48,10 @@ const Index = () => {
         <CTASection transparent />
       </HeroCarousel>
       <ServicesSection />
-      <HowItSection />
-      <DestinationsSection />
-      
+      <HowItSection />      
       <WhyChooseUsSection />
       <FAQSection />
-      <ContactUsSection />
-      
+      <ContactUsSection />      
       <Footer />
       <ScrollToTop />
       <FeedbackSection />
