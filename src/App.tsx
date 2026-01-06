@@ -10,8 +10,6 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
-import Destinations from "./pages/Destinations";
-import DestinationDetail from "./pages/DestinationDetail";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
@@ -80,8 +78,6 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/:serviceId" element={<ServiceDetail />} />
-              <Route path="/destinations" element={<Destinations />} />
-              <Route path="/destinations/:destinationId" element={<DestinationDetail />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:blogId" element={<BlogDetail />} />
