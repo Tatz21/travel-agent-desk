@@ -94,7 +94,7 @@ const Services = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url(./service-hero.png)"
+            backgroundImage: "url(./service-us.png)"
           }}
         />
         <div className="absolute inset-0 overflow-hidden">
