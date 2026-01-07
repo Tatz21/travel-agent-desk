@@ -49,32 +49,28 @@ const HeroContent = () => {
       >
         <div className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group">
           <Users className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-3xl md:text-4xl font-bold text-primary mb-2 font-serif">500+</p>
-          <p className="text-sm font-medium text-foreground/70">Agents Network</p>
+          <p className="text-sm font-medium text-foreground/70">Extensive Agents Network</p>
         </div>
         <div 
           className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
           style={{ animationDelay: '0.1s' }}
         >
           <CreditCard className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-3xl md:text-4xl font-bold text-primary mb-2 font-serif">10K+</p>
-          <p className="text-sm font-medium text-foreground/70">Transactions Processed</p>
+          <p className="text-sm font-medium text-foreground/70">Fast & Reliable Transaction Processing</p>
         </div>
         <div 
           className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
           style={{ animationDelay: '0.2s' }}
         >
           <MapPin className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-3xl md:text-4xl font-bold text-primary mb-2 font-serif">50+</p>
-          <p className="text-sm font-medium text-foreground/70">Service Destinations</p>
+          <p className="text-sm font-medium text-foreground/70">Serving Multiple Destinations</p>
         </div>
         <div 
           className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
           style={{ animationDelay: '0.3s' }}
         >
           <Headphones className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-3xl md:text-4xl font-bold text-primary mb-2 font-serif">24/7</p>
-          <p className="text-sm font-medium text-foreground/70">Dedicated Support</p>
+          <p className="text-sm font-medium text-foreground/70">24/7 Dedicated Customer Support</p>
         </div>
       </div>
     </div>
