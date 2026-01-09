@@ -16,6 +16,8 @@ import HotelBooking from '@/components/booking/HotelBooking';
 import BookingsList from '@/components/booking/BookingsList';
 import logo from '../assets/logo.gif';
 import DashboardCarousel from '@/components/ui/DashboardCarousel';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu";
+const [userMenuOpen, setUserMenuOpen] = useState(false);
 
 
 const Dashboard = () => {
@@ -66,6 +68,7 @@ const Dashboard = () => {
                 <div className="hidden md:block">
                   <ThemeToggle />
                 </div> */}
+                {/*
                 <div className="hidden lg:flex items-center space-x-2">
                   <User className="h-4 w-4" />
                   <span className="text-sm font-medium">{agent?.contact_person}</span>
@@ -76,7 +79,62 @@ const Dashboard = () => {
                 <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs md:text-sm">
                   <LogOut className="h-4 w-4 md:mr-2" />
                   <span className="hidden md:inline">Sign Out</span>
-                </Button>
+                </Button> */}
+                
+                <DropdownMenu open={userMenuOpen}>
+                  <div
+                  onMouseEnter={() => setUserMenuOpen(true)}
+                  onMouseLeave={() => setUserMenuOpen(false)}
+                >
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-muted transition">
+                      {/* Avatar */}
+                      <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+                        {agent?.contact_person?.[0] ?? "U"}
+                      </div>
+
+                      {/* Name + Status */}
+                      <div className="hidden md:flex flex-col items-start leading-tight">
+                        <span className="text-sm font-medium">
+                          {agent?.contact_person}
+                        </span>
+                        <Badge
+                          variant="secondary"
+                          className={`text-[10px] px-2 ${getStatusColor(agent?.status || "pending")}`}
+                        >
+                          {agent?.status?.toUpperCase()}
+                        </Badge>
+                      </div>
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end" className="w-56" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
+                    <DropdownMenuLabel className="text-sm">
+                      My Account
+                    </DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      className="cursor-pointer gap-2"
+                      onClick={() => navigate("/profile")}
+                    >
+                      <User className="w-4 h-4" />
+                      Profile Settings
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      onClick={handleSignOut}
+                      className="cursor-pointer gap-2 text-red-600 focus:text-red-600"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                  </div>
+                </DropdownMenu>
               </div>
             </div>
           </header>
