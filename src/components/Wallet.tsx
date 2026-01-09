@@ -45,8 +45,8 @@ const WalletComponent = () => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
+            ₹${balance.toLocaleString()}
             <Wallet className="h-4 w-4 mr-2" />
-            Wallet
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-md">
