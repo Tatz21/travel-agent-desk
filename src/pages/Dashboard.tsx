@@ -1,56 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/components/AuthProvider';
+import { useState } from 'react';
 import { useAgent } from '@/hooks/useAgent';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plane, Bus, Hotel, User, LogOut, Plus, UserCircle, Lock } from 'lucide-react';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Plane, Bus, Hotel, User, Plus } from 'lucide-react';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
-import WalletComponent from '@/components/Wallet';
 import FlightBooking from '@/components/booking/FlightBooking';
 import BusBooking from '@/components/booking/BusBooking';
 import HotelBooking from '@/components/booking/HotelBooking';
 import BookingsList from '@/components/booking/BookingsList';
-import logo from '../assets/logo.gif';
 import DashboardCarousel from '@/components/ui/DashboardCarousel';
-import { useNavigate } from 'react-router-dom';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu";
+import AgentHeader from '@/components/AgentHeader';
 
 const Dashboard = () => {
-  const { signOut } = useAuth();
-  const { agent, loading } = useAgent();
+  const { agent } = useAgent();
   const [activeTab, setActiveTab] = useState('overview');
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    if (!loading && agent === null) {
-      navigate("/register", { replace: true });
-    }
-  }, [agent, loading, navigate]);
-  
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-500/10 text-green-600 border-green-500/20';
-      case 'pending':
-        return 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20';
-      case 'suspended':
-        return 'bg-destructive/10 text-destructive border-destructive/20';
-      default:
-        return 'bg-muted text-muted-foreground border-border';
-    }
-  };
 
   return (
     <SidebarProvider>
@@ -58,96 +23,7 @@ const Dashboard = () => {
         <AppSidebar />
         
         <main className="flex-1 overflow-auto">
-          {/* Header */}
-          <header className="border-b border-border sticky top-0 bg-background z-10">
-            <div className="flex items-center justify-between h-16 px-3 md:px-6">
-              <div className="flex items-center space-x-2 md:space-x-4">
-                <SidebarTrigger />
-                <img src={logo} alt="Travelopedia" className="w-40 object-contain" style={{ imageRendering: 'crisp-edges', backgroundColor:'#fff' }} />
-              </div>
-              
-              <div className="flex items-center space-x-1 md:space-x-4">
-                <div className="hidden sm:block">
-                  <WalletComponent />
-                </div>
-                {/* <div className="hidden lg:flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span className="text-sm font-medium">{agent?.contact_person}</span>
-                  <Badge variant="secondary" className={getStatusColor(agent?.status || 'pending')}>
-                    {agent?.status}
-                  </Badge>
-                </div>
-                <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs md:text-sm">
-                  <LogOut className="h-4 w-4 md:mr-2" />
-                  <span className="hidden md:inline">Sign Out</span>
-                </Button> */}
-                <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <div
-                      onMouseEnter={() => setUserMenuOpen(true)}
-                      onMouseLeave={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-muted cursor-pointer"
-                    >
-                      <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
-                        {agent?.contact_person?.[0] ?? "U"}
-                      </div>
-
-                      <div className="hidden md:flex flex-col items-start">
-                        <span className="text-sm font-medium">{agent?.contact_person}</span>
-                        <Badge className={getStatusColor(agent?.status || "pending")}>
-                          {agent?.status?.toUpperCase()}
-                        </Badge>
-                      </div>
-                    </div>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-56"
-                    onMouseEnter={() => setUserMenuOpen(true)}
-                    onMouseLeave={() => setUserMenuOpen(false)}
-                  >
-                    <DropdownMenuItem className='gap-2'>
-                      <UserCircle className="w-4 h-4" />
-                      {agent?.agent_code}
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-                  
-                    <DropdownMenuItem className='gap-2'>
-                      <UserCircle className="w-4 h-4" />
-                      {agent?.contact_person}
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem onClick={() => navigate("/change-password")} className='gap-2'>
-                      <Lock className="w-4 h-4" />
-                      Change Password
-                    </DropdownMenuItem>
-                    
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem onClick={() => navigate("/profile")} className='gap-2'>
-                      <User className="w-4 h-4" />
-                      Profile
-                    </DropdownMenuItem>
-
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem
-                      onClick={handleSignOut}
-                      className="gap-2 text-red-600"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          </header>
-
+        <AgentHeader />
           {/* Main Content */}
           <div className="p-3 md:p-6 lg:p-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">
