@@ -15,21 +15,25 @@ const contactInfo = [
     icon: Phone,
     title: "Phone",
     details: ["+91 9147711694", "+91 9831208102"],
+    gradient: "from-sky-500/10 to-red-500/10",
   },
   {
     icon: Mail,
     title: "Email",
     details: ["info@phoenixtravelopedia.com", "support@phoenixtravelopedia.com"],
+    gradient: "from-red-500/10 to-blue-500/10",
   },
   {
     icon: MapPin,
     title: "Address",
     details: ["Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
+    gradient: "from-green-500/10 via-teal-400/5 to-pink-500/10",
   },
   {
     icon: Clock,
     title: "Working Hours",
-    details: ["Mon - Sat: 10:00 AM - 6:00 PM", "Sunday: 10:00 AM - 6:00 PM"],
+    details: ["24/7 Support Available"],
+    gradient: "from-blue-500/10 via-teal-400/5 to-yellow-500/10",
   },
 ];
 
