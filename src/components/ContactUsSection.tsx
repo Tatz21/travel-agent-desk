@@ -9,24 +9,28 @@ const contactInfo = [
     title: "Call Us",
     details: ["+91 9147711694", "+91 9831208102"],
     color: "bg-primary",
+    gradient: "from-violet-500/35 to-red-500/25",
   },
   {
     icon: Mail,
     title: "Email Us",
     details: ["info@phoenixtravelopedia.com", "support@phoenixtravelopedia.com"],
     color: "bg-primary",
+    gradient: "from-red-500/15 to-sky-500/25",
   },
   {
     icon: MapPin,
     title: "Visit Us",
     details: ["Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
     color: "bg-primary",
+    gradient: "from-yellow-500/35 to-blue-500/35",
   },
   {
     icon: Clock,
     title: "Working Hours",
     details: ["24/7"],
     color: "bg-primary",
+    gradient: "from-red-400/30 to-cyan-300/25",
   },
 ];
 
@@ -61,8 +65,7 @@ const ContactUsSection = () => {
             {contactInfo.map((info, index) => (
               <Card 
                 key={info.title}
-                className="border-border/50 hover:shadow-lg hover:border-primary/30 transition-all duration-300"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className={`border-border/50 hover:shadow-lg hover:border-primary/30 transition-all duration-300bg-gradient-to-br ${info.gradient}`} style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <CardContent className="p-6">
                   <div className={`w-12 h-12 rounded-xl ${info.color} flex items-center justify-center mb-4`}>
