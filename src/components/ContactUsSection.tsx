@@ -28,7 +28,7 @@ const contactInfo = [
   {
     icon: Clock,
     title: "Working Hours",
-    details: ["24/7"],
+    details: ["24/7 Support Available"],
     color: "bg-primary",
     gradient: "from-red-400/30 to-cyan-300/25",
   },
