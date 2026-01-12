@@ -12,7 +12,7 @@ const faqs = [
   },
   {
     question: "What commission rates do you offer?",
-    answer: "We offer industry-leading commission rates ranging from 5% to 15% depending on the service type and booking volume. Flight bookings typically earn 5-8%, bus tickets 8-10%, and hotel reservations 10-15%. Higher volume partners enjoy enhanced rates.",
+    answer: "We offer competitive, industry-leading commission rates based on the type of service and overall booking volume. Flight bookings, bus ticketing, and hotel reservations each have different commission structures, with hotel bookings generally offering higher earning potential. Partners with higher booking volumes are eligible for enhanced commission benefits.",
   },
   {
     question: "Is there any registration fee or subscription cost?",
@@ -20,23 +20,23 @@ const faqs = [
   },
   {
     question: "How and when do I receive my commission payments?",
-    answer: "Commissions are calculated weekly and paid directly to your registered bank account. Payments are processed every Monday for the previous week's confirmed bookings. You can track all earnings in real-time through your dashboard.",
+    answer: "We follow a structured and transparent commission process for all partners. Earnings from confirmed bookings are credited directly to your registered bank account, with complete tracking and reporting available through your partner dashboard.",
   },
   {
     question: "What support is available if I face booking issues?",
-    answer: "Our dedicated support team is available 24/7 via phone, email, and live chat. Priority support is provided to registered agents with an average response time of under 5 minutes. We also offer a comprehensive knowledge base and video tutorials.",
+    answer: "Our dedicated support team is available 24/7 via phone, email, and live chat to assist with any booking-related issues. Registered agents receive priority support, along with access to a comprehensive knowledge base and helpful resources.",
   },
   {
     question: "Can I manage bookings for multiple customers simultaneously?",
-    answer: "Absolutely! Our platform is designed for high-volume agents. You can manage unlimited customer profiles, handle multiple bookings simultaneously, and even set up sub-agent accounts for your team members.",
+    answer: "Yes. You can efficiently manage multiple customer bookings at the same time, with tools designed to support team operations and growing business needs..",
   },
   {
     question: "What documents are required for registration?",
     answer: "You'll need a valid government ID, business registration certificate (if applicable), GST certificate (optional), and a cancelled cheque or bank statement for payment processing. Individual agents can register with just their ID and PAN card.",
   },
   {
-    question: "Do you provide marketing materials and training?",
-    answer: "Yes! We provide comprehensive training through webinars and video tutorials. Partners also receive marketing materials including brochures, digital banners, and co-branded content to help grow their business.",
+    question: "Do you offer dedicated account management for B2B partners?",
+    answer: "Yes. Our B2B partners receive personalized account support to assist with onboarding, operational queries, and business growth. This ensures smoother coordination, faster issue resolution, and a more efficient partnership experience.",
   },
 ];
 
