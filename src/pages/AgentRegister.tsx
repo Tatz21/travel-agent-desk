@@ -155,17 +155,17 @@ const AgentRegister = () => {
     });
 
     setPreviews((prev) => {
+      if (prev[field]) URL.revokeObjectURL(prev[field]);
       const copy = { ...prev };
-      if (copy[field]) URL.revokeObjectURL(copy[field]);
       delete copy[field];
       return copy;
     });
 
-    // Clear actual file input value using ref map
     if (fileInputRefs.current[field]) {
       fileInputRefs.current[field]!.value = "";
     }
   };
+
 
   /* ---------------- IMAGE PREVIEW ---------------- */
   const ImagePreview = ({
@@ -178,8 +178,8 @@ const AgentRegister = () => {
     <div className="relative w-40 mt-2">
       <img
         src={src}
-        className="w-full h-24 object-cover rounded border"
         alt="Preview"
+        className="w-full h-24 object-cover rounded border"
       />
       <button
         type="button"
@@ -194,9 +194,12 @@ const AgentRegister = () => {
   /* ---------------- CLEANUP ---------------- */
   useEffect(() => {
     return () => {
-      Object.values(previews).forEach((url) => URL.revokeObjectURL(url));
+      Object.values(previews).forEach((url) => {
+        if (url) URL.revokeObjectURL(url);
+      });
     };
-  }, [previews]);
+  }, []);
+  
   /* ---------------- UPLOAD ---------------- */
   const uploadDocument = async (file: File, field: string) => {
     const form = new FormData();
