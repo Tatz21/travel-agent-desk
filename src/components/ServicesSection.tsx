@@ -25,7 +25,7 @@ const services = [
     icon: Hotel,
     title: "Hotel Reservations",
     description: " From budget hotels to luxury resorts, book accommodations across India with ease. Access exclusive hotel deals, best rate guarantees, and maximize profits on every booking.",
-    features: ["50,000+ Properties", "Best Rate Guarantee", "Free Cancellation", "Verified Reviews"],
+    features: ["Extensive Property Network", "Best Rate Assurance", "Flexible Cancellation Options", "Verified Guest Reviews"],
     color: "from-primary/20 to-accent/20",
     iconBg: "bg-primary",
     gradient: "from-white to-teal-500",
@@ -102,9 +102,6 @@ const ServicesSection = () => {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <p className="text-white mb-6">
-            Want to see all our services in action?
-          </p>
           <Button variant="default" size="lg">
             Explore All Services
             <ArrowRight className="w-4 h-4 ml-2" />
