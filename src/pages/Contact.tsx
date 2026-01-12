@@ -15,25 +15,25 @@ const contactInfo = [
     icon: Phone,
     title: "Phone",
     details: ["+91 9147711694", "+91 9831208102"],
-    gradient: "from-sky-500/10 to-red-500/10",
+    gradient: "from-sky-300 to-red-300",
   },
   {
     icon: Mail,
     title: "Email",
     details: ["info@phoenixtravelopedia.com", "support@phoenixtravelopedia.com"],
-    gradient: "from-red-500/10 to-blue-500/10",
+    gradient: "from-yellow-300 to-blue-300",
   },
   {
     icon: MapPin,
     title: "Address",
     details: ["Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
-    gradient: "from-green-500/10 via-teal-400/5 to-pink-500/10",
+    gradient: "from-green-300 via-teal-300 to-pink-300",
   },
   {
     icon: Clock,
     title: "Working Hours",
     details: ["24/7 Support Available"],
-    gradient: "from-blue-500/10 via-teal-400/5 to-yellow-500/10",
+    gradient: "from-blue-300 via-teal-300 to-yellow-300",
   },
 ];
 
@@ -102,7 +102,7 @@ const Contact = () => {
     <main className="min-h-screen bg-background">
       <Header />
       {/* Hero Section */}
-      <section className="relative py-40 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative py-24 sm:py-32 lg:py-40 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -113,12 +113,10 @@ const Contact = () => {
           <p className="text-primary text-sm font-serif font-bold italic tracking-[0.3em] animate-fade-in-down relative inline-block uppercase mb-4">
             
           </p>
-          <Button variant="default">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 animate-fade-in-up">
-              Get in Touch
-            </h1>
-          </Button>
-          <p className="text-lg text-white max-w-2xl mx-auto animate-fade-in">
+          <h1 className="inline-block px-4 py-2 text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 bg-black/40 backdrop-blur-sm rounded-lg animate-fade-in-up">
+            Get in Touch
+          </h1>
+          <p className="text-base sm:text-lg text-white max-w-2xl mx-auto animate-fade-in-up delay-100">
             Have questions or need assistance? We're here to help you succeed in your travel business.
           </p>
         </div>
@@ -222,10 +220,10 @@ const Contact = () => {
               <h2 className="text-2xl font-bold font-serif text-foreground mb-6">
                 Contact Information
               </h2>
-              {contactInfo.map((info, index) => (
+              {contactInfo.map((info) => (
                 <Card 
                   key={info.title}
-                  className="border-border/50 hover:shadow-lg hover:border-primary/30 transition-all duration-300"
+                  className={`border-border/50 hover:shadow-lg hover:border-primary/30 transition-all duration-300  bg-gradient-to-br ${info.gradient}`}
                 >
                   <CardContent className="p-6 flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
@@ -237,7 +235,7 @@ const Contact = () => {
                       </h3>
                       <div className="space-y-1">
                         {info.details.map((detail, i) => (
-                          <p key={i} className="text-sm text-muted-foreground">
+                          <p key={i} className="text-sm text-white">
                             {detail}
                           </p>
                         ))}
@@ -264,7 +262,7 @@ const Contact = () => {
           </div>
           <Card className="overflow-hidden border-border/50">
             {/* Responsive Map Container */}
-            <div className="relative w-full aspect-video">
+            <div className="relative w-full h-[250px] sm:h-[320px] lg:h-[380px]">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.19279168163!2d88.43323939999999!3d22.5718916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02755159f4e117%3A0x40e3bebe07f10e30!2sGlobsyn%20Crystals!5e0!3m2!1sen!2sin!4v1767079972741!5m2!1sen!2sin" 
                 className="absolute inset-0 w-full h-full border-0"
