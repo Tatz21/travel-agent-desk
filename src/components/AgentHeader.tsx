@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 import { useAgent } from "@/hooks/useAgent";
+import AccountManagerFloat from "@/components/AccountManagerFloat";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -41,7 +42,6 @@ const DashboardHeader = () => {
   return (
     <header className="border-b border-border sticky top-0 bg-background z-10">
       <div className="flex items-center justify-between h-16 px-3 md:px-6">
-        
         {/* Left */}
         <div className="flex items-center space-x-2 md:space-x-4">
           <SidebarTrigger />
@@ -107,7 +107,7 @@ const DashboardHeader = () => {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem
-                onClick={() => navigate("/change-password")}
+                onClick={() => navigate("/dashboard/change-password")}
                 className="gap-2"
               >
                 <Lock className="w-4 h-4" />
@@ -117,7 +117,7 @@ const DashboardHeader = () => {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/dashboard/profile")}
                 className="gap-2"
               >
                 <User className="w-4 h-4" />
@@ -135,6 +135,17 @@ const DashboardHeader = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <AccountManagerFloat
+            accountManager={
+              agent?.account_manager
+                ? {
+                    account_manager_name: agent.account_manager.account_manager_name ?? "",
+                    phone: agent.account_manager.phone ?? "",
+                    email: agent.account_manager.email ?? "",
+                  }
+                : null
+            }
+          />
         </div>
       </div>
     </header>
