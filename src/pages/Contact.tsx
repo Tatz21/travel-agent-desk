@@ -113,7 +113,7 @@ const Contact = () => {
           <p className="text-primary text-sm font-serif font-bold italic tracking-[0.3em] animate-fade-in-down relative inline-block uppercase mb-4">
             
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-primary mb-6 animate-fade-in-up">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 animate-fade-in-up">
             <Button variant="default">Get in Touch</Button>
           </h1>
           <p className="text-lg text-white max-w-2xl mx-auto animate-fade-in">
