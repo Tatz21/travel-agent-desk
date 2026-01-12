@@ -113,9 +113,11 @@ const Contact = () => {
           <p className="text-primary text-sm font-serif font-bold italic tracking-[0.3em] animate-fade-in-down relative inline-block uppercase mb-4">
             
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 animate-fade-in-up">
-            <Button variant="default">Get in Touch</Button>
-          </h1>
+          <Button variant="default">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 animate-fade-in-up">
+              Get in Touch
+            </h1>
+          </Button>
           <p className="text-lg text-white max-w-2xl mx-auto animate-fade-in">
             Have questions or need assistance? We're here to help you succeed in your travel business.
           </p>
