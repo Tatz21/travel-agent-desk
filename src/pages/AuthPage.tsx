@@ -447,6 +447,14 @@ const AuthPage = () => {
                 <Button type="submit" className="w-full h-12 text-base font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all" disabled={loading}>
                   {loading ? "Checking..." : "Login"}
                 </Button>
+
+                {/* Security Note */}
+                <div className="flex items-center justify-center gap-2 pt-2">
+                  <Shield className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    Secured with 256-bit SSL encryption
+                  </span>
+                </div>
               </form>
               )}
               {step === 2 && (
