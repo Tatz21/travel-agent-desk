@@ -42,7 +42,7 @@ const AccountManagerFloat = ({ accountManager }: Props) => {
           <div className="p-4 space-y-3">
             {phone && (
               <a
-                href={`tel:${phone}`}
+                href={`tel:+91${phone}`}
                 className="flex gap-3 p-3 rounded-lg bg-green-50 text-green-700"
               >
                 <Phone className="w-5 h-5" />
@@ -71,3 +71,4 @@ const AccountManagerFloat = ({ accountManager }: Props) => {
 };
 
 export default AccountManagerFloat;
+
