@@ -111,9 +111,9 @@ const Contact = () => {
         {/* Overlay */}
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <p className="text-primary text-sm font-serif font-bold italic tracking-[0.3em] animate-fade-in-down relative inline-block uppercase mb-4">
-            <Button variant="default">Contact Us</Button>
+            <Button variant="default"></Button>
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 animate-fade-in-up">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-primary mb-6 animate-fade-in-up">
             Get in Touch
           </h1>
           <p className="text-lg text-white max-w-2xl mx-auto animate-fade-in">
