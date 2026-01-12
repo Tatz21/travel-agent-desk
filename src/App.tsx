@@ -27,6 +27,9 @@ import GroupBooking from "./pages/GroupBooking";
 import ServiceCharge from "./pages/ServiceCharge";
 import BankDetails from "./pages/BankDetails";
 import ContactRepresentative from "./pages/ContactRepresentative";
+import ChangePassword from "./pages/ChangePassword";
+import Profile from "./pages/Profile";
+import { IdleTimerProvider } from "./components/IdleTimerProvider";
 import ApiTest from "./pages/ApiTest";
 import NotFound from "./pages/NotFound";
 import Tawk from "./components/tawk";
@@ -70,6 +73,7 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <TooltipProvider>
         <AuthProvider>
+          <IdleTimerProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -90,6 +94,16 @@ const App = () => (
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/change-password" element={
+                <ProtectedRoute>
+                  <ChangePassword />
                 </ProtectedRoute>
               } />
               <Route path="/dashboard/flights" element={
@@ -136,6 +150,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+          </IdleTimerProvider>
         </AuthProvider>
       </TooltipProvider>
       <Tawk />
