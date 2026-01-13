@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, Award, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned, Eye, EyeOff } from 'lucide-react';
+import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, ChartLine, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned, Eye, EyeOff, Globe, LayoutDashboard, CloudCog, Bus, ShieldCheck } from 'lucide-react';
 import logo from '@/assets/logo.gif';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -255,63 +255,61 @@ const AuthPage = () => {
     left: '75%',
     top: '85%'
   }];
+  
   const whyChooseFeatures = [{
     icon: Users,
-    title: '50,000+ Travel Agents',
-    description: 'Join thousands of successful agents on our B2B platform'
+    title: 'Trusted Agent Network',
+    description: 'Join a professionally vetted community of travel agents using a secure and scalable B2B travel platform built for long-term partnerships.'
   }, {
-    icon: Award,
-    title: '16+ Travel Products',
-    description: 'All travel services in one comprehensive platform'
+    icon: Globe,
+    title: 'Complete Travel Solutions',
+    description: 'Manage all essential travel services through a unified B2B portal designed to simplify bookings and improve operational efficiency.'
   }, {
     icon: Shield,
-    title: 'Trusted Globally',
-    description: 'Partnerships with the biggest industry players'
+    title: 'Industry Credibility',
+    description: 'Partner with a trusted B2B travel platform supported by strong industry relationships and dependable global supply networks.'
   }, {
     icon: Headphones,
-    title: '24/7 Support',
-    description: 'Regional language support for your convenience'
+    title: '24/7 Partner Support',
+    description: 'Ensure uninterrupted business operations with round-the-clock assistance, including regional language support.'
   }, {
     icon: TrendingUp,
-    title: 'Excellent Returns',
-    description: 'Best commission structure in the industry'
+    title: 'Higher Profit Potential',
+    description: 'Benefit from a transparent and performance-driven commission structure that supports sustainable business growth.'
   }, {
-    icon: Globe2,
-    title: '55+ Branches',
-    description: 'Physical presence across India for your support'
+    icon: LayoutDashboard,
+    title: 'Centralized Agent Dashboard',
+    description: 'Manage bookings, payments, and reports from a single, easy-to-use dashboard designed for professional travel businesses.'
+  }, {
+    icon: CloudCog,
+    title: 'Enterprise Booking Technology',
+    description: 'Operate faster with a secure, intuitive B2B booking engine built for accuracy, control, and high-volume transactions.'
+  }, {
+    icon: ChartLine,
+    title: 'Advanced Reporting Tools',
+    description: 'Gain better business insights with detailed reports that help track performance and improve decision-making.'
   }];
+  
   const products = [{
     icon: Plane,
     name: 'Flights',
-    color: 'from-blue-500 to-blue-600'
+    color: 'from-blue-500 to-blue-600',
+    shadow: "rgba(59,130,246,.80)"
   }, {
     icon: Hotel,
     name: 'Hotels',
-    color: 'from-purple-500 to-purple-600'
+    color: 'from-purple-500 to-purple-600',
+    shadow: "rgba(147,51,234,0.8)"
   }, {
-    icon: Car,
-    name: 'Car Rental',
-    color: 'from-green-500 to-green-600'
-  }, {
-    icon: Ship,
-    name: 'Cruise',
-    color: 'from-cyan-500 to-cyan-600'
-  }, {
-    icon: Ticket,
+    icon: Bus,
     name: 'Bus',
-    color: 'from-orange-500 to-orange-600'
+    color: 'from-orange-500 to-orange-600',
+    shadow: "rgba(249,115,22,0.8)"
   }, {
-    icon: Building2,
-    name: 'Rail',
-    color: 'from-red-500 to-red-600'
-  }, {
-    icon: MapPin,
-    name: 'Theme Parks',
-    color: 'from-pink-500 to-pink-600'
-  }, {
-    icon: Briefcase,
-    name: 'Insurance',
-    color: 'from-indigo-500 to-indigo-600'
+    icon: ShieldCheck,
+    name: 'Travel Insurance',
+    color: 'from-indigo-500 to-indigo-600',
+    shadow: "rgba(99,102,241,0.8)"
   }];
 
   const [contactForm, setContactForm] = useState({
@@ -478,7 +476,7 @@ const AuthPage = () => {
             </CardContent>
           </Card>
 
-          <p className="text-center mt-6 text-sm text-muted-foreground">
+          <p className="text-center mt-6 mb-4 text-sm text-muted-foreground">
             Don't have an account?{' '}
             <a onClick={() => navigate('/register')} className="text-primary hover:underline font-medium">
               Register Now
@@ -487,81 +485,83 @@ const AuthPage = () => {
         </div>
       </section>
 
-      {/* Section 2: Why Choose Us */}
-      <section ref={el => sectionRefs.current[1] = el} className={`min-h-screen py-20 px-4 relative transition-all duration-1000 ease-out ${visibleSections.has(1) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Why Choose <span className="text-primary">Travelopedia</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join India's most trusted B2B travel platform with unmatched benefits
-            </p>
-          </div>
+    {/* Section 2: Why Choose Us */}
+    <section ref={el => sectionRefs.current[1] = el} className={`min-h-screen py-20 px-4 relative transition-all duration-1000 ease-out ${visibleSections.has(1) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Why Choose <span className="text-primary">Travelopedia</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            India’s Most Trusted B2B Travel Platform for Travel Agents
+          </p>
+        </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {whyChooseFeatures.map((feature, index) => <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 animate-fade-in border-2 hover:border-primary/50" style={{
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {whyChooseFeatures.map((feature, index) => <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 animate-fade-in border-2 hover:border-primary/50" style={{
             animationDelay: `${index * 100}ms`
           }}>
-                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                  <feature.icon className="text-primary" size={32} />
-                </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </Card>)}
-          </div>
+            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+              <feature.icon className="text-primary" size={32} />
+            </div>
+            <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+            <p className="text-muted-foreground">{feature.description}</p>
+          </Card>)}
         </div>
-      </section>
+      </div>
+    </section>
 
-      {/* Section 3: Our Products */}
-      <section ref={el => sectionRefs.current[2] = el} className={`min-h-screen py-20 px-4 bg-white/50 relative transition-all duration-1000 ease-out ${visibleSections.has(2) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Our <span className="text-primary">Products</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              16+ travel products and services in one comprehensive platform
-            </p>
-          </div>
+    {/* Section 3: Our Products */}
+    <section ref={el => sectionRefs.current[2] = el} className={`py-20 md:py-20 px-4 bg-white/50 relative transition-all duration-1000 ease-out ${visibleSections.has(2) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Our <span className="text-primary">Products</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            16+ travel products and services in one comprehensive platform
+          </p>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {products.map((product, index) => <Card key={index} className="p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group animate-scale-in border-0" style={{
-            animationDelay: `${index * 80}ms`
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {products.map((product, index) => <Card key={index} className="p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group animate-scale-in border-0" style={{
+            animationDelay: `${index * 80}ms`,
+            boxShadow: `0 10px 30px ${product.shadow}`
           }}>
-                <div className={`bg-gradient-to-br ${product.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
-                  <product.icon className="text-white" size={32} />
-                </div>
-                <h3 className="text-lg font-bold text-center">{product.name}</h3>
-              </Card>)}
-          </div>
+            <div className={`bg-gradient-to-br ${product.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
+              <product.icon className="text-white" size={32} />
+            </div>
+            <h3 className="text-lg font-bold text-center">{product.name}</h3>
+          </Card>)}
         </div>
-      </section>
+      </div>
+    </section>
 
-      {/* Section 4: Features */}
-      <section ref={el => sectionRefs.current[3] = el} className={`min-h-screen py-20 px-4 relative transition-all duration-1000 ease-out ${visibleSections.has(3) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Platform <span className="text-primary">Features</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to run a successful travel business
-            </p>
-          </div>
+    {/* Section 4: Features */}
+    <section ref={el => sectionRefs.current[3] = el} className={`min-h-screen py-20 px-4 relative transition-all duration-1000 ease-out ${visibleSections.has(3) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Platform <span className="text-primary">Features</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Everything you need to run a successful travel business
+          </p>
+        </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {['Real-time inventory management', 'Instant booking confirmations', 'Automated invoicing system', 'Multi-currency support', 'Advanced reporting & analytics', 'Mobile-responsive design', 'Secure payment gateway', 'API integration available'].map((feature, index) => <div key={index} className="flex items-start gap-4 p-6 bg-white rounded-xl hover:shadow-lg transition-all animate-slide-in-left" style={{
-            animationDelay: `${index * 100}ms`
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {['Real-time inventory management', 'Centralized booking dashboard', 'Supplier management system', 'Credit limit & wallet management', 'Cancellation & refund management', 'Secure login for authorized agents', 'Booking history & audit logs', 'Dedicated account support','Scalable cloud-based infrastructure','Instant booking confirmations','Automated invoicing system','Secure payment gateway'].map((feature, index) => <div key={index} className="flex items-start gap-4 p-6 bg-white rounded-xl animate-slide-in-left group hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_22px_45px_rgba(59,130,246,0.35)]" style={{
+            animationDelay: `${index * 100}ms`,
+            boxShadow: "0 10px 25px rgba(25, 33, 44, 0.12)"
           }}>
-                <div className="bg-primary/10 p-2 rounded-full flex-shrink-0">
-                  <Check className="text-primary" size={24} />
-                </div>
-                <p className="text-lg font-medium">{feature}</p>
-              </div>)}
-          </div>
+            <div className="bg-primary/60 p-2 rounded-full flex-shrink-0">
+              <Check className="text-white" size={24} />
+            </div>
+            <p className="text-lg font-medium">{feature}</p>
+          </div>)}
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Section 5: Contact Us */}
       <section ref={el => sectionRefs.current[4] = el} className={`min-h-screen py-20 px-4 bg-white/50 relative transition-all duration-1000 ease-out ${visibleSections.has(4) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
