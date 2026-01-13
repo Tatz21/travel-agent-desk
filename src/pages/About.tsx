@@ -274,10 +274,10 @@ const About = () => {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold font-serif text-primary-foreground mb-6">
-            Ready to Transform Your Travel Business?
+            Ready to Partner With Us?
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
-            Join Phoenix Travelopedia today and start earning commissions on every booking.
+            Join thousands of travel agents who rely on Phoenix Travelopedia’s secure and scalable B2B travel platform to accelerate business growth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
