@@ -26,7 +26,7 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Address",
-    details: ["Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
+    details: ["Globsyn Crystals Bulding,  Street Number 17, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
     gradient: "from-green-300 via-teal-300 to-pink-300",
   },
   {
