@@ -605,7 +605,7 @@ const AuthPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Visit Us</h3>
-                  <p className="text-muted-foreground">Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India</p>
+                  <p className="text-muted-foreground">Globsyn Crystals Bulding,  Street Number 17, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India</p>
                 </div>
               </div>
             </div>
