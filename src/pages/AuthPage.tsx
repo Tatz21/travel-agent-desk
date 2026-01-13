@@ -519,7 +519,7 @@ const AuthPage = () => {
             Our <span className="text-primary">Products</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            16+ travel products and services in one comprehensive platform
+            Built to Drive Growth for Travel Partners
           </p>
         </div>
 
