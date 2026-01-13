@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Plane, Bus, Hotel, ArrowRight, CheckCircle, Headphones, CreditCard, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,16 +12,47 @@ const services = [
     id: "flight-bookings",
     icon: Plane,
     title: "Flight Bookings",
-    description: "Access real-time domestic flight fares with instant ticketing and reliable airline partners.",
+    description: "Access competitive fares on domestic and international flights through a trusted airline network. Our flight booking platform enables seamless reservations with real-time availability, instant e-ticketing, integrated travel insurance, and 24/7 support for a smooth booking experience.",
     features: [
-      "Domestic & International Flights",
-      "Real-time Seat Availability",
-      "Instant E-Ticket Generation",
-      "Multi-city & Round Trip Options",
-      "Group Booking Discounts",
-      "24/7 Booking Support"
+      {
+        title: "Domestic & International Flight Bookings",
+        description: "Book flights across major airlines with extensive global route coverage."
+      },
+      {
+        title: "Instant E-Ticket Generation",
+        description: "Receive instant booking confirmations and e-tickets without delays."
+      },
+      {
+        title: "Group & Corporate Booking Support",
+        description: "Easy management for group travel and corporate flight requirements."
+      },
+      {
+        title: "Real-Time Seat Availability",
+        description: "View live seat inventory and fare updates to secure the best options."
+      },
+      {
+        title: "Multi-City & Round-Trip Options",
+        description: "Plan and book one-way, round-trip, and multi-city journeys effortlessly."
+      },
+      {
+        title:"Travel Insurance Add-On",
+        description:"Enhance bookings with comprehensive travel insurance covering medical emergencies, trip delays, cancellations, and baggage protection."
+      },
+      {
+        title: "24/7 Booking Support",
+        description: "Reliable round-the-clock assistance for booking changes, queries, and support."
+      }
     ],
-    benefits: ["Up to 8% Commission", "Same-day Settlements", "No Hidden Fees"],
+    benefits: [
+      {
+        title: "Secure & Transparent Transactions",
+        description: "All bookings and payments are protected with advanced security and clear pricing."
+      },
+      {
+        title: "Efficient Settlement Process",
+        description: "Fast and streamlined transaction handling for smooth operations."
+      }
+    ],
     gradient: "from-blue-500 to-cyan-600",
     image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80",
   },
@@ -28,16 +60,43 @@ const services = [
     id: "bus-tickets",
     icon: Bus,
     title: "Bus Tickets",
-    description: "Book bus tickets across major routes in India with live seat availability and instant confirmation.",
+    description: "Connect your customers to India’s largest bus network. From luxury coaches to budget bus tickets, provide the best travel options across all routes.",
     features: [
-      "Pan-India Coverage",
-      "1000+ Bus Operators",
-      "Live GPS Tracking",
-      "Easy Cancellation & Refunds",
-      "Seat Selection",
-      "Pick-up Point Flexibility"
+      {
+        title: "Pan-India Bus Coverage",
+        description: "Access buses across India with ease."
+      },
+      {
+        title: "Secure Bus Booking with Verified Operators",
+        description: "Enjoy reliable travel on every route."
+      },
+      {
+        title: "Live GPS Bus Tracking",
+        description: "Track buses in real-time for safe and timely journeys"
+      },
+      {
+        title: "Seat Selection & Pick-up Point Flexibility",
+        description: "Let passengers select their seats and convenient boarding points."
+      },
+      {
+        title: "Easy Bus Ticket Cancellation & Refunds",
+        description: "Hassle-free cancellations & refunds."
+      },
+      {
+        title: "Instant Bus Ticket Confirmation",
+        description: "Get e-tickets instantly upon booking."
+      }
     ],
-    benefits: ["Up to 15% Commission", "Instant Confirmation", "Zero Cancellation Charges"],
+    benefits: [
+      {
+        title: "Safe & Transparent Payments",
+        description: "Ensure secure transactions with clear and upfront pricing."
+      },
+      {
+        title: "Streamlined Settlement Process",
+        description: "Fast, hassle-free operations for travel agents and partners."
+      }
+    ],
     gradient: "from-emerald-500 to-teal-600",
     image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80",
   },
@@ -45,16 +104,47 @@ const services = [
     id: "hotel-reservations",
     icon: Hotel,
     title: "Hotel Reservations",
-    description: "Choose from a wide range of hotels across India with competitive pricing and flexible booking options.",
+    description: "From budget hotels to luxury resorts, book accommodations across India with ease. Access exclusive hotel deals, best rate guarantees, and maximize profits on every booking.",
     features: [
-      "50,000+ Properties",
-      "Best Rate Guarantee",
-      "Free Cancellation Options",
-      "Verified Guest Reviews",
-      "Room Upgrades Available",
-      "Corporate Tie-ups"
+      {
+        title: "Extensive Verified Properties",
+        description: "Stay at trusted hotels, resorts, and guesthouses across India."
+      },
+      {
+        title: "Best Rate Guarantee",
+        description: "Get the lowest prices on all hotel bookings."
+      },
+      {
+        title: "Verified Guest Reviews",    
+        description: "Make informed choices based on real feedback."
+      },
+      {
+        title: "Room Upgrades Available",
+        description: "Enhance your stay with premium options."
+      },
+      {
+        title: "Corporate Tie-ups",
+        description: "Special rates and packages for business travelers."  
+      },
+      {
+        title: "Pay at Hotel Options",
+        description: "Convenient payment directly at the hotel."
+      },
+      {
+        title: "Loyalty Rewards",
+        description: "Earn rewards and benefits on every booking."
+      }
     ],
-    benefits: ["Up to 20% Commission", "Pay at Hotel Options", "Loyalty Rewards"],
+    benefits: [
+      {
+        title: "Best Rate Advantage",
+        description: "Offer competitive pricing with better margins."
+      },
+      {
+        title: "Easy Booking Dashboard",
+        description: "Manage searches, bookings, and cancellations from one place."
+      }
+    ],
     gradient: "from-violet-500 to-purple-600",
     image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
   },
@@ -64,26 +154,30 @@ const features = [
   {
     icon: Shield,
     title: "Secure Transactions",
-    description: "Bank-grade security for all your bookings and payments",
+    description: "Enterprise-grade security ensures safe, compliant, and reliable transactions across all bookings and payment processes.",
   },
   {
     icon: Clock,
     title: "Real-time Updates",
-    description: "Instant confirmations and live status tracking",
+    description: "Access instant confirmations and live operational updates to manage bookings efficiently and reduce turnaround time.",
   },
   {
     icon: Headphones,
-    title: "24/7 Support",
-    description: "Dedicated support team available round the clock",
+    title: "24/7 Partner Support",
+    description: "Our dedicated partner support team operates 24/7, ensuring uninterrupted assistance for your business operations.",
   },
   {
     icon: CreditCard,
-    title: "Flexible Payments",
-    description: "Multiple payment options including credit and wallet",
+    title: "Flexible Payment Solutions",
+    description: "Enable multiple payment options, including credit terms and digital payments, designed to support smooth B2B transactions.",
   },
 ];
 
 const Services = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
@@ -116,7 +210,7 @@ const Services = () => {
       </section>
 
       {/* Platform Features */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 mt-5 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {features.map((feature) => (
@@ -156,23 +250,32 @@ const Services = () => {
                 </p>
                 
                 {/* Features Grid */}
-                <div className="grid sm:grid-cols-2 gap-3 mb-8">
-                  {service.features.map((feature) => (
-                    <div key={feature} className="flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                      <span className="text-foreground text-sm">{feature}</span>
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {service.features.map((feature, idx) => (
+                    <div key={idx} className="flex gap-3">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">
+                          {feature.title}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          {feature.description}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Benefits */}
                 <div className="flex flex-wrap gap-3 mb-8">
-                  {service.benefits.map((benefit) => (
-                    <span 
-                      key={benefit}
-                      className="px-4 py-2 bg-accent/10 text-accent-foreground rounded-full text-sm font-medium"
+                  {service.benefits.map((benefit, idx) => (
+                    <span
+                      key={idx}
+                      className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium"
+                      title={benefit.description}
                     >
-                      {benefit}
+                      {benefit.title}
                     </span>
                   ))}
                 </div>
@@ -192,10 +295,6 @@ const Services = () => {
                     alt={service.title}
                     className="rounded-3xl shadow-2xl w-full aspect-[4/3] object-cover"
                   />
-                  <div className={`absolute -bottom-6 ${index % 2 === 0 ? '-right-6' : '-left-6'} bg-gradient-to-r ${service.gradient} text-white rounded-2xl p-6 shadow-xl`}>
-                    <div className="text-3xl font-bold font-serif">{service.benefits[0]}</div>
-                    <p className="text-sm opacity-80">On Every Booking</p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -212,20 +311,20 @@ const Services = () => {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold font-serif text-primary-foreground mb-6">
-            Ready to Grow Your Travel Business?
+            Ready to Transform Your Travel Business?
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of successful travel agents and start earning more with Phoenix Travelopedia.
+            Join Phoenix Travelopedia today and start earning commissions on every booking.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
               <Button size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
-                Start Free Trial
+                Create Agent Account
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
             <Link to="/contact">
-              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary hover:bg-primary-foreground/10">
                 Contact Sales
               </Button>
             </Link>
