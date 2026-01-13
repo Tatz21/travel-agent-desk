@@ -1,9 +1,11 @@
 import { Plane, Bus, Hotel, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const services = [
   {
+    id: "flight-bookings",
     icon: Plane,
     title: "Flight Bookings",
     description: "Access real-time domestic flight fares with instant ticketing and reliable airline partners.",
@@ -13,6 +15,7 @@ const services = [
     gradient: "from-emerald-50 to-teal-100",
   },
   {
+    id: "bus-tickets",
     icon: Bus,
     title: "Bus Tickets",
     description: "Book bus tickets across major routes in India with live seat availability and instant confirmation.",
@@ -22,6 +25,7 @@ const services = [
     gradient: "from-amber-100 to-orange-300",
   },
   {
+    id: "hotel-reservations",
     icon: Hotel,
     title: "Hotel Reservations",
     description: " From budget hotels to luxury resorts, book accommodations across India with ease. Access exclusive hotel deals, best rate guarantees, and maximize profits on every booking.",
@@ -88,13 +92,15 @@ const ServicesSection = () => {
                 </ul>
 
                 {/* CTA Button */}
-                <Button 
-                  variant="ghost" 
-                  className="group/btn p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent"
-                >
-                  Learn More
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                </Button>
+                <Link to={`/services/${service.id}`}>
+                  <Button 
+                    variant="ghost" 
+                    className="group/btn p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent"
+                  >
+                    Learn More
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
