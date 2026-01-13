@@ -1,65 +1,75 @@
-import { Users, Target, Award, Heart, Globe, Shield, ArrowRight, CheckCircle } from "lucide-react";
+import { Users, Target, Award, Heart, Globe, Shield, ArrowRight, CheckCircle, CreditCard, MapPin, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Header from "@/components/Header";
+import { useEffect } from "react";
 
 const values = [
   {
     icon: Shield,
-    title: "Trust & Transparency",
-    description: "We believe in honest dealings and complete transparency in all our business operations.",
+    title: "Integrity & Transparency",
+    description: "We follow ethical business practices with complete transparency, building long-term trust with travel partners and real estate clients.",
   },
   {
     icon: Heart,
-    title: "Customer First",
-    description: "Our partners' success is our priority. We go the extra mile to ensure satisfaction.",
+    title: "Customer-First Commitment",
+    description: "Our partners’ success comes first. We deliver reliable support, personalized solutions, and seamless service at every stage.",
   },
   {
     icon: Globe,
-    title: "Innovation",
-    description: "Continuously evolving our platform with cutting-edge technology and features.",
+    title: "Smart Innovation",
+    description: "We leverage advanced technology and data-driven solutions to continuously improve performance, efficiency, and user experience.",
   },
   {
     icon: Award,
-    title: "Excellence",
-    description: "Committed to delivering the highest quality service in every interaction.",
+    title: "Excellence in Every Interaction",
+    description: "From service quality to execution, we maintain the highest standards to deliver consistent value and lasting satisfaction.",
   },
 ];
 
 const stats = [
-  { number: "10,000+", label: "Travel Agents" },
-  { number: "₹500Cr+", label: "Transactions" },
-  { number: "1000+", label: "Destinations" },
-  { number: "24/7", label: "Support" },
+  { icon: Users, label: "Extensive Agents Network" },
+  { icon: CreditCard, label: "Fast & Reliable Transaction Processing" },
+  { icon: MapPin, label: "Serving Multiple Destinations" },
+  { icon: Headphones, label: "24/7 Dedicated Customer Support" },
 ];
 
 const team = [
   {
     name: "Rajesh Kumar",
-    role: "Founder & CEO",
+    role: "Founder",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80",
   },
   {
-    name: "Priya Sharma",
-    role: "Chief Operations Officer",
+    name: "Prasenjit Mallick",
+    role: "Chief Executive Officer",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+  },
+  {
+    name: "Dipa Singh",
+    role: "Sales Manager",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
   },
   {
-    name: "Amit Patel",
+    name: "Mukteswar Mondal",
     role: "Chief Technology Officer",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
   },
   {
-    name: "Sneha Reddy",
-    role: "Head of Partnerships",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80",
-  },
+    name: "Koushik Ghosh",
+    role: "Backend Developer",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+  }
 ];
 
 const About = () => {
+  useEffect(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
@@ -68,9 +78,9 @@ const About = () => {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url(./about.png)"
+            backgroundImage: "url(./about-hero.png)"
           }}
         />
         <div className="absolute inset-0 overflow-hidden">
@@ -79,20 +89,17 @@ const About = () => {
         </div>
         
         <div className="relative max-w-7xl mx-auto text-center">
-          <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium tracking-wider uppercase bg-primary-foreground/10 text-primary-foreground rounded-full border border-primary-foreground/20">
-            About Us
-          </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-primary-foreground mb-6">
+          <h1 className="inline-block px-4 py-2 text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 bg-black/40 backdrop-blur-sm rounded-lg animate-fade-in-up">
             Empowering Travel Entrepreneurs
           </h1>
-          <p className="text-xl text-primary-foreground/80 max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-white max-w-3xl mx-auto mb-8">
             Phoenix Travelopedia is India's leading B2B travel platform, connecting travel agents with the best deals on flights, hotels, and buses.
           </p>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 mt-5 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat) => (
@@ -101,7 +108,7 @@ const About = () => {
                 className="bg-card rounded-2xl p-6 text-center shadow-xl border border-border/50"
               >
                 <div className="text-3xl md:text-4xl font-bold font-serif text-primary mb-2">
-                  {stat.number}
+                  {stat.icon && <stat.icon className="w-10 h-10 mx-auto" />}
                 </div>
                 <p className="text-muted-foreground text-sm">{stat.label}</p>
               </div>
@@ -144,10 +151,6 @@ const About = () => {
                 alt="Team collaboration"
                 className="rounded-3xl shadow-2xl"
               />
-              <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground rounded-2xl p-6 shadow-xl">
-                <div className="text-4xl font-bold font-serif">9+</div>
-                <p className="text-sm opacity-80">Years of Excellence</p>
-              </div>
             </div>
           </div>
         </div>
@@ -164,7 +167,7 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold font-serif text-card-foreground mb-4">Our Mission</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  To empower every travel entrepreneur in India with world-class technology, competitive pricing, and unwavering support, enabling them to build successful and sustainable travel businesses.
+                  Our mission is to empower travel entrepreneurs and agents across India by providing world-class travel technology, competitive B2B pricing, and dedicated partner support. We strive to enable our partners to grow profitable, scalable, and sustainable travel businesses through seamless access to flights, hotels, buses, and complete travel solutions—all on a single, reliable platform.
                 </p>
               </CardContent>
             </Card>
@@ -175,7 +178,7 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold font-serif text-card-foreground mb-4">Our Vision</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  To be India's most trusted and innovative B2B travel platform, transforming how travel business is conducted across the nation and beyond.
+                  Our vision is to become India’s most trusted and innovative B2B travel platform, redefining how travel businesses operate in a digital-first world. By continuously investing in technology, transparency, and partner success, we aim to transform the travel trade ecosystem in India and expand our footprint globally.
                 </p>
               </CardContent>
             </Card>
@@ -191,7 +194,7 @@ const About = () => {
               Our Core Values
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              The principles that guide everything we do
+              The principles that drive our growth and define our commitment
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -221,6 +224,7 @@ const About = () => {
       {/* Team Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="max-w-7xl mx-auto">
+          {/* Heading */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-4">
               Leadership Team
@@ -229,16 +233,27 @@ const About = () => {
               Meet the people driving innovation in travel technology
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member) => (
-              <div key={member.name} className="text-center group">
-                <div className="relative mb-6 mx-auto w-40 h-40 rounded-full overflow-hidden shadow-xl">
-                  <img 
-                    src={member.image} 
+
+          {/* 5 Column Responsive Grid */}
+          <div className="
+            grid 
+            grid-cols-1
+            sm:grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+            xl:grid-cols-5
+            gap-8
+          ">
+            {team.map((member, index) => (
+              <div key={index} className="text-center group">
+                <div className="relative mb-6 mx-auto w-36 h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-xl">
+                  <img
+                    src={member.image}
                     alt={member.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
+
                 <h3 className="text-lg font-bold font-serif text-foreground mb-1">
                   {member.name}
                 </h3>
@@ -249,6 +264,7 @@ const About = () => {
         </div>
       </section>
 
+
       {/* CTA Section */}
       <section 
         className="py-20 px-4 sm:px-6 lg:px-8"
@@ -258,10 +274,10 @@ const About = () => {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold font-serif text-primary-foreground mb-6">
-            Ready to Partner With Us?
+            Ready to Transform Your Travel Business?
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of successful travel agents who trust Phoenix Travelopedia for their business growth.
+            Join Phoenix Travelopedia today and start earning commissions on every booking.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
@@ -271,7 +287,7 @@ const About = () => {
               </Button>
             </Link>
             <Link to="/contact">
-              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary hover:bg-primary-foreground/10">
                 Contact Us
               </Button>
             </Link>
