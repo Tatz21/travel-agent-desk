@@ -119,32 +119,24 @@ const About = () => {
         </div>
       </section>
 
-      {/* Story Section */}
+      {/* Founder Story Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-6">
-                Our Story
+                Our Founder's Story
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Founded in 2015, Phoenix Travelopedia began with a simple vision: to democratize travel business in India by providing small and medium travel agents access to the same inventory and pricing as large agencies.
+                  Our journey began in 1997, driven by the vision, dedication, and hard work of Mr. Pankaj Mallick, the founder of our organization. What started as a small travel service initiative was built on strong values—trust, transparency, and long-term partnerships. With unwavering commitment, he laid the foundation of a business focused on reliable travel solutions and ethical operations, earning the confidence of travel agents and industry partners alike.
                 </p>
                 <p>
-                  What started as a small team of passionate travel enthusiasts has now grown into India's most trusted B2B travel platform, serving over 10,000 travel agents across the country.
+                  Over the years, the company evolved into a trusted B2B travel service provider, supporting travel agents, tour operators, and corporate partners with consistent service delivery and dependable backend operations. Our reputation has been built on accurate ticketing, smooth settlements, operational efficiency, and partner-first support, enabling our associates to grow their businesses with confidence.
                 </p>
                 <p>
-                  Our journey has been marked by continuous innovation, unwavering commitment to our partners, and a deep understanding of the Indian travel landscape.
+                  Though Mr. Pankaj Mallick is no longer with us, his principles continue to guide our business philosophy and operational standards.
                 </p>
-              </div>
-              <div className="mt-8 space-y-3">
-                {["Pan-India Network of Travel Partners", "Direct Contracts with Airlines & Hotels", "Real-time Booking Technology", "Dedicated Relationship Managers"].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-foreground">{item}</span>
-                  </div>
-                ))}
               </div>
             </div>
             <div className="relative">
@@ -153,6 +145,37 @@ const About = () => {
                 alt="Team collaboration"
                 className="rounded-3xl shadow-2xl"
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CEO Story Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
+                alt="Team collaboration"
+                className="rounded-3xl shadow-2xl"
+              />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-6">
+                Our CEO Story
+              </h2>
+              <div className="space-y-4 text-muted-foreground leading-relaxed">
+                <p>
+                  In 2018, leadership was assumed by his son, Mr. Prasenjit Mallick, who carried the legacy forward with a technology-driven and scalable B2B approach. Under his direction, the company strengthened its digital infrastructure, agent portal capabilities, and service automation, ensuring faster bookings, transparent transactions, and improved partner experience.
+                </p>
+                <p>
+                  Today, our B2B travel portal offers comprehensive services including flight ticket booking, bus ticket booking, and hotel reservations, designed specifically to meet the operational needs of travel agents and corporate partners. As a proud member of TAB (Travel Agents Body), we strictly adhere to industry standards, compliance norms, and ethical business practices.
+                </p>
+                <p>
+                  With decades of industry experience, a strong legacy of trust, and a future-focused mindset, we remain committed to empowering our partners with reliable technology, competitive solutions, and long-term business support.
+                </p>
+              </div>
             </div>
           </div>
         </div>
