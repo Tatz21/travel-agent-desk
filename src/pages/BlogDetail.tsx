@@ -236,7 +236,7 @@ const BlogDetail = () => {
             alt={post.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+          <div className="absolute inset-0" />
         </div>
       </section>
 
@@ -246,7 +246,7 @@ const BlogDetail = () => {
           <div className="bg-background rounded-2xl shadow-xl p-8 md:p-12">
             {/* Back Link */}
             <Link 
-              to="/blog" 
+              to="/blogs" 
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
