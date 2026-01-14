@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Header from "@/components/Header";
 import FeedbackSection from "@/components/FeedbackSection";
+import { useEffect } from "react";
 
 const blogPosts = {
   "top-10-destinations-india": {
