@@ -140,7 +140,7 @@ const Blog = () => {
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                    <div className="absolute inset-0" />
                     <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
                       {post.category}
                     </Badge>
