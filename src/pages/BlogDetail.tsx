@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import Header from "@/components/Header";
+import FeedbackSection from "@/components/FeedbackSection";
 
 const blogPosts = {
   "top-10-destinations-india": {
@@ -214,6 +216,8 @@ const BlogDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
+      <Header />
+      <FeedbackSection />
       
       {/* Hero Section */}
       <section className="relative pt-20 pb-0 overflow-hidden">
