@@ -33,6 +33,7 @@ import { IdleTimerProvider } from "./components/IdleTimerProvider";
 import ApiTest from "./pages/ApiTest";
 import NotFound from "./pages/NotFound";
 import Tawk from "./components/tawk";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -77,13 +78,14 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+          <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/:serviceId" element={<ServiceDetail />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/blog" element={<Blog />} />
+              <Route path="/blogs" element={<Blog />} />
               <Route path="/blog/:blogId" element={<BlogDetail />} />
               <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
               <Route path="/register" element={<PublicRoute><AgentRegister /></PublicRoute>} />
