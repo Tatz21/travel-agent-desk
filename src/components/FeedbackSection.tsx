@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageSquarePlus, Send, Star, Loader2 } from "lucide-react";
+import { MessageSquare, Send, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -126,7 +126,7 @@ const FeedbackSection = () => {
               textOrientation: "mixed"
             }}
           >
-            <MessageSquarePlus size={18} className="rotate-90 xs:w-5 xs:h-5 sm:w-5 sm:h-5" />
+            <MessageSquare size={18} className="rotate-90 xs:w-5 xs:h-5 sm:w-5 sm:h-5" />
             <span className="text-xs xs:text-sm font-semibold tracking-wide">Feedback</span>
           </div>
         </div>
