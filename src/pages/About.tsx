@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Header from "@/components/Header";
 import { useEffect } from "react";
+import FeedbackSection from "@/components/FeedbackSection";
 
 const values = [
   {
@@ -74,6 +75,7 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <ScrollToTop />
       <Header />
+      <FeedbackSection />
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
