@@ -82,6 +82,10 @@ const blogPosts = [
 const POSTS_PER_PAGE = 6;
 
 const Blog = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(blogPosts.length / POSTS_PER_PAGE);
   
