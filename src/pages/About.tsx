@@ -40,7 +40,7 @@ const stats = [
 
 const team = [
   {
-    name: "Rajesh Kumar",
+    name: "Pankaj Mallick",
     role: "Founder",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80",
   },
