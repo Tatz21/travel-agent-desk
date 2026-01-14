@@ -198,6 +198,14 @@ const relatedPosts = [
 
 const BlogDetail = () => {
   const { blogId } = useParams();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [blogId]);
+  
   const post = blogPosts[blogId as keyof typeof blogPosts];
 
   if (!post) {
