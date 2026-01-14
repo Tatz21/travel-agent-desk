@@ -4,14 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 const ratingCategories = [
   { key: "websiteExperience", label: "Website Experience" },
@@ -20,10 +15,12 @@ const ratingCategories = [
   { key: "overallSatisfaction", label: "Overall Satisfaction" },
 ];
 
-const FeedbackSection = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+export default function FeedbackSection() {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
@@ -33,14 +30,60 @@ const FeedbackSection = () => {
     overallSatisfaction: 0,
     suggestion: "",
   });
-  const { toast } = useToast();
 
-  const handleRatingChange = (category: string, rating: number) => {
-    setFormData({ ...formData, [category]: rating });
+  const setRating = (key: string, value: number) => {
+    setForm({ ...form, [key]: value });
   };
 
-  const resetForm = () => {
-    setFormData({
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // ✅ Rating validation
+    if (
+      form.websiteExperience === 0 ||
+      form.customerSupport === 0 ||
+      form.bookingProcess === 0 ||
+      form.overallSatisfaction === 0
+    ) {
+      toast({
+        title: "Rating required",
+        description: "Please rate all experience categories before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    const { error } = await supabase.from("feedback").insert({
+      name: form.name || null,
+      email: form.email || null,
+      phone: form.phone || null,
+      website_experience: form.websiteExperience || null,
+      customer_support: form.customerSupport || null,
+      booking_process: form.bookingProcess || null,
+      overall_satisfaction: form.overallSatisfaction || null,
+      suggestion: form.suggestion || null,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: "Submission failed",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Thank you!",
+      description: "Your feedback has been submitted successfully",
+    });
+
+    setOpen(false);
+    setForm({
       name: "",
       email: "",
       phone: "",
@@ -52,57 +95,20 @@ const FeedbackSection = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase.from("feedback").insert({
-        name: formData.name.trim() || null,
-        email: formData.email.trim() || null,
-        phone: formData.phone.trim() || null,
-        website_experience: formData.websiteExperience || null,
-        customer_support: formData.customerSupport || null,
-        booking_process: formData.bookingProcess || null,
-        overall_satisfaction: formData.overallSatisfaction || null,
-        suggestion: formData.suggestion.trim() || null,
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Thank you for your feedback!",
-        description: "We appreciate your valuable input and will use it to improve our services.",
-      });
-      setIsOpen(false);
-      resetForm();
-    } catch (error) {
-      console.error("Error submitting feedback:", error);
-      toast({
-        title: "Error submitting feedback",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const StarRating = ({ category, value }: { category: string; value: number }) => (
-    <div className="flex gap-1 xs:gap-1.5 sm:gap-2">
-      {[1, 2, 3, 4, 5].map((star) => (
+  const Stars = ({ value, onChange }: any) => (
+    <div className="flex gap-1">
+      {[1, 2, 3, 4, 5].map((i) => (
         <button
-          key={star}
+          key={i}
           type="button"
-          onClick={() => handleRatingChange(category, star)}
-          className="transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50 rounded touch-manipulation"
+          onClick={() => onChange(i)}
+          className="transition hover:scale-110"
         >
           <Star
-            size={20}
-            className={`xs:w-5 xs:h-5 sm:w-6 sm:h-6 transition-colors ${
-              star <= value
-                ? "fill-primary text-primary"
-                : "fill-transparent text-muted-foreground/40 hover:text-primary/60"
+            className={`h-5 w-5 transition-colors ${
+              i <= value
+                ? "fill-[#F5B301] text-[#F5B301]"
+                : "text-muted-foreground"
             }`}
           />
         </button>
@@ -112,28 +118,25 @@ const FeedbackSection = () => {
 
   return (
     <>
-      {/* Floating Feedback Button */}
+      {/* Floating Button */}
       <button
-        onClick={() => setIsOpen(true)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-50 group touch-manipulation"
-        aria-label="Open feedback form"
+        onClick={() => setOpen(true)}
+        className="fixed right-0 top-1/2 z-50 -translate-y-1/2 group touch-manipulation" aria-label="Open Feedback Form"
       >
         <div className="flex items-center bg-primary text-primary-foreground rounded-l-xl shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:pr-2">
-          <div 
-            className="flex items-center gap-2 px-2 py-3 xs:px-2.5 xs:py-4 sm:px-3 sm:py-5"
+          <div className="flex items-center gap-2 px-2 py-3 xs:px-2.5 xs:py-4 sm:px-3 sm:py-5"
             style={{ 
               writingMode: "vertical-rl",
               textOrientation: "mixed"
-            }}
-          >
-            <MessageSquare size={18} className="rotate-90 xs:w-5 xs:h-5 sm:w-5 sm:h-5" />
-            <span className="text-xs xs:text-sm font-semibold tracking-wide">Feedback</span>
+            }} >
+          <MessageSquare className="rotate-90 xs:w-5 xs:h-5 sm:w-5 sm:h-5" />
+          <span className="text-xs xs:text-sm font-semibold tracking-wide">Feedback</span>
           </div>
         </div>
       </button>
 
-      {/* Feedback Modal using Dialog */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      {/* Modal */}
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="w-[95vw] max-w-lg sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto p-0 gap-0 border-none">
           {/* Custom Header with gradient */}
           <div className="bg-gradient-to-r from-primary to-primary/80 p-4 xs:p-5 sm:p-6 rounded-t-lg">
@@ -146,126 +149,115 @@ const FeedbackSection = () => {
               </p>
             </DialogHeader>
           </div>
-
-          <form onSubmit={handleSubmit} className="p-4 xs:p-5 sm:p-6 space-y-4 sm:space-y-6 bg-background">
-            {/* Contact Information */}
-            <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-2">
-                <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs sm:text-sm font-bold">1</span>
+          <form
+            onSubmit={submit}
+            className="bg-[#FBF9F6] p-4 sm:p-6 space-y-6"
+          >
+            {/* STEP 1 */}
+            <section className="space-y-4">
+              <h3 className="font-semibold flex items-center gap-2">
+                <span className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+                  1
+                </span>
                 Contact Information
               </h3>
-              
-              <div className="grid gap-3 sm:gap-4">
-                <div>
-                  <Label htmlFor="name" className="text-xs sm:text-sm text-muted-foreground">
-                    Full Name
-                  </Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Enter your name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="mt-1 text-sm sm:text-base h-9 sm:h-10 border-border focus:border-primary focus:ring-primary"
-                    maxLength={100}
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-                  <div>
-                    <Label htmlFor="email" className="text-xs sm:text-sm text-muted-foreground">
-                      Email Address
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="mt-1 text-sm sm:text-base h-9 sm:h-10 border-border focus:border-primary focus:ring-primary"
-                      maxLength={255}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone" className="text-xs sm:text-sm text-muted-foreground">
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+91 XXXXX XXXXX"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="mt-1 text-sm sm:text-base h-9 sm:h-10 border-border focus:border-primary focus:ring-primary"
-                      maxLength={20}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Rating Section */}
-            <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-2">
-                <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs sm:text-sm font-bold">2</span>
+              <Input
+                placeholder="Enter your name"
+                value={form.name}
+                required
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Input
+                  placeholder="your@email.com"
+                  value={form.email}
+                  required
+                  type="email"
+                  onChange={(e) =>
+                    setForm({ ...form, email: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="96XXX XXXXX"
+                  value={form.phone}
+                  required
+                  type="tel"
+                  onChange={(e) =>
+                    setForm({ ...form, phone: e.target.value })
+                  }
+                  maxLength={10}
+                  onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
+                />
+              </div>
+            </section>
+
+            {/* STEP 2 */}
+            <section className="space-y-4">
+              <h3 className="font-semibold flex items-center gap-2">
+                <span className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+                  2
+                </span>
                 Rate Your Experience
               </h3>
-              
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-                {ratingCategories.map((category) => (
-                  <div 
-                    key={category.key}
-                    className="p-3 sm:p-4 rounded-lg bg-muted/50 border border-border/50 hover:border-primary/30 transition-colors"
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {ratingCategories.map((c) => (
+                  <div
+                    key={c.key}
+                    className="bg-white rounded-xl border p-4 space-y-2"
                   >
-                    <Label className="text-xs sm:text-sm font-medium text-foreground block mb-2">
-                      {category.label}
-                    </Label>
-                    <StarRating 
-                      category={category.key} 
-                      value={formData[category.key as keyof typeof formData] as number} 
+                    <Label className="font-medium">{c.label}</Label>
+                    <span className="text-red-500 text-sm"> *</span>
+                    <Stars
+                      value={form[c.key as keyof typeof form]}
+                      onChange={(v: number) => setRating(c.key, v)}
                     />
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* Suggestions */}
-            <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-sm sm:text-base font-semibold text-foreground flex items-center gap-2">
-                <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs sm:text-sm font-bold">3</span>
+            {/* STEP 3 */}
+            <section className="space-y-4">
+              <h3 className="font-semibold flex items-center gap-2">
+                <span className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+                  3
+                </span>
                 Your Suggestions
               </h3>
-              
+
               <Textarea
                 placeholder="Tell us how we can improve our services..."
-                value={formData.suggestion}
-                onChange={(e) => setFormData({ ...formData, suggestion: e.target.value })}
-                className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base border-border focus:border-primary focus:ring-primary resize-none"
-                maxLength={1000}
+                className="min-h-[100px]"
+                value={form.suggestion}
+                onChange={(e) =>
+                  setForm({ ...form, suggestion: e.target.value })
+                }
               />
-            </div>
+            </section>
 
-            {/* Submit Button */}
+            {/* SUBMIT */}
             <Button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full h-10 sm:h-12 text-sm sm:text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 touch-manipulation disabled:opacity-70"
+              disabled={loading}
+              className="w-full h-11 text-base font-semibold"
             >
-              {isSubmitting ? (
+              {loading ? (
                 <>
-                  <Loader2 size={16} className="mr-2 animate-spin sm:w-5 sm:h-5" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
                 </>
               ) : (
                 <>
-                  <Send size={16} className="mr-2 sm:w-5 sm:h-5" />
+                  <Send className="mr-2 h-4 w-4" />
                   Submit Feedback
                 </>
               )}
             </Button>
 
-            {/* Privacy Note */}
-            <p className="text-[10px] xs:text-xs text-muted-foreground text-center">
+            <p className="text-xs text-muted-foreground text-center">
               Your feedback is confidential and helps us improve our services.
             </p>
           </form>
@@ -273,6 +265,4 @@ const FeedbackSection = () => {
       </Dialog>
     </>
   );
-};
-
-export default FeedbackSection;
+}
