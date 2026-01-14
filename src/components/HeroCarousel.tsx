@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import heroB2BPartnership from "@/assets/slider/hero-b2b-partnership.jpg";
 import heroGlobalNetwork from "@/assets/slider/hero-global-network.jpg";
@@ -37,13 +36,6 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-    setTimeout(() => setIsTransitioning(false), 700);
-  }, [isTransitioning]);
-
-  const prevSlide = useCallback(() => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     setTimeout(() => setIsTransitioning(false), 700);
   }, [isTransitioning]);
 
