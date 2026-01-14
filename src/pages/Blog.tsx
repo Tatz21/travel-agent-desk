@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/pagination";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import Header from "@/components/Header";
+import FeedbackSection from "@/components/FeedbackSection";
 
 const blogPosts = [
   {
@@ -89,6 +91,8 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
+      <Header />
+      <FeedbackSection />
       
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
