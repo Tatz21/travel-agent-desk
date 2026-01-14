@@ -1,27 +1,27 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import heroTajMahal from "@/assets/slider/hero-taj-mahal.jpg";
-import heroKerala from "@/assets/slider/hero-kerala.jpg";
-import heroHimalayas from "@/assets/slider/hero-himalayas.jpg";
-import heroJaipur from "@/assets/slider/hero-jaipur.jpg";
+import heroB2BPartnership from "@/assets/slider/hero-b2b-partnership.jpg";
+import heroGlobalNetwork from "@/assets/slider/hero-global-network.jpg";
+import heroTravelOperations from "@/assets/slider/hero-travel-operations.jpg";
+import heroBusinessTravel from "@/assets/slider/hero-business-travel.jpg";
 
 const slides = [
   {
-    image: heroTajMahal,
-    alt: "Taj Mahal at sunrise",
+    image: heroB2BPartnership,
+    alt: "B2B travel business partnership meeting",
   },
   {
-    image: heroKerala,
-    alt: "Kerala backwaters sunset",
+    image: heroGlobalNetwork,
+    alt: "Global travel network connections",
   },
   {
-    image: heroHimalayas,
-    alt: "Himalayan mountains",
+    image: heroTravelOperations,
+    alt: "Travel agency operations center",
   },
   {
-    image: heroJaipur,
-    alt: "Jaipur Pink City",
+    image: heroBusinessTravel,
+    alt: "Premium business travel experience",
   },
 ];
 
