@@ -4,10 +4,11 @@ import heroB2BPartnership from "@/assets/slider/hero-b2b-partnership.jpg";
 import heroGlobalNetwork from "@/assets/slider/hero-global-network.jpg";
 import heroTravelOperations from "@/assets/slider/hero-travel-operations.jpg";
 import heroBusinessTravel from "@/assets/slider/hero-business-travel.jpg";
+import heroAbout from "@/assets/slider/hero-about.jpg";
 
 const slides = [
   {
-    image: heroB2BPartnership,
+    image: heroAbout,
     alt: "B2B travel business partnership meeting",
   },
   {
