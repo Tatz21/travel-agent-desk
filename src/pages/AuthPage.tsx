@@ -9,6 +9,7 @@ import { toast } from '@/hooks/use-toast';
 import { Plane, Hotel, Car, Ship, Building2, Calendar, MapPin, Ticket, Briefcase, Globe2, Check, Users, ChartLine, Shield, Headphones, TrendingUp, Mail, Phone, MapPinned, Eye, EyeOff, Globe, LayoutDashboard, CloudCog, Bus, ShieldCheck } from 'lucide-react';
 import logo from '@/assets/logo.gif';
 import { supabase } from '@/integrations/supabase/client';
+import loginVideo from "@/assets/login-bg.mp4";
 
 const AuthPage = () => {
   const { user } = useAuth();
@@ -382,18 +383,16 @@ const AuthPage = () => {
         {/* Watermark Logo Pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.10]" />
         
-        {/* Floating Travel Icons */}
-        {floatingIcons.map(({
-        Icon,
-        delay,
-        duration,
-        left,
-        top
-      }, index) => <Icon key={index} className="absolute text-primary/10 pointer-events-none" size={48} style={{
-        left,
-        top,
-        animation: `float ${duration} ease-in-out ${delay} infinite`
-      }} />)}
+        {/* Background Video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src={loginVideo} type="video/mp4" />
+        </video>
 
         <div className="w-full max-w-md mx-4 relative z-10 animate-fade-in">
           <Card className="shadow-2xl border-0 rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
@@ -476,9 +475,9 @@ const AuthPage = () => {
             </CardContent>
           </Card>
 
-          <p className="text-center mt-6 mb-4 text-sm text-muted-foreground">
+          <p className="text-center mt-6 mb-4 text-sm text-white">
             Don't have an account?{' '}
-            <a onClick={() => navigate('/register')} className="text-primary hover:underline font-medium">
+            <a onClick={() => navigate('/register')} className="text-white hover:underline font-medium">
               Register Now
             </a>
           </p>
