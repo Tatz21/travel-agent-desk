@@ -291,22 +291,26 @@ const AuthPage = () => {
     description: 'Gain better business insights with detailed reports that help track performance and improve decision-making.'
   }];
   
-  const products = [{
+  const products = [{  
+    id: "flight-bookings",
     icon: Plane,
     name: 'Flights',
     color: 'from-blue-500 to-blue-600',
     shadow: "rgba(59,130,246,.80)"
   }, {
+    id: "hotel-reservations",
     icon: Hotel,
     name: 'Hotels',
     color: 'from-purple-500 to-purple-600',
     shadow: "rgba(147,51,234,0.8)"
   }, {
+    id: "bus-tickets",
     icon: Bus,
     name: 'Bus',
     color: 'from-orange-500 to-orange-600',
     shadow: "rgba(249,115,22,0.8)"
   }, {
+    id: "travel-insurance",
     icon: ShieldCheck,
     name: 'Travel Insurance',
     color: 'from-indigo-500 to-indigo-600',
@@ -526,11 +530,13 @@ const AuthPage = () => {
           {products.map((product, index) => <Card key={index} className="p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group animate-scale-in border-0" style={{
             animationDelay: `${index * 80}ms`,
             boxShadow: `0 10px 30px ${product.shadow}`
-          }}>
-            <div className={`bg-gradient-to-br ${product.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
-              <product.icon className="text-white" size={32} />
-            </div>
-            <h3 className="text-lg font-bold text-center">{product.name}</h3>
+          }}>            
+            <Link to={`/services/${product.id}`}>
+              <div className={`bg-gradient-to-br ${product.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform`}>
+                <product.icon className="text-white" size={32} />
+              </div>
+              <h3 className="text-lg font-bold text-center">{product.name}</h3>
+            </Link>
           </Card>)}
         </div>
       </div>
