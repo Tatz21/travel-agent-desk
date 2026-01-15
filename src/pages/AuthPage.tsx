@@ -489,7 +489,7 @@ const AuthPage = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Why Choose <span className="text-primary">Travelopedia</span>
+            Why Choose <span className="text-primary">Phoenix Travelopedia</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             India’s Most Trusted B2B Travel Platform for Travel Agents
