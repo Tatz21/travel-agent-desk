@@ -385,10 +385,7 @@ const AuthPage = () => {
       </div>
 
       {/* Section 1: Login */}
-      <section ref={el => sectionRefs.current[0] = el} className="min-h-screen flex items-center justify-center relative overflow-hidden">
-        {/* Watermark Logo Pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.10]" />
-        
+      <section ref={el => sectionRefs.current[0] = el} className="min-h-screen flex items-center justify-center relative overflow-hidden bg-cover bg-center">
         {/* Background Video */}
         <video
           autoPlay
