@@ -27,7 +27,7 @@ const AuthPage = () => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60);
   
-  const [videoReady, setVideoReady] = useState(false);
+  const [videoReady, setVideoReady] = useState(true);
 
   const startTimer = () => {
     setTimer(60);
