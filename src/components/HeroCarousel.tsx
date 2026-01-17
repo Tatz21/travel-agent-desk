@@ -12,16 +12,16 @@ const slides = [
     alt: "Scenic travel destination with mountains and lake",
   },
   {
+    image: heroOperationsNew,
+    alt: "Efficient travel operations management",
+  },
+  {
     image: heroPartnershipnew,
     alt: "B2B travel business partnership meeting",
   },
   {
     image: heroServiceDetail,
     alt: "Personalized travel service details",
-  },
-  {
-    image: heroOperationsNew,
-    alt: "Efficient travel operations management",
   },
   {
     image: heroNetworkNew,
