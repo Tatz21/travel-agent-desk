@@ -26,6 +26,8 @@ const AuthPage = () => {
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60);
+  
+  const [videoReady, setVideoReady] = useState(false);
 
   const startTimer = () => {
     setTimer(60);
@@ -393,7 +395,10 @@ const AuthPage = () => {
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
+          preload="auto"
+          onCanPlay={() => setVideoReady(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 
+            ${videoReady ? 'opacity-100' : 'opacity-0'}`}
         >
           <source src={loginVideo} type="video/mp4" />
         </video>
