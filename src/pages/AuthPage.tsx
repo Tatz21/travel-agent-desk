@@ -26,7 +26,8 @@ const AuthPage = () => {
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60);
-  
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(true);
 
   const startTimer = () => {
@@ -380,20 +381,20 @@ const AuthPage = () => {
 
   return <div className="relative bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
       {/* Scroll Indicator */}
-      <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
-        {sections.map((_, index) => <button key={index} onClick={() => scrollToSection(index)} className={`w-3 h-3 rounded-full transition-all duration-300 ${activeSection === index ? 'bg-primary scale-150 shadow-lg' : 'bg-primary/30 hover:bg-primary/50'}`} aria-label={`Go to section ${index + 1}`} />)}
-      </div>
-
+      
       {/* Section 1: Login */}
-      <section ref={el => sectionRefs.current[0] = el} className="min-h-screen flex items-center justify-center relative overflow-hidden bg-cover bg-center">
+      <section
+      ref={el => sectionRefs.current[0] = el}
+      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-cover bg-center">
         {/* Background Video */}
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          onCanPlay={() => setVideoReady(true)}
+          onCanPlay={() => { setVideoReady(true); videoRef.current?.play().catch(() => {}); }}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 
             ${videoReady ? 'opacity-100' : 'opacity-0'}`}
         >
