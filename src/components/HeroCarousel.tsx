@@ -1,27 +1,31 @@
 import { useState, useEffect, useCallback } from "react";
 
-import heroB2BPartnership from "@/assets/slider/hero-b2b-partnership.jpg";
-import heroGlobalNetwork from "@/assets/slider/hero-global-network.jpg";
-import heroTravelOperations from "@/assets/slider/hero-travel-operations.jpg";
-import heroBusinessTravel from "@/assets/slider/hero-business-travel.jpg";
-import heroAbout from "@/assets/slider/hero-about.jpg";
+import heroHome from "@/assets/slider/hero-home.jpg";
+import heroPartnershipnew from "@/assets/slider/hero-partnership-new.jpg";
+import heroServiceDetail from "@/assets/slider/hero-service-detail.jpg";
+import heroNetworkNew from "@/assets/slider/hero-network-new.jpg";
+import heroOperationsNew from "@/assets/slider/hero-operations-new.jpg";
 
 const slides = [
   {
-    image: heroAbout,
+    image: heroHome,
+    alt: "Scenic travel destination with mountains and lake",
+  },
+  {
+    image: heroPartnershipnew,
     alt: "B2B travel business partnership meeting",
   },
   {
-    image: heroGlobalNetwork,
-    alt: "Global travel network connections",
+    image: heroServiceDetail,
+    alt: "Personalized travel service details",
   },
   {
-    image: heroTravelOperations,
-    alt: "Travel agency operations center",
+    image: heroOperationsNew,
+    alt: "Efficient travel operations management",
   },
   {
-    image: heroBusinessTravel,
-    alt: "Premium business travel experience",
+    image: heroNetworkNew,
+    alt: "Expansive travel network map",
   },
 ];
 
