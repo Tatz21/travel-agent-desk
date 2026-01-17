@@ -47,30 +47,45 @@ const HeroContent = () => {
         className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto bg-background/95 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-border animate-scale-in"
         style={{ animationDelay: '1s', animationFillMode: 'both' }}
       >
-        <div className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group">
+        {/* Box 1 */}
+        <div className="bg-white rounded-2xl shadow-md border border-border p-6 text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group">
           <Users className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-sm font-medium text-foreground/70">Extensive Agents Network</p>
+          <p className="text-sm font-medium text-foreground/70">
+            Extensive Agents Network
+          </p>
         </div>
+
+        {/* Box 2 */}
         <div 
-          className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
+          className="bg-white rounded-2xl shadow-md border border-border p-6 text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
           style={{ animationDelay: '0.1s' }}
         >
           <CreditCard className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-sm font-medium text-foreground/70">Fast & Reliable Transaction Processing</p>
+          <p className="text-sm font-medium text-foreground/70">
+            Fast & Reliable Transaction Processing
+          </p>
         </div>
+
+        {/* Box 3 */}
         <div 
-          className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
+          className="bg-white rounded-2xl shadow-md border border-border p-6 text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
           style={{ animationDelay: '0.2s' }}
         >
           <MapPin className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-sm font-medium text-foreground/70">Serving Multiple Destinations</p>
+          <p className="text-sm font-medium text-foreground/70">
+            Serving Multiple Destinations
+          </p>
         </div>
+
+        {/* Box 4 */}
         <div 
-          className="text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
+          className="bg-white rounded-2xl shadow-md border border-border p-6 text-center hover:scale-110 transition-transform duration-300 flex flex-col items-center group"
           style={{ animationDelay: '0.3s' }}
         >
           <Headphones className="w-8 h-8 text-primary mb-3 group-hover:animate-bounce transition-transform" />
-          <p className="text-sm font-medium text-foreground/70">24/7 Dedicated Customer Support</p>
+          <p className="text-sm font-medium text-foreground/70">
+            24/7 Dedicated Customer Support
+          </p>
         </div>
       </div>
     </div>
