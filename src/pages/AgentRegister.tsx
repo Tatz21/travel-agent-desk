@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { toast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const AgentRegister = () => {
   const navigate = useNavigate();
@@ -63,7 +64,8 @@ const AgentRegister = () => {
     country: 'India',
     pincode: '',
     status: 'pending' as const,
-    commission_rate: 5.00
+    commission_rate: 5.00,    
+    account_manager_code: '',
   });
 
   const INDIAN_STATES = [
@@ -555,6 +557,7 @@ const AgentRegister = () => {
           pincode: formData.pincode,
           status: formData.status,
           commission_rate: formData.commission_rate || 5.00,
+          account_manager_code: formData.account_manager_code || null,
         });
 
       if (agentError) {
@@ -870,6 +873,18 @@ const AgentRegister = () => {
                   placeholder="Enter Your Area Pincode"
                   required
                   maxLength={6}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="account_manager_code">Account Manager Code (Optional)</Label>
+                <Input
+                  id="account_manager_code"
+                  name="account_manager_code"
+                  value={formData.account_manager_code}
+                  onChange={(e) =>
+                    setFormData({ ...formData, account_manager_code: e.target.value })
+                  }
+                  placeholder="Enter Account Manager Code"
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
