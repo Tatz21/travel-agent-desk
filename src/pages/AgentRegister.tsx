@@ -11,6 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const AgentRegister = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  /* ---------------- TERMS AGREEMENT STATE ---------------- */
+  const [agreeTerms, setAgreeTerms] = useState(false);
   
   /* ---------------- THANK YOU STATE ---------------- */
   const [showThankYou, setShowThankYou] = useState(false);
@@ -516,6 +519,15 @@ const AgentRegister = () => {
       return;
     }
 
+    if (!agreeTerms) {
+      toast({
+        title: "Terms Required",
+        description: "Please agree to the terms and conditions.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       /* Upload files */
@@ -859,6 +871,26 @@ const AgentRegister = () => {
                   required
                   maxLength={6}
                 />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="agreeTerms"
+                    checked={agreeTerms}
+                    onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
+                    className="mt-1" />
+                  <Label htmlFor="agreeTerms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                    I agree to the{" "}
+                    <Link to="/terms" className="text-primary hover:underline">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy" className="text-primary hover:underline">
+                      Privacy Policy
+                    </Link>
+                    . I understand that my information will be used to create my agent account.
+                  </Label>
+                </div>
               </div>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
