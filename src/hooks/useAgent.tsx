@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/AuthProvider';
 
@@ -40,13 +40,17 @@ export const useAgent = () => {
   const { user } = useAuth();
   const [agent, setAgent] = useState<Agent | null>(null);
   const [loading, setLoading] = useState(true);
+  const fetchedOnce = useRef(false);
 
   useEffect(() => {
-    if (user) {
-      fetchAgent();
-    } else {
-      setAgent(null);
+    if (!user) {
       setLoading(false);
+      return;
+    }
+
+    if (!fetchedOnce.current) {
+      fetchedOnce.current = true;
+      fetchAgent();
     }
   }, [user]);
 
@@ -59,9 +63,8 @@ export const useAgent = () => {
         .eq('user_id', user?.id)
         .single();
 
-      if (agentError || !agentData) {
-        setAgent(null);
-        return;
+      if (!agentError || agentData) {
+        setAgent(agentData);
       }
 
       let accountManager: AccountManager | null = null;
@@ -85,7 +88,8 @@ export const useAgent = () => {
 
     setLoading(false);
     } catch (error) {
-      setAgent(null);
+      console.error(error);
+    } finally {
       setLoading(false);
     }
   };
