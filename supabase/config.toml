@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.send-thankyou-email]
 verify_jwt = false
+
+[functions.send-career-application]
+verify_jwt = false
