@@ -624,7 +624,7 @@ const AgentRegister = () => {
               Become a Travel Agent Partner
             </h1>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Register today and start earning competitive commissions on every booking. Join thousands of successful agents across India.
+              Join Phoenix Travelopedia today and start earning commissions on every booking.
             </p>
           </div>
         </div>
