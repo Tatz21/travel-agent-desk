@@ -9,53 +9,70 @@ serve(async (req) => {
     if (req.method === "OPTIONS") {
         return new Response(null, { headers: corsHeaders });
     }
+
     try {
-        const body = await req.json();
-
+        const { name, email, phone, position, message, cv } = await req.json();
+        console.log("Received application from:", name, email, position);
+        const hrEmail = "mukteswar@phoenixtravelopedia.com";
         const MSG91_AUTH_KEY = Deno.env.get("MSG91_AUTH_KEY");
-        const hrEmail = "hr@phoenixtravelopedia.com";
 
-        const emailPayload = {
-            to: [{ email: hrEmail }],
-            from: { email: "noreply@phoenixtravelopedia.com", name: "Careers Portal" },
-            subject: `New Job Application – ${body.position}`,
-            content: [{
-                type: "text/html",
-                value: `
-                <h3>New Career Application</h3>
-                <p><b>Name:</b> ${body.name}</p>
-                <p><b>Email:</b> ${body.email}</p>
-                <p><b>Phone:</b> ${body.phone}</p>
-                <p><b>Position:</b> ${body.position}</p>
-                <p><b>Message:</b><br/>${body.message}</p>
-      `
-            }],
-            attachments: [
-                {
-                    name: body.cv.name,
-                    content: body.cv.content,
-                    type: body.cv.type,
-                }
-            ]
-        };
+        if (!MSG91_AUTH_KEY) {
+            return new Response(
+                JSON.stringify({ success: false, message: "MSG91 config missing" }),
+                { status: 500, headers: corsHeaders }
+            );
+        }
+
+        if (!email) {
+            return new Response(
+                JSON.stringify({ success: false, message: "Missing email" }),
+                { status: 400 }
+            );
+        }
 
         const res = await fetch("https://control.msg91.com/api/v5/email/send", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authkey": MSG91_AUTH_KEY!,
+                Accept: "application/json",
+                authkey: MSG91_AUTH_KEY
             },
-            body: JSON.stringify(emailPayload),
+            body: JSON.stringify({
+                recipients: [
+                    {
+                        to: [{ email: hrEmail }],
+                        variables: {
+                            VAR2: name,
+                            VAR3: email,
+                            VAR4: phone,
+                            VAR1: position,
+                            VAR5: message,
+                        }
+                    },
+                ],
+                from: {
+                    name: "Website Careers",
+                    email: "no-reply@phoenixtravelopedia.com"
+                },
+                attachments: [
+                    {
+                        name: cv.name,
+                        content: cv.content,
+                        type: cv.type,
+                    }
+                ],
+                domain: "phoenixtravelopedia.com",
+                template_id: 1112202512
+            }),
         });
 
-        if (!res.ok) {
-            return new Response("Email failed", { status: 500 });
-        }
-
-        return new Response(JSON.stringify({ success: true }), {
-            headers: { "Content-Type": "application/json" },
-        });
+        const result = await res.json();
+        console.log("Email send result:", result);
+        return new Response(
+            JSON.stringify({ success: true, result }),
+            { headers: corsHeaders }
+        );
     } catch (error) {
-        return new Response("Internal Server Error", { status: 500 });
+        return new Response(JSON.stringify({ success: false, message: "Internal Server Error" }), { status: 500 });
     }
 });
