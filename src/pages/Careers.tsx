@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Briefcase, Upload, Send } from "lucide-react";
+import { Briefcase, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,22 +36,27 @@ const Careers = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!cvFile) {
-      toast({ title: "Please upload CV", variant: "destructive" });
+      toast({ title: "CV Required", variant: "destructive" });
       return;
     }
 
     setLoading(true);
 
     try {
-      const fileBase64 = await fileToBase64(cvFile);
+      const base64 = await cvFile.arrayBuffer().then((b) =>
+        Buffer.from(b).toString("base64")
+      );
 
       const { error } = await supabase.functions.invoke("send-career-application", {
         body: {
           ...form,
-          fileName: cvFile.name,
-          fileType: cvFile.type,
-          fileBase64,
+          cv: {
+            name: cvFile.name,
+            type: cvFile.type,
+            content: base64,
+          },
         },
       });
 
@@ -72,8 +77,8 @@ const Careers = () => {
       setCvFile(null);
     } catch (err) {
       toast({
-        title: "Submission failed",
-        description: "Please try again later",
+        title: "Submission Failed",
+        description: "Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -86,56 +91,41 @@ const Careers = () => {
       <Header />
 
       {/* HERO */}
-      <section className="relative py-28">
+      <section className="relative py-28 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroContactImage})` }}
         />
-        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 text-center text-white">
           <h1 className="text-5xl font-bold">Careers</h1>
-          <p className="mt-4 text-lg">Join our growing travel technology team</p>
+          <p className="mt-4 text-lg">
+            Join our team & build the future of travel
+          </p>
         </div>
       </section>
 
       {/* FORM */}
-      <section className="py-16 px-4 bg-secondary/30">
-        <div className="max-w-3xl mx-auto">
+      <section className="py-16">
+        <div className="max-w-3xl mx-auto px-4">
           <Card>
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Briefcase /> Apply for a Position
+                <Briefcase /> Apply Now
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <Input id="name" placeholder="Full Name" required value={form.name} onChange={handleChange} />
-                  <Input id="email" type="email" placeholder="Email" required value={form.email} onChange={handleChange} />
-                </div>
-
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <Input id="phone" placeholder="Phone Number" required value={form.phone} onChange={handleChange} />
-                  <Input id="position" placeholder="Position Applying For" required value={form.position} onChange={handleChange} />
-                </div>
-
-                <Textarea
-                  id="message"
-                  placeholder="Cover letter / Message"
-                  rows={5}
-                  required
-                  value={form.message}
-                  onChange={handleChange}
-                />
+                <Input id="name" placeholder="Full Name" required value={form.name} onChange={handleChange} />
+                <Input id="email" type="email" placeholder="Email" required value={form.email} onChange={handleChange} />
+                <Input id="phone" placeholder="Phone" required value={form.phone} onChange={handleChange} />
+                <Input id="position" placeholder="Position Applied For" required value={form.position} onChange={handleChange} />
 
                 <div>
-                  <Label>Upload CV (PDF/DOC)</Label>
-                  <Input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={(e) => setCvFile(e.target.files?.[0] || null)}
-                    required
-                  />
+                  <Label>Upload CV (PDF / DOC)</Label>
+                  <Input type="file" accept=".pdf,.doc,.docx" required onChange={(e) => setCvFile(e.target.files?.[0] || null)} />
                 </div>
+
+                <Textarea id="message" placeholder="Why should we hire you?" value={form.message} onChange={handleChange} />
 
                 <Button type="submit" disabled={loading} className="w-full">
                   {loading ? "Submitting..." : "Submit Application"}
@@ -153,12 +143,3 @@ const Careers = () => {
 };
 
 export default Careers;
-
-/* UTIL */
-const fileToBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-  });
