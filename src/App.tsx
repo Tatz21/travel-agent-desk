@@ -13,6 +13,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import Careers from "./pages/Careers";
 import AgentRegister from "./pages/AgentRegister";
 import AgentStatus from "./pages/AgentStatus";
 import AuthPage from "./pages/AuthPage";
@@ -87,6 +88,7 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/blogs" element={<Blog />} />
               <Route path="/blog/:blogId" element={<BlogDetail />} />
+              <Route path="/careers" element={<Careers />} />
               <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
               <Route path="/register" element={<PublicRoute><AgentRegister /></PublicRoute>} />
               <Route path="/check-status" element={<AgentStatus />} />
