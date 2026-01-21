@@ -35,21 +35,30 @@ const Careers = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!cvFile) {
-      toast({ title: "CV Required", variant: "destructive" });
-      return;
-    }
+  if (!cvFile) {
+    toast({ title: "CV Required", variant: "destructive" });
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const base64 = await cvFile.arrayBuffer().then((b) =>
-        Buffer.from(b).toString("base64")
-      );
+  try {
+    // Browser-safe Base64 conversion
+    const base64 = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(cvFile);
+      reader.onload = () => {
+        const result = reader.result as string;
+        resolve(result.split(",")[1]); // remove data:mime;base64,
+      };
+      reader.onerror = reject;
+    });
 
-      const { error } = await supabase.functions.invoke("send-career-application", {
+    const { error } = await supabase.functions.invoke(
+      "send-career-application",
+      {
         body: {
           ...form,
           cv: {
@@ -58,33 +67,36 @@ const Careers = () => {
             content: base64,
           },
         },
-      });
+      }
+    );
 
-      if (error) throw error;
+    if (error) throw error;
 
-      toast({
-        title: "Application Submitted",
-        description: "Our HR team will contact you shortly.",
-      });
+    toast({
+      title: "Application Submitted",
+      description: "Our HR team will contact you shortly.",
+    });
 
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-        position: "",
-        message: "",
-      });
-      setCvFile(null);
-    } catch (err) {
-      toast({
-        title: "Submission Failed",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    setForm({
+      name: "",
+      email: "",
+      phone: "",
+      position: "",
+      message: "",
+    });
+    setCvFile(null);
+
+  } catch (err) {
+    console.error(err);
+    toast({
+      title: "Submission Failed",
+      description: "Please try again later.",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <main className="min-h-screen bg-background">
