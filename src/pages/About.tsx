@@ -7,6 +7,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import Header from "@/components/Header";
 import { useEffect } from "react";
 import FeedbackSection from "@/components/FeedbackSection";
+import heroAboutImage from "@/assets/goa-beach.jpg";
 
 const values = [
   {
@@ -82,7 +83,7 @@ const About = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url(./about-hero.png)"
+            backgroundImage: `url(${heroAboutImage})`
           }}
         />
         <div className="absolute inset-0 overflow-hidden">
@@ -94,7 +95,7 @@ const About = () => {
           <h1 className="inline-block px-4 py-2 text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 bg-black/40 backdrop-blur-sm rounded-lg animate-fade-in-up">
             Empowering Travel Entrepreneurs
           </h1>
-          <p className="text-xl text-white max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-black max-w-3xl mx-auto mb-8">
             Phoenix Travelopedia is India's leading B2B travel platform, connecting travel agents with the best deals on flights, hotels, and buses.
           </p>
         </div>
@@ -107,10 +108,10 @@ const About = () => {
             {stats.map((stat) => (
               <div 
                 key={stat.label}
-                className="bg-card rounded-2xl p-6 text-center shadow-xl border border-border/50"
+                className="bg-card rounded-2xl p-6 text-center shadow-xl border border-border/50 hover:scale-110 transition-transform duration-300 group"
               >
                 <div className="text-3xl md:text-4xl font-bold font-serif text-primary mb-2">
-                  {stat.icon && <stat.icon className="w-10 h-10 mx-auto" />}
+                  {stat.icon && <stat.icon className="w-10 h-10 mx-auto group-hover:animate-bounce transition-transform" />}
                 </div>
                 <p className="text-muted-foreground text-sm">{stat.label}</p>
               </div>
@@ -129,13 +130,13 @@ const About = () => {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Our journey began in 1997 under the visionary leadership of Late Mr. Pankaj Mallick, the founder of our organization. What started as a small travel service initiative was built on strong core values—trust, transparency, and long-term partnerships. Through his dedication, integrity, and deep understanding of the travel industry, Late Mr. Mallick laid a strong foundation for a business focused on reliable travel solutions and ethical operations, earning the confidence of travel agents and industry partners.
+                  Our journey began in 1997, driven by the vision, dedication, and hard work of Mr. Pankaj Mallick, the founder of our organization. What started as a small travel service initiative was built on strong values—trust, transparency, and long-term partnerships. With unwavering commitment, he laid the foundation of a business focused on reliable travel solutions and ethical operations, earning the confidence of travel agents and industry partners alike.
                 </p>
                 <p>
                   Over the years, the company evolved into a trusted B2B travel service provider, supporting travel agents, tour operators, and corporate partners with consistent service delivery and dependable backend operations. Our reputation has been built on accurate ticketing, smooth settlements, operational efficiency, and partner-first support, enabling our associates to grow their businesses with confidence.
                 </p>
                 <p>
-                  Although Late Mr. Pankaj Mallick is no longer with us, his vision and values continue to guide our business. His legacy lives on through our commitment to integrity, excellence, and long-term partnerships.
+                  Though Mr. Pankaj Mallick is no longer with us, his principles continue to guide our business philosophy and operational standards.
                 </p>
               </div>
             </div>
@@ -170,7 +171,7 @@ const About = () => {
                   In 2018, leadership was assumed by his son, Mr. Prasenjit Mallick, who carried the legacy forward with a technology-driven and scalable B2B approach. Under his direction, the company strengthened its digital infrastructure, agent portal capabilities, and service automation, ensuring faster bookings, transparent transactions, and improved partner experience.
                 </p>
                 <p>
-                  Today, our B2B travel portal offers comprehensive services including flight ticket booking, bus ticket booking, and hotel reservations, designed specifically to meet the operational needs of travel agents and corporate partners. As a proud member of TAAB (Travel Agents Association of Bengal), we strictly adhere to industry standards, compliance norms, and ethical business practices.
+                  Today, our B2B travel portal offers comprehensive services including flight ticket booking, bus ticket booking, and hotel reservations, designed specifically to meet the operational needs of travel agents and corporate partners. As a proud member of TAB (Travel Agents Body), we strictly adhere to industry standards, compliance norms, and ethical business practices.
                 </p>
                 <p>
                   With decades of industry experience, a strong legacy of trust, and a future-focused mindset, we remain committed to empowering our partners with reliable technology, competitive solutions, and long-term business support.
@@ -188,7 +189,7 @@ const About = () => {
             <Card className="border-border/50 bg-card overflow-hidden group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-8">
                 <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center mb-6">
-                  <Target className="w-7 h-7 text-primary-foreground" />
+                  <Target className="w-7 h-7 text-primary-foreground group-hover:animate-lattoo" />
                 </div>
                 <h3 className="text-2xl font-bold font-serif text-card-foreground mb-4">Our Mission</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -199,7 +200,7 @@ const About = () => {
             <Card className="border-border/50 bg-card overflow-hidden group hover:shadow-xl transition-all duration-300">
               <CardContent className="p-8">
                 <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center mb-6">
-                  <Globe className="w-7 h-7 text-accent-foreground" />
+                  <Globe className="w-7 h-7 text-accent-foreground group-hover:animate-lattoo" />
                 </div>
                 <h3 className="text-2xl font-bold font-serif text-card-foreground mb-4">Our Vision</h3>
                 <p className="text-muted-foreground leading-relaxed">
