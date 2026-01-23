@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
-import heroContactImage from "@/assets/contact-us.jpg";
+import heroContactImage from "@/assets/contactus.png";
 
 const contactInfo = [
   {
