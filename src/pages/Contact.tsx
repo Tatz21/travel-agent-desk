@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
-import heroContactImage from "@/assets/cnt.png";
+import heroContactImage from "@/assets/c2.png";
 
 const contactInfo = [
   {
@@ -114,11 +114,11 @@ const Contact = () => {
           <p className="text-primary text-sm font-serif font-bold italic tracking-[0.3em] animate-fade-in-down relative inline-block uppercase mb-4">
 
           </p>
-          <h1 className="inline-block px-4 py-2 text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6 bg-black/40 backdrop-blur-sm rounded-lg animate-fade-in-up">
-            Get in Touch
+          <h1 className="inline-block px-4 py-2 text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-6  animate-fade-in-up">
+            
           </h1>
-          <p className="text-base sm:text-lg text-primary max-w-2xl mx-auto animate-fade-in-up delay-100">
-            Have questions or need assistance? We're here to help you succeed in your travel business.
+          <p className="text-base sm:text-lg text-black max-w-2xl mx-auto animate-fade-in-up delay-100">
+            <br></br><br></br><br></br><br></br><br></br>
           </p>
         </div>
       </section>
