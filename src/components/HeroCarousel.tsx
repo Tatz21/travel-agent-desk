@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import heroB2BTechnology from "@/assets/slider/hero-b2b-technology.jpg";
+import heroBackground from "@/assets/slider/hero-background.jpg";
 import heroVideoFlight from "@/assets/slider/hero-video-flight.mp4";
 
 interface HeroCarouselProps {
@@ -25,7 +25,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
       <video
         ref={videoRef}
         src={heroVideoFlight}
-        poster={heroB2BTechnology}
+        poster={heroBackground}
         muted
         autoPlay
         loop
