@@ -130,7 +130,7 @@ const AuthPage = () => {
 
       if (error) throw error;
 
-      if (data.no_otp) {
+      /* if (data.no_otp) {
         // Already verified today - sign in with Supabase Auth
         const agentEmail = String((data as any)?.agent_email ?? (data as any)?.email ?? "").trim();
         if (!agentEmail) {
@@ -150,7 +150,7 @@ const AuthPage = () => {
 
         navigate("/dashboard", { replace: true });
         return;
-      }
+      } */
 
       if (data.success) {
         toast({ title: "OTP Sent", description: "OTP sent successfully" });
@@ -171,7 +171,7 @@ const AuthPage = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('login-otp', {
-        body: { action: 'verify', agent_code: formData.agent_code, otp: otp, password: formData.password }
+        body: { action: 'verify', agent_code: formData.agent_code, otp: otp.trim(), password: formData.password }
       });
 
       if (error) throw error;
