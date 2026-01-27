@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import heroContactImage from "@/assets/c2.png";
+import FeedbackSection from "@/components/FeedbackSection";
 
 const contactInfo = [
   {
@@ -106,6 +107,7 @@ const Contact = () => {
   return (
     <main className="min-h-screen bg-background">
       <Header />
+      <FeedbackSection />
       {/* Hero Section */}
       <section className="relative py-24 sm:py-32 lg:py-40 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Image */}
