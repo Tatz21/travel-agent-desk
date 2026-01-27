@@ -18,7 +18,7 @@ const HeroContent = () => {
           Phoenix Travelopedia
         </h1>
         <p 
-          className="text-3xl sm:text-4xl md:text-5xl font-script text-primary mb-8 drop-shadow-md animate-fade-in"
+          className="text-3xl sm:text-4xl md:text-5xl font-script text-foreground mb-8 drop-shadow-md animate-fade-in"
           style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
         >
           Discover Incredible India
