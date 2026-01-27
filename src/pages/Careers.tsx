@@ -116,24 +116,30 @@ const Careers = () => {
     <main className="min-h-screen bg-background">
       <ScrollToTop />
       <Header />
+      <section className="relative overflow-hidden">
+        {/* HERO CONTAINER */}
+        <div className="relative w-full
+          h-[45vh]
+          sm:h-[55vh]
+          md:h-[65vh]
+          lg:h-[75vh]
+          xl:h-[85vh]"
+        >
+          {/* Mobile Image (NO CROPPING) */}
+          <img
+            src={heroCareerImage}
+            alt="Join Our Team"
+            className="absolute inset-0 w-full h-full object-contain sm:hidden"
+          />
 
-      <section className="relative min-h-[65vh] sm:min-h-[75vh] lg:min-h-[85vh] px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Mobile Image */}
-        <img
-          src={heroCareerImage}
-          alt="Join Our Team"
-          className="absolute inset-0 w-full h-full object-contain sm:hidden"
-        />
+          {/* Tablet + Desktop Image (CINEMATIC) */}
+          <div
+            className="absolute inset-0 hidden sm:block bg-no-repeat bg-cover bg-center"
+            style={{ backgroundImage: `url(${heroCareerImage})` }}
+          />
 
-        {/* Desktop Background */}
-        <div
-          className="absolute inset-0 hidden sm:block bg-no-repeat bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroCareerImage})` }}
-        />
-
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-primary-foreground/5 rounded-full blur-3xl" />
+          {/* Optional overlay for contrast */}
+          <div className="absolute inset-0 bg-black/5 sm:bg-black/10" />
         </div>
       </section>
       {/* Heading After Hero */}
