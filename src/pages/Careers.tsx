@@ -118,8 +118,16 @@ const Careers = () => {
       <Header />
 
       <section className="relative min-h-[65vh] sm:min-h-[75vh] lg:min-h-[85vh] px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Mobile Image */}
+        <img
+          src={heroCareerImage}
+          alt="Join Our Team"
+          className="absolute inset-0 w-full h-full object-contain sm:hidden"
+        />
+
+        {/* Desktop Background */}
         <div
-          className="absolute inset-0 w-full h-full bg-no-repeat bg-cover bg-[center_70%] sm:bg-center"
+          className="absolute inset-0 hidden sm:block bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${heroCareerImage})` }}
         />
 
