@@ -18,7 +18,7 @@ const HeroContent = () => {
           Phoenix Travelopedia
         </h1>
         <p 
-          className="text-3xl sm:text-4xl md:text-5xl font-script text-foreground/80 mb-8 drop-shadow-md animate-fade-in"
+          className="text-3xl sm:text-4xl md:text-5xl font-script text-primary mb-8 drop-shadow-md animate-fade-in"
           style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
         >
           Discover Incredible India
@@ -26,7 +26,7 @@ const HeroContent = () => {
       </div>
       
       <p 
-        className="text-lg md:text-xl text-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md animate-fade-in-up"
+        className="text-lg md:text-xl text-black mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md animate-fade-in-up"
         style={{ animationDelay: '0.6s', animationFillMode: 'both' }}
       >
         Your trusted travel booking platform across India. Book flights, buses, and hotels effortlessly while earning competitive commissions as a verified travel agent. Grow your travel business with Phoenix Travelopedia.
