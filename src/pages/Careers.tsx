@@ -117,7 +117,7 @@ const Careers = () => {
       <ScrollToTop />
       <Header />
 
-      <section className="relative py-24 sm:py-32 lg:py-40 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative min-h-[65vh] sm:min-h-[75vh] lg:min-h-[85vh] px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center"
           style={{ backgroundImage: `url(${heroCareerImage})` }}
@@ -127,11 +127,13 @@ const Careers = () => {
           <div className="absolute top-20 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-primary-foreground/5 rounded-full blur-3xl" />
         </div>
-
-        <div className="relative max-w-7xl mx-auto text-center">
-          <p className="text-xl text-black max-w-3xl mx-auto mb-8 px-4 py-24 rounded-lg animate-fade-in-up delay-100">
+      </section>
+      {/* Heading After Hero */}
+      <section className="py-10 sm:py-14 bg-background">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-serif text-foreground">
             Join our team & build the future of travel
-          </p>
+          </h2>
         </div>
       </section>
 
