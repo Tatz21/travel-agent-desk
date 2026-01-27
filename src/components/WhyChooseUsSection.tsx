@@ -81,17 +81,23 @@ const WhyChooseUsSection = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className={`group rounded-2xl p-8 border border-border/50 hover:border-primary/50 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 bg-gradient-to-br from-primary/5 via-card to-accent/10 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-              }`}
-              style={{ 
-                transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
+              className={`
+                group relative overflow-hidden rounded-2xl p-8 border border-border/50 bg-gradient-to-br from-primary/5 via-card to-accent/10
+
+                transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-2xl hover:border-primary/40
+
+                ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+                }`
+              }
+              style={{
+                transitionDelay: isVisible ? `${index * 10}ms` : '0ms',
               }}
             >
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-6 group-hover:from-primary group-hover:to-primary group-hover:scale-110 transition-all duration-300">
-                <feature.icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
+
+              <div className="relative z-10 w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-6 transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-3 group-hover:from-primary group-hover:to-primary">
+                <feature.icon className="w-7 h-7 text-primary transition-all duration-300 group-hover:text-primary-foreground group-hover:drop-shadow-md" />
               </div>
-              <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+              <h3 className="font-display text-xl font-semibold text-foreground mb-3 transition-colors duration-300 group-hover:translate-x-1">
                 {feature.title}
               </h3>
               <p className="text-muted-foreground leading-relaxed">
