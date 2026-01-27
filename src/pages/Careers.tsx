@@ -118,13 +118,7 @@ const Careers = () => {
       <Header />
       <section className="relative overflow-hidden">
         {/* HERO CONTAINER */}
-        <div className="relative w-full
-          h-[45vh]
-          sm:h-[55vh]
-          md:h-[65vh]
-          lg:h-[75vh]
-          xl:h-[85vh]"
-        >
+        <div className="relative w-full">
           {/* Mobile Image (NO CROPPING) */}
           <img
             src={heroCareerImage}
