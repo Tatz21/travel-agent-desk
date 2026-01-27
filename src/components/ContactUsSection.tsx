@@ -21,7 +21,7 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Visit Us",
-    details: ["Globsyn Crystals Bulding,  Street Number 17, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
+    details: ["Globsyn Crystals, EP Block, Sector V, Bidhannagar, Kolkata, West Bengal, 700091, India"],
     color: "bg-primary",
     gradient: "from-pink-300 to-teal-300",
   },
@@ -48,10 +48,10 @@ const ContactUsSection = () => {
               We're Here to Help
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Have questions about our services or need assistance with your bookings? 
+              Have questions about our services or need assistance with your bookings?
               Our dedicated support team is available to help you succeed in your travel business.
             </p>
-            
+
             <Link to="/contact">
               <Button variant="default" size="lg">
                 Contact Us
@@ -63,20 +63,35 @@ const ContactUsSection = () => {
           {/* Right - Contact Cards */}
           <div className="grid sm:grid-cols-2 gap-4">
             {contactInfo.map((info, index) => (
-              <Card 
+              <Card
                 key={info.title}
-                className={`border-border/50 hover:shadow-lg hover:border-primary/30 transition-all duration-300 bg-gradient-to-br ${info.gradient}`} style={{ animationDelay: `${index * 0.1}s` }}
+                className={`
+                  group relative overflow-hidden border border-border/50 bg-gradient-to-br ${info.gradient}
+                  transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
+                  transform-gpu
+                  hover:-translate-y-2 hover:scale-[1.02]
+                  hover:shadow-2xl hover:border-primary/40
+                  active:scale-[0.97] active:translate-y-0
+                `} style={{ animationDelay: `${index * 0.1}s` }}
               >
+                <span
+                  className="
+                  pointer-events-none absolute inset-0
+                  bg-gradient-to-r from-white/0 via-white/25 to-white/0
+                  opacity-0 group-hover:opacity-100
+                  transition-opacity duration-700
+                  "
+                />
                 <CardContent className="p-6">
-                  <div className={`w-12 h-12 rounded-xl ${info.color} flex items-center justify-center mb-4`}>
+                  <div className={`w-12 h-12 rounded-xl ${info.color} flex items-center justify-center mb-4 transition-all duration-500 ease-out transform-gpu group-hover:scale-110 group-hover:rotate-3 group-active:scale-95`}>
                     <info.icon className="w-6 h-6 text-primary-foreground" />
                   </div>
-                  <h3 className="text-lg font-bold font-serif text-card-foreground mb-3">
+                  <h3 className="text-lg font-bold font-serif text-card-foreground mb-3 transition-colors duration-300 group-hover:text-primary-foreground">
                     {info.title}
                   </h3>
                   <div className="space-y-1">
                     {info.details.map((detail, i) => (
-                      <p key={i} className="text-sm text-white">
+                      <p key={i} className="text-sm text-white/90 transition-colors duration-300 group-hover:text-primary">
                         {detail}
                       </p>
                     ))}
