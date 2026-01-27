@@ -107,12 +107,14 @@ const ServicesSection = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <Button variant="default" size="lg">
-            Explore All Services
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
+        <Link to="/services">
+          <div className="text-center mt-16">
+            <Button variant="default" size="lg">
+              Explore All Services
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </Link>
       </div>
     </section>
   );
