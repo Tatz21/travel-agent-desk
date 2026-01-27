@@ -119,7 +119,7 @@ const Careers = () => {
 
       <section className="relative min-h-[65vh] sm:min-h-[75vh] lg:min-h-[85vh] px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          className="absolute inset-0 w-full h-full bg-no-repeat bg-cover bg-[center_70%] sm:bg-center"
           style={{ backgroundImage: `url(${heroCareerImage})` }}
         />
 
