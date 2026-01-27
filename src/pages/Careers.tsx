@@ -116,14 +116,15 @@ const Careers = () => {
     <main className="min-h-screen bg-background">
       <ScrollToTop />
       <Header />
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden bg-[#bfe7ef]">
         {/* HERO CONTAINER */}
         <div className="relative w-full
           h-[45vh]
           sm:h-[55vh]
           md:h-[65vh]
           lg:h-[75vh]
-          xl:h-[85vh]">
+          xl:h-[85vh]"
+        >
           {/* Mobile Image (NO CROPPING) */}
           <img
             src={heroCareerImage}
@@ -142,7 +143,7 @@ const Careers = () => {
         </div>
       </section>
       {/* Heading After Hero */}
-      <section className="py-10 sm:py-14 bg-background">
+      <section className="py-8 sm:py-12 bg-secondary/30">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-serif text-foreground">
             Join our team & build the future of travel
