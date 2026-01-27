@@ -26,7 +26,7 @@ const HeroContent = () => {
       </div>
       
       <p 
-        className="text-lg md:text-xl text-black mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md animate-fade-in-up"
+        className="text-lg md:text-xl text-foreground mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md animate-fade-in-up"
         style={{ animationDelay: '0.6s', animationFillMode: 'both' }}
       >
         Your trusted travel booking platform across India. Book flights, buses, and hotels effortlessly while earning competitive commissions as a verified travel agent. Grow your travel business with Phoenix Travelopedia.
