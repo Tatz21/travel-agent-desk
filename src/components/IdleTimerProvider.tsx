@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 
-const IDLE_TIME = 10 * 60 * 1000; // 10 minutes
+const IDLE_TIME = 50 * 60 * 1000; // 10 minutes
 const WARNING_TIME = 30; // 30 seconds
 
 export const IdleTimerProvider = ({
@@ -129,5 +129,6 @@ export const IdleTimerProvider = ({
     </>
   );
 };
+
 
 
