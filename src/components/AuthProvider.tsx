@@ -41,6 +41,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     init();
 
+    // Force logout on browser/tab close
+    const handleUnload = () => {
+      supabase.auth.signOut();
+    };
+    window.addEventListener("beforeunload", handleUnload);
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -53,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       mounted = false;
       subscription.unsubscribe();
+      window.addEventListener("beforeunload", handleUnload);
     };
   }, []);
 
