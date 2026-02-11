@@ -247,50 +247,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
-        <div className="max-w-7xl mx-auto">
-          {/* Heading */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-4">
-              Leadership Team
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Meet the people driving innovation in travel technology
-            </p>
-          </div>
-
-          {/* 5 Column Responsive Grid */}
-          <div className="
-            grid 
-            grid-cols-1
-            sm:grid-cols-2
-            md:grid-cols-3
-            lg:grid-cols-4
-            xl:grid-cols-5
-            gap-8
-          ">
-            {team.map((member, index) => (
-              <div key={index} className="text-center group">
-                <div className="relative mb-6 mx-auto w-36 h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-xl">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-
-                <h3 className="text-lg font-bold font-serif text-foreground mb-1">
-                  {member.name}
-                </h3>
-                <p className="text-primary text-sm">{member.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
       {/* CTA Section */}
       <section 
         className="py-20 px-4 sm:px-6 lg:px-8"
